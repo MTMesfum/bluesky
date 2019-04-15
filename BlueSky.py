@@ -4,6 +4,8 @@ from __future__ import print_function
 import sys
 import traceback
 import bluesky as bs
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Create custom system-wide exception handler. For now it replicates python's
 # default traceback message. This was added to counter a new PyQt5.5 feature
@@ -38,7 +40,8 @@ def main():
     """
     # When importerror gives different name than (pip) install needs,
     # also advise latest version
-    missingmodules = {"OpenGL": "pyopengl and pyopengl-accelerate"}
+    missingmodules = {"OpenGL": "pyopengl and pyopengl-accelerate",
+                      "PyQt4": "pyqt5"}
 
     ### Parse command-line arguments ###
     # BlueSky.py modes:
@@ -47,6 +50,10 @@ def main():
     # server-headless: start server only
     # detached: start only one simulation node, without networking
     #   ==> useful for calling bluesky from within another python script/program
+    # sys.argv.append('--headless')
+    # sys.argv.append('--scenfile')
+    # sys.argv.append('\Trajectories-batch.scn')
+    print(sys.argv)
     if '--detached' in sys.argv:
         mode = 'sim-detached'
     elif '--sim' in sys.argv:
