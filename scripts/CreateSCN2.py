@@ -7,8 +7,9 @@ import random
 # from datetime import datetime
 # from datetime import timedelta
 from tkinter import Tk
-from geo import qdrdist as dist
-from geo import latlondist as dist2
+import geo
+# from geo import qdrdist as dist
+# from geo import latlondist as dist2
 import datetime
 from tkinter.filedialog import askopenfilename
 
@@ -139,4 +140,4 @@ def CreateSCN(alpha):
 
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
 
-CreateSCN(False)
+# CreateSCN(False)

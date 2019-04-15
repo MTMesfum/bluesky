@@ -1,7 +1,14 @@
 import numpy as np
 import sys
+# from math import *
+import pandas as pd
 import os
+import datetime
 import fileinput as fi
+# import geo
+# from bluesky.tools import geo
+from bluesky.tools.geo import qdrdist as dist
+from bluesky.tools.geo import latlondist as dist2
 #from BlueSky import main
 # print(sys.argv)
 #sys.argv.append("--headless")
@@ -10,8 +17,8 @@ import fileinput as fi
 
 # Scenario batch file
 global scenario_manager, settings_config, dt
-scenario_manager = "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\Trajectories-batch.scn"
-settings_config = "F:\Documents\Google Drive\Thesis 2018\BlueSky\settings.cfg"
+scenario_manager = "scenario\Trajectories-batch.scn"
+settings_config = "settings.cfg"
 dt = '0.10' # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = list(range(1,5))
@@ -117,9 +124,10 @@ def CreateSCN(alpha, save_file):
     nm  = 1852.  # m       1 nautical mile
     ft  = .3048  # m        1 foot
 
-    folder = "\queries\\"
+    folder = "queries\\"
     FileName = os.listdir(folder)
-
+    FileName.remove('hide')
+    # print(FileName)
     # Tk().withdraw()
     # print("Choose the csv file:")
     # FileName = askopenfilename()
@@ -212,9 +220,9 @@ def CreateSCN(alpha, save_file):
                     #acid AFTER afterwp ADDWPT (wpname/lat,lon),[alt,spd]
 
     #save = pd.DataFrame(banana)
-    with open("C:\Documents\Git\\trunk\scenario\\"+ save_file + '.scn', "w") as fin:
+    with open("C:\Documents\Git\scenario\\"+ save_file + '.scn', "w") as fin:
         fin.write('\n'.join(banana))
-    os.startfile("C:\Documents\Git\\trunk\scenario\\" + save_file + '.scn')
+    os.startfile("C:\Documents\Git\scenario\\" + save_file + '.scn')
 
     # save.to_csv('test1.scn', sep=',', index=False, header=False, quoting=0)
     # banana.to_csv('test2.scn', sep=',')
@@ -227,12 +235,12 @@ def CreateSCN(alpha, save_file):
 CreateSCN(False, 'Test4')
 
 # assign the timestep and run the simulations X times
-for i in set_of_dt:
-    dt = i
-    replace_dt()
-    for j in list_ensemble:
-        replace_ensemble(i)
-        run_bluesky_desktop()
+# for i in set_of_dt:
+    # dt = i
+    # replace_dt()
+    # for j in list_ensemble:
+        # replace_ensemble(i)
+        # run_bluesky_desktop()
         # run_bluesky_laptop()
 
 # os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
