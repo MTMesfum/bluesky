@@ -1,0 +1,125 @@
+# Load wind data
+00:00:00.00> SWRAD VOR
+00:00:00.00> LOAD_WIND 0.,Tigge_01_09_2017.nc
+00:00:00.00> DATE 1,9,2017
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_01
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 01 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_02
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 02 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_03
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 03 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_04
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 04 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_05
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 05 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_06
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 06 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_07
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 07 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_08
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 08 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_09
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 09 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_10
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 10 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_11
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 11 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_12
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 12 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_13
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 13 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_14
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 14 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_15
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 15 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_16
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 16 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_17
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 17 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_18
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 18 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_19
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 19 
+00:00:00.00> FF
+06:05:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_20
+00:00:00.00> PCALL "F:\Documents\Google Drive\Thesis 2018\BlueSky\scenario\experimental\Trajectories.scn" 20 
+00:00:00.00> FF
+06:04:00.00> WRITER W01_dt_0.05
+06:05:00.00> QUIT
