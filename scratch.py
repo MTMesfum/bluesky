@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 import os
 import datetime
+import pdb
 import fileinput as fi
 # import geo
 # from bluesky.tools import geo
@@ -27,48 +28,62 @@ list_ensemble = list(range(1,5))
 def replace_ensemble(ensemble):
     f = open(scenario_manager, 'r')
     filedata = list(f.read())
+    filedata2 = f.read()
     f.close()
+
     ensemble = str(ensemble)
-
+    apple = filedata2.find('LOAD_WIND')
+    banana = filedata2.find('WRITER')
+    print(apple)
+    print(banana)
     if len(ensemble) < 2:
-        filedata[63]    = str(0)
-        filedata[64]    = ensemble[0]
-        filedata[4135]  = str(0)
-        filedata[4136]  = ensemble[0]
+        filedata[apple+10]      = str(0)
+        filedata[apple+11]      = ensemble[0]
+        filedata[banana+8]      = str(0)
+        filedata[banana+9]      = ensemble[0]
     else:
-        filedata[63]    = ensemble[0]
-        filedata[64]    = ensemble[1]
-        filedata[4135]  = ensemble[0]
-        filedata[4136]  = ensemble[1]
+        filedata[apple+10]      = ensemble[0]
+        filedata[apple+11]      = ensemble[1]
+        filedata[banana+8]      = ensemble[0]
+        filedata[banana+9]      = ensemble[1]
 
-    filedata[4141]  = dt[0]
-    filedata[4142]  = dt[1]
-    filedata[4143]  = dt[2]
-    filedata[4144]  = dt[3]
+    filedata[banana+14]  = dt[0]
+    filedata[banana+15]  = dt[1]
+    filedata[banana+16]  = dt[2]
+    filedata[banana+17]  = dt[3]
 
     filedata2 = str("".join(filedata))
     f = open(scenario_manager, 'w')
     f.write(filedata2)
     f.close()
+    os.startfile("C:\Documents\Git\\" + scenario_manager)
     pass
 
 
 # Changes the timestep in the settings config of BlueSky using the provided timestep
 # Keep in mind that the savefile doesn't change its name, unless the timestep is set into the global variable dt
 def set_dt(timestep):
+    if type(timestep) is not str:
+        timestep = str(timestep)
     f = open(settings_config, 'r')
     filedata = list(f.read())
+    filedata2 = f.read()
     f.close()
 
-    filedata[1030] = timestep[0]
-    filedata[1031] = timestep[1]
-    filedata[1032] = timestep[2]
-    filedata[1033] = timestep[3]
+    apple = filedata2.find('simdt =')
+    print(filedata2)
+    print(apple)
+    print(timestep)
+    filedata[apple+ 8] = timestep[0]
+    filedata[apple+ 9] = timestep[1]
+    filedata[apple+10] = timestep[2]
+    filedata[apple+11] = timestep[3]
 
-    filedata2 = str("".join(filedata))
+    filedata3 = str("".join(filedata))
     f = open(settings_config, 'w')
-    f.write(filedata2)
+    f.write(filedata3)
     f.close()
+    os.startfile("C:\Documents\Git\\" + settings_config)
     pass
 
 # This functions replaces the dt in the settings.cfg with the globally defined dt
@@ -86,6 +101,7 @@ def replace_dt():
     f = open(settings_config, 'w')
     f.write(filedata2)
     f.close()
+    os.startfile("C:\Documents\Git\\" + settings_config)
     pass
 
 # Run a simulation of BlueSky using the desktop path
@@ -119,6 +135,7 @@ def addSecs(tm, secs, secs2):
     return str(fulldate.time()), delay
 
 # Create a scenario file from the provided trajectories and save it in the provided name
+# The first entry in the method decides whether a random delay is added
 def CreateSCN(alpha, save_file):
     # Constants
     nm  = 1852.  # m       1 nautical mile
@@ -136,9 +153,22 @@ def CreateSCN(alpha, save_file):
     banana = list()
     #banana.append('00:00:00.00> SWRAD VOR')
     #banana.append('00:00:00.00> FF 79495')
+    scenario2 = pd.DataFrame()
 
     for k in FileName:
-        scenario = pd.read_csv(folder +"\\" + k)
+        if not scenario2.empty:
+            scenario2 = scenario2.append(pd.read_csv(folder + "\\" + k))
+        else:
+            scenario2 = pd.read_csv(folder + "\\" + k)
+
+    scenario2 = scenario2.sort_values(by=['time_over']).reset_index(drop=True)
+
+    for l in set(scenario2['trajectory_id']):
+        #
+        # pdb.set_trace()
+        scenario    = scenario2[scenario2['trajectory_id'][:] == scenario2['trajectory_id'][0]].reset_index(drop=True)
+        scenario2   = scenario2[scenario2['trajectory_id'][:] != scenario2['trajectory_id'][0]].reset_index(drop=True)
+
         traj += 1
         traj2 = str(traj)
         if traj2.count('') < 3:
@@ -232,7 +262,54 @@ def CreateSCN(alpha, save_file):
 
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
 
-CreateSCN(False, 'Test4')
+# Create a scenario manager to run a file alpha times, load wind ensemble beta and save the file in save_file
+def CreateSCNM(alpha, beta, save_file):
+    gamma = list()
+    gamma.append('# Load wind data')
+    gamma.append('00:00:00.00> SWRAD VOR')
+    if beta < 10:
+        gamma.append('00:00:00.00> LOAD_WIND 0' +str(beta) +',Tigge_01_09_2017.nc')
+    else:
+        gamma.append('00:00:00.00> LOAD_WIND ' + str(beta) + ',Tigge_01_09_2017.nc')
+    gamma.append('00:00:00.00> DATE 1,9,2017')
+
+    for i in range(1, alpha):
+        gamma.append('')
+        gamma.append('# Load trajectories for a run')
+        if i < 10:
+            gamma.append('00:00:00.00> SCEN Test_0'+str(i))
+            gamma.append('00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" 0' + str(i))
+        else:
+            gamma.append('00:00:00.00> SCEN Test_' + str(i))
+            gamma.append('00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" ' + str(i))
+        gamma.append('00:00:00.00> FF')
+        gamma.append('23:59:00.00> HOLD')
+
+    gamma.append('')
+    gamma.append('# Load trajectories for a run')
+    if alpha < 10:
+        gamma.append('00:00:00.00> SCEN Test_0' + str(alpha))
+        gamma.append('00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" 0' + str(alpha))
+    else:
+        gamma.append('00:00:00.00> SCEN Test_' + str(alpha))
+        gamma.append('00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" ' + str(alpha))
+    gamma.append('00:00:00.00> FF')
+    if beta < 10:
+        gamma.append('23:59:59.00> WRITER W0' +str(beta) +'_dt_' +str(dt))
+    else:
+        gamma.append('23:59:59.00> WRITER W' + str(beta) +'_dt_' +str(dt))
+    gamma.append('23:59:59.00> QUIT')
+
+    with open("C:\Documents\Git\scenario\\"+ save_file + '.scn', "w") as fin:
+        fin.write('\n'.join(gamma))
+    os.startfile("C:\Documents\Git\scenario\\" + save_file + '.scn')
+
+scenario_manager = "scenario\Test10.scn"
+
+# CreateSCN(False, 'Test5')
+set_dt(0.15)
+# CreateSCNM(20, 5, 'Test10')
+replace_ensemble(50)
 
 # assign the timestep and run the simulations X times
 # for i in set_of_dt:
