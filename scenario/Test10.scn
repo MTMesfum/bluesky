@@ -1,6 +1,6 @@
 # Load wind data
 00:00:00.00> SWRAD VOR
-00:00:00.00> LOAD_WIND 05,Tigge_01_09_2017.nc
+00:00:00.00> LOAD_WIND 01,Tigge_01_09_2017.nc
 00:00:00.00> DATE 1,9,2017
 
 # Load trajectories for a run
@@ -121,5 +121,5 @@
 00:00:00.00> SCEN Test_20
 00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" 20
 00:00:00.00> FF
-23:59:59.00> WRITER W05_dt_0.10
+23:59:59.00> WRITER W01_dt_1.0
 23:59:59.00> QUIT

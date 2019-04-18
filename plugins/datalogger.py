@@ -157,6 +157,9 @@ class DataLogger(TrafficArrays):
         #     # print(traf.counter)
         #print(self.inittime)
         print("AC {0} has been created at {1}.".format(traf.id[-1], self.inittime[-1]))
+        # print(self.initmass)
+        print(traf.perf.mass)
+
         # print('mass in create is:', traf.perf.mass)
         # print(sim.utc)
         pass
@@ -221,7 +224,7 @@ class DataLogger(TrafficArrays):
             print('Now i will save a file in {0}!!!'.format(filename))
             #print(traf.resultstosave)
             traf.resultstosave.to_csv(
-                '\output\WRITER {0}.csv'.format(filename)) # Desktop
+                'output\WRITER {0}.csv'.format(filename)) # Desktop
             # traf.resultstosave.to_csv(
             #     'I:\Documents\Google Drive\Thesis 2018\BlueSky\\output\\WRITER {0}.csv'.format(filename)) # Laptop
         print(traf.resultstosave)
@@ -229,7 +232,7 @@ class DataLogger(TrafficArrays):
 
     def log(self):
         apple = len(traf.id)
-        limit = 30
+        limit = 5
         # datalogger.update()
 
         if apple > 0:

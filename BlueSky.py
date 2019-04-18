@@ -52,7 +52,7 @@ def main():
     #   ==> useful for calling bluesky from within another python script/program
     sys.argv.append('--headless')
     sys.argv.append('--scenfile')
-    sys.argv.append('\Trajectories-batch.scn')
+    sys.argv.append('Trajectories-batch.scn')
     print(sys.argv)
     if '--detached' in sys.argv:
         mode = 'sim-detached'

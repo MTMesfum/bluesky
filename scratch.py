@@ -19,6 +19,7 @@ from bluesky.tools.geo import latlondist as dist2
 # Scenario batch file
 global scenario_manager, settings_config, dt
 scenario_manager = "scenario\Trajectories-batch.scn"
+# scenario_manager = "scenario\Test10.scn"
 settings_config = "settings.cfg"
 dt = '0.10' # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
@@ -26,91 +27,73 @@ list_ensemble = list(range(1,5))
 
 # Switches the ensemble in the scenario manager and adapts the name using the ensemble # and global dt
 def replace_ensemble(ensemble):
+    if ensemble < 10:
+        ensemble = str(0) + str(ensemble)
+
     f = open(scenario_manager, 'r')
-    filedata = list(f.read())
-    filedata2 = f.read()
+    filedata = f.read()
     f.close()
 
     ensemble = str(ensemble)
-    apple = filedata2.find('LOAD_WIND')
-    banana = filedata2.find('WRITER')
-    print(apple)
-    print(banana)
-    if len(ensemble) < 2:
-        filedata[apple+10]      = str(0)
-        filedata[apple+11]      = ensemble[0]
-        filedata[banana+8]      = str(0)
-        filedata[banana+9]      = ensemble[0]
-    else:
-        filedata[apple+10]      = ensemble[0]
-        filedata[apple+11]      = ensemble[1]
-        filedata[banana+8]      = ensemble[0]
-        filedata[banana+9]      = ensemble[1]
+    apple = filedata.find('LOAD_WIND')
+    banana = filedata.find(',Tigge_')
+    citrus = filedata.find('WRITER')
+    date = filedata.find('_dt_')
+    filedata = str("".join(filedata[0:apple+10] + str(ensemble) + filedata[banana:citrus+8]
+                           + str(ensemble) + filedata[date:]))
 
-    filedata[banana+14]  = dt[0]
-    filedata[banana+15]  = dt[1]
-    filedata[banana+16]  = dt[2]
-    filedata[banana+17]  = dt[3]
-
-    filedata2 = str("".join(filedata))
     f = open(scenario_manager, 'w')
-    f.write(filedata2)
+    f.write(filedata)
     f.close()
-    os.startfile("C:\Documents\Git\\" + scenario_manager)
+    # os.startfile("C:\Documents\Git\\" + scenario_manager)
     pass
-
 
 # Changes the timestep in the settings config of BlueSky using the provided timestep
 # Keep in mind that the savefile doesn't change its name, unless the timestep is set into the global variable dt
 def set_dt(timestep):
-    if type(timestep) is not str:
-        timestep = str(timestep)
+
+    #   Replace the dt in the settings.cfg
     f = open(settings_config, 'r')
-    filedata = list(f.read())
-    filedata2 = f.read()
+    filedata = f.read()
     f.close()
 
-    apple = filedata2.find('simdt =')
-    print(filedata2)
-    print(apple)
-    print(timestep)
-    filedata[apple+ 8] = timestep[0]
-    filedata[apple+ 9] = timestep[1]
-    filedata[apple+10] = timestep[2]
-    filedata[apple+11] = timestep[3]
+    apple = filedata.find('simdt =')
+    banana = filedata.find('# Snaplog dt')
+    filedata = str("".join(filedata[0:apple+8] + str(timestep) + '\n \n' + filedata[banana:]))
 
-    filedata3 = str("".join(filedata))
     f = open(settings_config, 'w')
-    f.write(filedata3)
+    f.write(filedata)
     f.close()
-    os.startfile("C:\Documents\Git\\" + settings_config)
+    # os.startfile("C:\Documents\Git\\" + settings_config)
+
+    #   Replace the dt in the save file
+    f = open(scenario_manager, 'r')
+    filedata = f.read()
+    f.close()
+
+    apple = filedata.find('_dt_')
+    banana = filedata.find('> QUIT')
+    filedata = str("".join(filedata[0:apple+4] + str(timestep) + '\n' + filedata[banana-11:]))
+
+    f = open(scenario_manager, 'w')
+    f.write(filedata)
+    f.close()
+    # os.startfile("C:\Documents\Git\\" + scenario_manager)
+
     pass
 
 # This functions replaces the dt in the settings.cfg with the globally defined dt
 def replace_dt():
-    f = open(settings_config, 'r')
-    filedata = list(f.read())
-    f.close()
-
-    filedata[1030] = dt[0]
-    filedata[1031] = dt[1]
-    filedata[1032] = dt[2]
-    filedata[1033] = dt[3]
-
-    filedata2 = str("".join(filedata))
-    f = open(settings_config, 'w')
-    f.write(filedata2)
-    f.close()
-    os.startfile("C:\Documents\Git\\" + settings_config)
+    set_dt(dt)
     pass
 
 # Run a simulation of BlueSky using the desktop path
-def run_bluesky_desktop():
+def bs_desktop():
     os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
-                    cd C:\Documents\BlueSky && conda activate py36 && python BlueSky.py")
+                    cd C:\Documents\Git && conda activate py36 && python BlueSky.py")
 
 # Run a simulation of BlueSky using the laptop path
-def run_bluesky_laptop():
+def bs_laptop():
     os.system("call I:\Programs\Anaconda\Program\Scripts\\activate.bat && \
                     cd I:\Documents\Google Drive\Thesis 2018\BlueSky Git2 && python BlueSky.py")
 
@@ -272,6 +255,7 @@ def CreateSCNM(alpha, beta, save_file):
     else:
         gamma.append('00:00:00.00> LOAD_WIND ' + str(beta) + ',Tigge_01_09_2017.nc')
     gamma.append('00:00:00.00> DATE 1,9,2017')
+    gamma.append('00:00:00.00> FF')
 
     for i in range(1, alpha):
         gamma.append('')
@@ -302,14 +286,19 @@ def CreateSCNM(alpha, beta, save_file):
 
     with open("C:\Documents\Git\scenario\\"+ save_file + '.scn', "w") as fin:
         fin.write('\n'.join(gamma))
-    os.startfile("C:\Documents\Git\scenario\\" + save_file + '.scn')
+    # os.startfile("C:\Documents\Git\scenario\\" + save_file + '.scn')
 
-scenario_manager = "scenario\Test10.scn"
+# scenario_manager = "scenario\Test10.scn"
 
 # CreateSCN(False, 'Test5')
-set_dt(0.15)
+# set_dt(0.15)
 # CreateSCNM(20, 5, 'Test10')
-replace_ensemble(50)
+# replace_ensemble(50)
+# CreateSCNM(5, 3, 'Trajectories-batch')
+
+# replace_ensemble(1)
+# set_dt(10.0)
+bs_desktop()
 
 # assign the timestep and run the simulations X times
 # for i in set_of_dt:
