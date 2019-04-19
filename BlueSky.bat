@@ -1,1 +1,1 @@
-call "C:\Programs\Tools\Anaconda\Program\Scripts\activate.bat" && cd C:\Documents\Git && conda activate py36 && python BlueSky.py
+call "C:\Programs\Tools\Anaconda\Program\Scripts\activate.bat" && cd I:\Documents\Google Drive\Thesis 2018\BlueSky Git3 && conda activate py36 && python BlueSky.py

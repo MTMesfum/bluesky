@@ -112,17 +112,23 @@ class DataLogger(TrafficArrays):
         pass
 
     def preupdate(self):
-        if len(traf.perf.mass) > 0:
-            print('mass in preupdate is:', traf.perf.mass)
+        # if len(traf.perf.mass) > 0:
+        #     print('mass in preupdate is:', traf.perf.mass)
+        # print(self.fuelused)
+        print(self.initmass-traf.perf.mass)
 
     def update(self):
         #stack.stack('ECHO MY_PLUGIN update: creating a random aircraft')
         #stack.stack('MCRE 1')
-        if len(traf.perf.mass) > 0:
-            print('mass in update is:', traf.perf.mass)
-
-        if len(traf.id) > 0:
-            print(np.array2string((traf.perf.mass), precision=2))
+        # print(self.fuelused)
+        # if len(traf.perf.mass) > 0:
+        #     print('mass in update is:', traf.perf.mass)
+        #
+        # if len(traf.id) > 0:
+        #     print(np.array2string((traf.perf.mass), precision=2))
+        # print(self.initmass)
+        # print(traf.perf.mass)
+        print(self.initmass-traf.perf.mass)
         pass
 
     def create(self, n=1):
@@ -137,11 +143,10 @@ class DataLogger(TrafficArrays):
             self.inittime[-1] = str(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
             self.counter[-1] = 0
         # Try to print/use simt
-
-        # else:
-        #     self.initmass[0] = traf.perf.mass[0]
-        #     self.inittime[0] = str(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
-        #     self.counter[0] = 0
+        else:
+            self.initmass[0] = traf.perf.mass[0]
+            self.inittime[0] = str(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
+            self.counter[0] = 0
         # print('after assignment')
         # print(self.initmass)
         # print(self.inittime)
@@ -233,7 +238,7 @@ class DataLogger(TrafficArrays):
     def log(self):
         apple = len(traf.id)
         limit = 5
-        # datalogger.update()
+        datalogger.update()
 
         if apple > 0:
             # print(traf.id)
