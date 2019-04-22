@@ -115,7 +115,7 @@ class Navdatabase:
 
             # Waypoint name is free
             else:
-                return True,"Waypoint "+name.upper()+" does not yet exist."
+                return True ,"Waypoint "+name.upper()+" does not yet exist."
 
         # Still here? So there is data, then we add this waypoint
         self.wpid.append(name.upper())
@@ -135,7 +135,7 @@ class Navdatabase:
          # Update screen info
         bs.scr.addnavwpt(name.upper(),lat,lon)
 
-        return True,name.upper()+" added to navdb."
+        return True #,name.upper()+" added to navdb."
 
     def getwpidx(self, txt, reflat=999999., reflon=999999):
         """Get waypoint index to access data"""

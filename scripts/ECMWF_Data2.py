@@ -9,10 +9,10 @@ server = ECMWFDataServer()
 server.retrieve({
     "class": "ti",
     "dataset": "tigge",
-    "date": "2014-06-10/to/2014-06-14",
+    "date": "2014-06-25/to/2014-06-26",
     "expver": "prod",
     "grid": "0.5/0.5",
-    "levelist": "250/700/1000",
+    "levelist": "200/250/300/500/700/850/925/1000",
     "levtype": "pl",
     "number": "1/2/3",
     "origin": "ecmf",
@@ -20,7 +20,7 @@ server.retrieve({
     "step": "6",
     "time": "00:00:00",
     "format": "netcdf",
-    "target": "F:\Documents\ECMWF Data\\tigge10.nc",
+    "target": "C:\Documents\Git\\24_06_2014.nc",
 })
 
 # 3 pressure levels, 3 perturbations

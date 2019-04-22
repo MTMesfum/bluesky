@@ -5,6 +5,7 @@
     The Area plugin is used as a framework. """
 import numpy as np
 import pandas as pd
+import os
 from datetime import datetime as dt
 # Import the global bluesky objects. Uncomment the ones you need
 from bluesky import traf, sim, settings  #, settings, navdb, traf, sim, scr, tools
@@ -163,7 +164,7 @@ class DataLogger(TrafficArrays):
         #print(self.inittime)
         print("AC {0} has been created at {1}.".format(traf.id[-1], self.inittime[-1]))
         # print(self.initmass)
-        print(traf.perf.mass)
+        # print(traf.perf.mass)
 
         # print('mass in create is:', traf.perf.mass)
         # print(sim.utc)
@@ -224,6 +225,7 @@ class DataLogger(TrafficArrays):
             #     r'I:\Documents\Google Drive\Thesis 2018\BlueSky\output\WRITER Standard File.csv') # Laptop
             #, index=None,
                       #header=True)  # Don't forget to add '.csv' at the end of the path
+            os.startfile("\output\WRITER Standard File.csv")
         else:
             filename = str(args[0])
             print('Now i will save a file in {0}!!!'.format(filename))
@@ -232,13 +234,15 @@ class DataLogger(TrafficArrays):
                 'output\WRITER {0}.csv'.format(filename)) # Desktop
             # traf.resultstosave.to_csv(
             #     'I:\Documents\Google Drive\Thesis 2018\BlueSky\\output\\WRITER {0}.csv'.format(filename)) # Laptop
+            os.startfile('output\WRITER {0}.csv'.format(filename))
         print(traf.resultstosave)
+
         pass
 
     def log(self):
         apple = len(traf.id)
         limit = 5
-        datalogger.update()
+        # datalogger.update()
 
         if apple > 0:
             # print(traf.id)
@@ -249,7 +253,7 @@ class DataLogger(TrafficArrays):
             # print(traf.perf.mass)
             # print(self.initmass)
             # print(np.logical_and(traf.alt<1, traf.M<0.002))
-            self.counter += np.ones(apple) * np.logical_and(traf.alt<1, traf.M<0.007)
+            self.counter += np.ones(apple) * np.logical_and(traf.alt<1, True)  # _and , traf.M<0.007
 
             if np.size((np.nonzero(self.counter > limit))) > 0:
                 delcounter = np.delete(traf.id2idx(traf.id), np.nonzero(self.counter < limit))

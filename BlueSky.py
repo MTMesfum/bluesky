@@ -51,8 +51,8 @@ def main():
     # detached: start only one simulation node, without networking
     #   ==> useful for calling bluesky from within another python script/program
     # sys.argv.append('--headless')
-    # sys.argv.append('--scenfile')
-    # sys.argv.append('Trajectories-batch.scn')
+    sys.argv.append('--scenfile')
+    sys.argv.append('Trajectories-batch.scn')
     print(sys.argv)
     if '--detached' in sys.argv:
         mode = 'sim-detached'
