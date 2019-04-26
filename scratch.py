@@ -126,8 +126,8 @@ def addSecs(tm, secs, secs2):
 # The first entry in the method decides whether a random delay is added
 def CreateSCN(alpha, save_file):
     # Constants
-    nm  = 1852.  # m       1 nautical mile
-    ft  = .3048  # m        1 foot
+    # nm  = 1852.  # m       1 nautical mile
+    # ft  = .3048  # m        1 foot
 
     folder = "queries\\"
     FileName = os.listdir(folder)
@@ -187,11 +187,11 @@ def CreateSCN(alpha, save_file):
                 distance = abs(dist2(scenario['st_x(gpt.coords)'][i + 1], scenario['st_y(gpt.coords)'][i + 1],
                                      scenario['st_x(gpt.coords)'][i], scenario['st_y(gpt.coords)'][i]))
 
-                height = abs((scenario['fl'][i + 1] - scenario['fl'][i]) * 100 * ft)
+                height = abs((scenario['fl'][i + 1] - scenario['fl'][i]) * 100 * aero.ft)
                 distance = (height ** 2 + distance ** 2) ** (1 / 2)
 
-                speed = distance / deltatime.total_seconds() * 3600 / nm
-                speed = aero.tas2cas(speed, int(FlightLevel[2:]) * 100 * aero.ft)
+                speed = distance / deltatime.total_seconds()
+                speed = aero.tas2cas(speed, int(FlightLevel[2:]) * 100 * aero.ft) * 3600 / aero.nm
 
                 banana.append(apple + '.00> CRE ' + aircraftid + actype + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
                               + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', ' + str(cut3(heading)) + ', 10, ' + str(cut3(speed))) #+ FlightLevel
@@ -218,11 +218,11 @@ def CreateSCN(alpha, save_file):
                     distance    = abs(dist2(scenario['st_x(gpt.coords)'][i+j], scenario['st_y(gpt.coords)'][i+j],
                                      scenario['st_x(gpt.coords)'][i], scenario['st_y(gpt.coords)'][i]))
 
-                    height      = abs((scenario['fl'][i] - scenario['fl'][i+j]) * 100 * ft)
+                    height      = abs((scenario['fl'][i] - scenario['fl'][i+j]) * 100 * aero.ft)
                     distance    = (height**2 + distance**2)**(1/2)
 
-                    speed = distance / deltatime.total_seconds() * 3600 / nm
-                    speed = aero.tas2cas(speed, int(FlightLevel[2:]) * 100 * aero.ft)
+                    speed = distance / deltatime.total_seconds()
+                    speed = aero.tas2cas(speed, int(FlightLevel[2:]) * 100 * aero.ft) * 3600 / aero.nm
 
                     if i == 1:
                         follow = aircraftid + '-ORIG'
