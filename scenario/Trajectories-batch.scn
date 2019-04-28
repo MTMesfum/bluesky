@@ -1,12 +1,32 @@
 # Load wind data
-00:00:00.00> SWRAD VOR
-#00:00:00.00> LOAD_WIND 05,24_06_2014.nc
+#00:00:00.00> LOAD_WIND 01, 24_06_2014.nc
 00:00:00.00> DATE 1,9,2017
+00:00:00.00> SWRAD VOR
 00:00:00.00> FF
 
 # Load trajectories for a run
+00:00:00.00> SWRAD VOR
 00:00:00.00> SCEN Test_01
-00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" 01
+00:00:00.00> PCALL "Trajectories.scn" 01
 00:00:00.00> FF
-23:58:59.00> WRITER W05_dt_1.0
+02:10:04.00> hold
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+#00:00:00.00> SWRAD VOR
+#00:00:00.00> SCEN Test_06
+#00:00:00.00> PCALL "Trajectories afms BACKUP.scn" 06
+#00:00:00.00> FF
+#02:10:04.00> hold
+#23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_05
+00:00:00.00> PCALL "Trajectories afms.scn" 05
+00:00:00.00> SWRAD VOR
+00:00:00.00> FF
+02:10:04.00> hold
+#02:12:04.00> writer first_waypoint_both
+#02:10:04.00> hold
+23:58:59.00> WRITER W01_dt_1.0
 23:58:59.00> QUIT

@@ -1,9 +1,7 @@
 import numpy as np
 import sys
 # from math import *
-import pandas as pd
-import os
-import datetime
+import pandas as pd, os, datetime, random
 import pdb
 import fileinput as fi
 # import geo
@@ -83,6 +81,7 @@ def set_dt(timestep):
     f.write(filedata)
     f.close()
     dt = timestep
+    print('The timestep has been changed to {0} seconds.'.format(timestep))
     # os.startfile("C:\Documents\Git\\" + scenario_manager)
 
     pass
@@ -100,7 +99,7 @@ def bs_desktop():
 # Run a simulation of BlueSky using the laptop path
 def bs_laptop():
     os.system("call I:\Programs\Anaconda\Program\Scripts\\activate.bat && \
-                    cd I:\Documents\Google Drive\Thesis 2018\BlueSky Git2 && python BlueSky.py")
+                    cd I:\Documents\Google Drive\Thesis 2018\BlueSky Git3 && python BlueSky.py")
 
 # Cut the number to 3 digits
 def cut3(one):
@@ -239,9 +238,10 @@ def CreateSCN(alpha, save_file):
             FL_OLD = FlightLevel
 
     #save = pd.DataFrame(banana)
-    with open("C:\Documents\Git\scenario\\"+ save_file + '.scn', "w") as fin:
+    dir = os.getcwd()
+    with open(dir + '/scenario/' + save_file + '.scn', "w") as fin:
         fin.write('\n'.join(banana))
-    os.startfile("C:\Documents\Git\scenario\\" + save_file + '.scn')
+    os.startfile(dir + '/scenario/' + save_file + '.scn')
 
     # save.to_csv('test1.scn', sep=',', index=False, header=False, quoting=0)
     # banana.to_csv('test2.scn', sep=',')
@@ -255,7 +255,6 @@ def CreateSCN(alpha, save_file):
 def CreateSCNM(alpha, beta, save_file):
     gamma = list()
     gamma.append('# Load wind data')
-    gamma.append('00:00:00.00> SWRAD VOR')
     if beta < 10:
         gamma.append('00:00:00.00> LOAD_WIND 0' +str(beta) +',Tigge_01_09_2017.nc')
     else:
@@ -266,12 +265,13 @@ def CreateSCNM(alpha, beta, save_file):
     for i in range(1, alpha):
         gamma.append('')
         gamma.append('# Load trajectories for a run')
+        gamma.append('00:00:00.00> SWRAD VOR')
         if i < 10:
             gamma.append('00:00:00.00> SCEN Test_0'+str(i))
-            gamma.append('00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" 0' + str(i))
+            gamma.append('00:00:00.00> PCALL "Trajectories.scn" 0' + str(i))
         else:
             gamma.append('00:00:00.00> SCEN Test_' + str(i))
-            gamma.append('00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" ' + str(i))
+            gamma.append('00:00:00.00> PCALL "Trajectories.scn" ' + str(i))
         gamma.append('00:00:00.00> FF')
         gamma.append('23:59:00.00> HOLD')
 
@@ -279,10 +279,11 @@ def CreateSCNM(alpha, beta, save_file):
     gamma.append('# Load trajectories for a run')
     if alpha < 10:
         gamma.append('00:00:00.00> SCEN Test_0' + str(alpha))
-        gamma.append('00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" 0' + str(alpha))
+        gamma.append('00:00:00.00> PCALL "Trajectories.scn" 0' + str(alpha))
     else:
         gamma.append('00:00:00.00> SCEN Test_' + str(alpha))
-        gamma.append('00:00:00.00> PCALL "C:\Documents\Git\scenario\Trajectories.scn" ' + str(alpha))
+        gamma.append('00:00:00.00> PCALL "Trajectories.scn" ' + str(alpha))
+    gamma.append('00:00:00.00> SWRAD VOR')
     gamma.append('00:00:00.00> FF')
     if beta < 10:
         gamma.append('23:58:59.00> WRITER W0' +str(beta) +'_dt_' +str(dt))
@@ -290,9 +291,10 @@ def CreateSCNM(alpha, beta, save_file):
         gamma.append('23:58:59.00> WRITER W' + str(beta) +'_dt_' +str(dt))
     gamma.append('23:58:59.00> QUIT')
 
-    with open("C:\Documents\Git\scenario\\"+ save_file + '.scn', "w") as fin:
+    dir = os.getcwd()
+    with open(dir + '/scenario/' + save_file + '.scn', "w") as fin:
         fin.write('\n'.join(gamma))
-    os.startfile("C:\Documents\Git\scenario\\" + save_file + '.scn')
+    os.startfile(dir + '/scenario/' + save_file + '.scn')
 
 #############################       Methods are described above this line ##############################################
 
@@ -305,11 +307,12 @@ set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = list(range(1,5))
 # print(dt)
 # scenario_manager = "scenario\Test10.scn"
-set_dt(1.0)
-# CreateSCN(False, 'Trajectories')
-# CreateSCNM(1, 5, "Trajectories-batch")
+# CreateSCN(False, 'testtest')
 # set_dt(1.0)
-bs_desktop()
+# CreateSCN(False, 'Trajectories')
+# CreateSCNM(5, 1, "Trajectories-batch")
+# set_dt(1.0)
+bs_laptop()
 
 # CreateSCNM(20, 5, 'Test10')
 # replace_ensemble(50)
@@ -345,3 +348,6 @@ bs_desktop()
 
 #"IC C:\Documents\BlueSky\scenario\experimental\Trajectories.scn"
 
+# import pickle
+# df = pickle.load( open( "I:\Documents\Google Drive\Thesis 2018\BlueSky Git3\queries\pickle\results_det_46.p", "rb" ) )
+# print(df.to_string())
