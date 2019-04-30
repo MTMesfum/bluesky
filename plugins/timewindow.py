@@ -103,9 +103,7 @@ class TimeWindow(Navdatabase):
         print('Im in TimeWindow.')
         # stack.stack("DEFWPT %s, %s, %s " % (name, lat, lon) )
         stack.stack("ECHO I'm testing!!!")
-        super().defwpt(name, lat, lon, wptype)
-
-        pass
+        super(Timewindow, self).defwpt(name, lat, lon, wptype)
 
     def defwpt2(self, name=None, lat=None, lon=None, RTA=None, TW=None):
         stack.stack("DEFWPT %s, %s, %s " % (name, lat, lon) )
@@ -123,68 +121,75 @@ class TimeWindow(Navdatabase):
             print('Apparantly, Im a fckin airplane??')
         else:
             wp = idxorwp.upper()
-
+            print('pos 1: ', wp)
             # Reference position for finding nearest
             reflat, reflon = bs.scr.getviewctr()
             iwps = bs.navdb.getwpindices(wp, reflat, reflon)
             lines = "Info on "+wp+":\n"
-            #
-            #
-            # if iwps[0] >= 0:
-            #     typetxt = ""
-            #     desctxt = ""
-            #     lastdesc = "XXXXXXXX"
-            #     for i in iwps:
-            #
-            #         # One line type text
-            #         if typetxt == "":
-            #             typetxt = typetxt + bs.navdb.wptype[i]
-            #         else:
-            #             typetxt = typetxt + " and " + bs.navdb.wptype[i]
-            #
-            #         # Description: multi-line
-            #         samedesc = bs.navdb.wpdesc[i] == lastdesc
-            #         if desctxt == "":
-            #             desctxt = desctxt + bs.navdb.wpdesc[i]
-            #             lastdesc = bs.navdb.wpdesc[i]
-            #         elif not samedesc:
-            #             desctxt = desctxt + "\n" + bs.navdb.wpdesc[i]
-            #             lastdesc = bs.navdb.wpdesc[i]
-            #
-            #         # Navaid: frequency
-            #         if bs.navdb.wptype[i] in ["VOR", "DME", "TACAN"] and not samedesc:
-            #             desctxt = desctxt + " " + str(bs.navdb.wpfreq[i]) + " MHz"
-            #         elif bs.navdb.wptype[i] == "NDB" and not samedesc:
-            #             desctxt = desctxt + " " + str(bs.navdb.wpfreq[i]) + " kHz"
-            #
-            #     iwp = iwps[0]
-            #
-            #     # Basic info
-            #     lines = lines + wp + " is a " + typetxt \
-            #             + " at\n" \
-            #             + latlon2txt(bs.navdb.wplat[iwp], \
-            #                          bs.navdb.wplon[iwp])
-            #
-            #     # How many others?
-            #     nother = bs.navdb.wpid.count(wp) - len(iwps)
-            #     if nother > 0:
-            #         verb = ["is ", "are "][min(1, max(0, nother - 1))]
-            #         lines = lines + "\nThere " + verb + str(nother) + \
-            #                 " other waypoint(s) also named " + wp
-            #
-            #     # In which airways?
-            #     connect = bs.navdb.listconnections(wp, \
-            #                                        bs.navdb.wplat[iwp],
-            #                                        bs.navdb.wplon[iwp])
-            #     if len(connect) > 0:
-            #         awset = set([])
-            #         for c in connect:
-            #             awset.add(c[0])
-            #
-            #         lines = lines + "\nAirways: " + "-".join(awset)
+
+            if iwps[0] >= 0:
+                typetxt = ""
+                desctxt = ""
+                lastdesc = "XXXXXXXX"
+                for i in iwps:
+
+                    # One line type text
+                    if typetxt == "":
+                        typetxt = typetxt + bs.navdb.wptype[i]
+                    else:
+                        typetxt = typetxt + " and " + bs.navdb.wptype[i]
+
+                    # Description: multi-line
+                    samedesc = bs.navdb.wpdesc[i] == lastdesc
+                    if desctxt == "":
+                        desctxt = desctxt + bs.navdb.wpdesc[i]
+                        lastdesc = bs.navdb.wpdesc[i]
+                    elif not samedesc:
+                        desctxt = desctxt + "\n" + bs.navdb.wpdesc[i]
+                        lastdesc = bs.navdb.wpdesc[i]
+
+                    # Navaid: frequency
+                    if bs.navdb.wptype[i] in ["VOR", "DME", "TACAN"] and not samedesc:
+                        desctxt = desctxt + " " + str(bs.navdb.wpfreq[i]) + " MHz"
+                    elif bs.navdb.wptype[i] == "NDB" and not samedesc:
+                        desctxt = desctxt + " " + str(bs.navdb.wpfreq[i]) + " kHz"
+
+                iwp = iwps[0]
+                print('pos 4: ', iwp)
+                print(len(bs.navdb.wplat))
+                print(len(self.wpRTA))
+                print(self.wpRTA[iwp] )
+                # print(self.wpRTA)
+                print( self.wpTW[iwp])
+
+                # Basic info
+                lines = lines + wp + " is a " + typetxt \
+                        + " at\n" \
+                        + latlon2txt(bs.navdb.wplat[iwp], \
+                                     bs.navdb.wplon[iwp])
+
+                # How many others?
+                nother = bs.navdb.wpid.count(wp) - len(iwps)
+                if nother > 0:
+                    verb = ["is ", "are "][min(1, max(0, nother - 1))]
+                    lines = lines + "\nThere " + verb + str(nother) + \
+                            " other waypoint(s) also named " + wp
+
+                # In which airways?
+                connect = bs.navdb.listconnections(wp, \
+                                                   bs.navdb.wplat[iwp],
+                                                   bs.navdb.wplon[iwp])
+                if len(connect) > 0:
+                    awset = set([])
+                    for c in connect:
+                        awset.add(c[0])
+
+                    lines = lines + "\nAirways: " + "-".join(awset)
 
             # print(iwp)
             name = idxorwp.upper()
+            print('pos 5: ', name)
+
             try:
                 i = self.wpid.index(name)
             except:
@@ -201,9 +206,13 @@ class TimeWindow(Navdatabase):
                     found = False
             if len(idx) == 1:
                 iwp = idx[0]
+                print('pos 2: ', idx)
             else:
+
                 imin = idx[0]
                 dmin = geo.kwikdist(reflat, reflon, self.wplat[imin], self.wplon[imin])
+
+                print('pos 3: ', imin)
                 for i in idx[1:]:
                     d = geo.kwikdist(reflat, reflon, self.wplat[i], self.wplon[i])
                     if d < dmin:
@@ -212,7 +221,7 @@ class TimeWindow(Navdatabase):
                 iwp = imin
         print(iwp)
         RTA = self.wpRTA[iwp]
-        print(self.wpRTA)
+        # print(self.wpRTA)
         TW = self.wpTW[iwp]
         # Position report
 
@@ -223,9 +232,10 @@ class TimeWindow(Navdatabase):
         return True, lines
 
     def reset(self):
-        super().reset()
+        super(TimeWindow, self).reset()
         self.wpRTA = list( -1 * np.ones(len(self.wpid)) )
         self.wpTW = list( -1 * np.ones(len(self.wpid)) )
+        print(len(self.wpRTA))
         # print(type(self.wpRTA))
         pass
 
