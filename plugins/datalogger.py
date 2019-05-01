@@ -56,34 +56,19 @@ def init_plugin():
 
     # Configuration parameters
     config = {
-        # The name of your plugin
-        'plugin_name':     'datalogger',
-
-        # The type of this plugin. For now, only simulation plugins are possible.
-        'plugin_type':     'sim',
-
-        # # Update interval in seconds.
-        # 'update_interval': update,
-
-        # The update function is called after traffic is updated.
-        'update': datalogger.log,
-        # 'preupdate': datalogger.preupdate,
-        'reset': datalogger.reset
+        'plugin_name'   :   'datalogger',
+        'plugin_type'   :   'sim',
+        'update'        :   datalogger.log,
+        # 'preupdate'   :   datalogger.preupdate,
+        'reset'         :   datalogger.reset
         }
 
     stackfunctions = {
         "DATALOGGER": [
-            # A short usage string. This will be printed if you type HELP <name> in the BlueSky console
             "DATALOGGER <ON/OFF>",
-
-            # A list of the argument types your function accepts. For a description of this, see ...
             '[]',
-
-            # The name of your function in this plugin
             datalogger.log,
-
-            # a longer help text of your function.
-            "Start logging the data."
+            'Start logging the data [doesn\'t work yet].'
         ],
         'WRITER': [
             'WRITER <FILENAME>',
@@ -91,6 +76,7 @@ def init_plugin():
             datalogger.write,
             'Write the results of traf.resultstosave into a file.']
     }
+
     # init_plugin() should always return these two dicts.
     return config, stackfunctions
 

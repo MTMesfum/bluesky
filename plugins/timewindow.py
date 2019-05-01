@@ -43,43 +43,23 @@ def init_plugin():
     # Configuration parameters
     config = {
         # The name of your plugin
-        'plugin_name':     'TIMEWINDOW',
-
-        # The type of this plugin. For now, only simulation plugins are possible.
-        'plugin_type':     'sim',
-
-        # Update interval in seconds. By default, your plugin's update function(s)
-        # are called every timestep of the simulation. If your plugin needs less
-        # frequent updates provide an update interval.
-        'update_interval': 1.0,
-
-        # The update function is called after traffic is updated. Use this if you
-        # want to do things as a result of what happens in traffic. If you need to
-        # something before traffic is updated please use preupdate.
-        'update':          update,
-
-        # The preupdate function is called before traffic is updated. Use this
-        # function to provide settings that need to be used by traffic in the current
-        # timestep. Examples are ASAS, which can give autopilot commands to resolve
-        # a conflict.
-        'preupdate':       preupdate,
-
-        # If your plugin has a state, you will probably need a reset function to
-        # clear the state in between simulations.
-        'reset':         timewindow.reset
+        'plugin_name'   :   'TIMEWINDOW',
+        'plugin_type'   :   'sim',
+        'update'        :   update,
+        'preupdate'     :   preupdate,
+        'reset'         :   timewindow.reset
         }
 
     stackfunctions = {
-        # The command name for your function
         'TIMEWINDOW': [
             'TIMEWINDOW ON/OFF',
             '[onoff]',
             timewindow_talk,
-            'Activate or deactivate timewindow based waypoints.'
+            'Activate or deactivate timewindow based waypoints [doesnt work yet].'
         ],
         'DEFWPT2': [
             "DEFWPT2 wpname, lat, lon, RTA HH:MM:SS, TW",
-            "txt, latlon, txt, int",
+            "txt,latlon,[txt,int]",
             timewindow.defwpt2,
             "Define a waypoint only for this scenario/run with a RTA and TW"
         ],
@@ -87,7 +67,7 @@ def init_plugin():
             "POS2 waypoint",
             "wpt",
             timewindow.poscommand2,
-            "Get info on a waypoint including RTA and TW"
+            "Get info on a waypoint including its RTA and TW"
         ]
     }
 
@@ -96,152 +76,87 @@ def init_plugin():
 
 class TimeWindow(Navdatabase):
     def __init__(self):
-        super().__init__()
+        super(TimeWindow, self).__init__()
+        # from bs.navdatabase import Navdatabase
+        # from bs.loadnavdata import load_aptsurface, load_coastlines
         # self.wpRTA =
 
-    def defwpt(self,name=None,lat=None,lon=None,wptype=None):
-        print('Im in TimeWindow.')
-        # stack.stack("DEFWPT %s, %s, %s " % (name, lat, lon) )
-        stack.stack("ECHO I'm testing!!!")
-        super(Timewindow, self).defwpt(name, lat, lon, wptype)
+    # def defwpt(self,name=None,lat=None,lon=None,wptype=None):
+    #     print('Im in TimeWindow.')
+    #     stack.stack("DEFWPT %s, %s, %s " % (name, lat, lon) )
+    #     stack.stack("ECHO I'm testing!!!")
+        # super(TimeWindow, self).defwpt(name, lat, lon)
+        # self.wpRTA.append(None)
+        # self.wpTW.append(None)
 
     def defwpt2(self, name=None, lat=None, lon=None, RTA=None, TW=None):
-        stack.stack("DEFWPT %s, %s, %s " % (name, lat, lon) )
+        # stack.stack("DEFWPT %s, %s, %s " % (name, lat, lon) )
         # Navdatabase.defwpt(name, lat, lon)
         print('The additional values are ', RTA, ' and ', TW)
+        super(TimeWindow, self).defwpt(name, lat, lon)
         self.wpRTA.append(RTA)
         self.wpTW.append(TW)
-        # print(self.wpRTA)
+        print(len(self.wpid))
+        print(len(self.wplat))
+        print(len(self.wplon))
+        print(len(self.wpRTA))
+        print((self.wpid[-5:]))
+        print((self.wplat[-5:]))
+        print((self.wplon[-5:]))
+        print((self.wpRTA[-5:]))
+        print((self.wpTW[-5:]))
+
 
     def poscommand2(self, idxorwp):
-        stack.stack("POS %s " % idxorwp )
+        # stack.stack("POS %s " % idxorwp )
         # super(TimeWindow, self).poscommand(idxorwp)
-        print('I do pass here')
-        if type(idxorwp) == int and idxorwp >= 0:
-            print('Apparantly, Im a fckin airplane??')
-        else:
-            wp = idxorwp.upper()
-            print('pos 1: ', wp)
-            # Reference position for finding nearest
-            reflat, reflon = bs.scr.getviewctr()
-            iwps = bs.navdb.getwpindices(wp, reflat, reflon)
-            lines = "Info on "+wp+":\n"
 
-            if iwps[0] >= 0:
-                typetxt = ""
-                desctxt = ""
-                lastdesc = "XXXXXXXX"
-                for i in iwps:
+        wp = idxorwp.upper()
+        try:
+            i = self.wpid.index(wp)
+        except:
+            return -1
+        print('i is: ', i)
 
-                    # One line type text
-                    if typetxt == "":
-                        typetxt = typetxt + bs.navdb.wptype[i]
-                    else:
-                        typetxt = typetxt + " and " + bs.navdb.wptype[i]
-
-                    # Description: multi-line
-                    samedesc = bs.navdb.wpdesc[i] == lastdesc
-                    if desctxt == "":
-                        desctxt = desctxt + bs.navdb.wpdesc[i]
-                        lastdesc = bs.navdb.wpdesc[i]
-                    elif not samedesc:
-                        desctxt = desctxt + "\n" + bs.navdb.wpdesc[i]
-                        lastdesc = bs.navdb.wpdesc[i]
-
-                    # Navaid: frequency
-                    if bs.navdb.wptype[i] in ["VOR", "DME", "TACAN"] and not samedesc:
-                        desctxt = desctxt + " " + str(bs.navdb.wpfreq[i]) + " MHz"
-                    elif bs.navdb.wptype[i] == "NDB" and not samedesc:
-                        desctxt = desctxt + " " + str(bs.navdb.wpfreq[i]) + " kHz"
-
-                iwp = iwps[0]
-                print('pos 4: ', iwp)
-                print(len(bs.navdb.wplat))
-                print(len(self.wpRTA))
-                print(self.wpRTA[iwp] )
-                # print(self.wpRTA)
-                print( self.wpTW[iwp])
-
-                # Basic info
-                lines = lines + wp + " is a " + typetxt \
-                        + " at\n" \
-                        + latlon2txt(bs.navdb.wplat[iwp], \
-                                     bs.navdb.wplon[iwp])
-
-                # How many others?
-                nother = bs.navdb.wpid.count(wp) - len(iwps)
-                if nother > 0:
-                    verb = ["is ", "are "][min(1, max(0, nother - 1))]
-                    lines = lines + "\nThere " + verb + str(nother) + \
-                            " other waypoint(s) also named " + wp
-
-                # In which airways?
-                connect = bs.navdb.listconnections(wp, \
-                                                   bs.navdb.wplat[iwp],
-                                                   bs.navdb.wplon[iwp])
-                if len(connect) > 0:
-                    awset = set([])
-                    for c in connect:
-                        awset.add(c[0])
-
-                    lines = lines + "\nAirways: " + "-".join(awset)
-
-            # print(iwp)
-            name = idxorwp.upper()
-            print('pos 5: ', name)
-
-            try:
-                i = self.wpid.index(name)
-            except:
-                return -1
-
-            idx = []
-            idx.append(i)
-            found = True
-            while i < len(self.wpid) - 1 and found:
-                try:
-                    i = self.wpid.index(name, i + 1)
-                    idx.append(i)
-                except:
-                    found = False
-            if len(idx) == 1:
-                iwp = idx[0]
-                print('pos 2: ', idx)
-            else:
-
-                imin = idx[0]
-                dmin = geo.kwikdist(reflat, reflon, self.wplat[imin], self.wplon[imin])
-
-                print('pos 3: ', imin)
-                for i in idx[1:]:
-                    d = geo.kwikdist(reflat, reflon, self.wplat[i], self.wplon[i])
-                    if d < dmin:
-                        imin = i
-                        dmin = d
-                iwp = imin
-        print(iwp)
-        RTA = self.wpRTA[iwp]
-        # print(self.wpRTA)
-        TW = self.wpTW[iwp]
         # Position report
-
-        lines = "RTA: %s. TW: %s" % (RTA, TW)
-
+        lines = "Info on " + wp + ":\n" \
+                + latlon2txt(bs.navdb.wplat[i], \
+                        bs.navdb.wplon[i]) + "\n" \
+                + "RTA: %s; TW: %s" % (self.wpRTA[i], self.wpTW[i])
         print(lines)
-        print('Why doesnt this work ??')
         return True, lines
 
     def reset(self):
         super(TimeWindow, self).reset()
-        self.wpRTA = list( -1 * np.ones(len(self.wpid)) )
-        self.wpTW = list( -1 * np.ones(len(self.wpid)) )
-        print(len(self.wpRTA))
+        # wptdata['wpRTA'] = []
+        # wptdata['wpTW'] = []
+        self.wpRTA = len(self.wpid) * [None] #[] #wptdata['wpRTA']
+        self.wpTW = len(self.wpid) * [None] #[] #wptdata['wpTW']
+        # print(len(self.wpRTA))
         # print(type(self.wpRTA))
         pass
+
+# class TimeWindow2(Traffic):
+#     def poscommand(self, idxorwp):
+#         print(' TEST TEST')
+#         super(TimeWindow2, self).poscommand(idxorwp)
+#         print(' TEST TEST')
+#         wp = idxorwp.upper()
+#         reflat, reflon = bs.scr.getviewctr()
+#         iwps = bs.navdb.getwpindices(wp, reflat, reflon)
+#         iwp = iwps[0]
+#         print(bs.navdb.wplon[iwp])
+#         print(' TEST TEST')
 
 # class TimeWindow(Traffic):
 #     def __init__(self):
 #         super(TimeWindow, self).__init__()
+
+# def load_navdata_txt():
+#     wptdata, aptdata, awydata, firdata, codata = .load_navdata_text()
+#     wptdata['wpRTA']    = []
+#     wptdata['wpTW']     = []
+    # wptdata['wpRTA'][10] = 10
 
 
 
