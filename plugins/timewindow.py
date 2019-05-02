@@ -176,12 +176,13 @@ class TimeWindow(Navdatabase):
 def timewindow_talk(apple):
     print('This is timewindow!')
 
-class TimeWindow2(TrafficArrays):
+class TimeWindow2(Traffic):
     def __init__(self):
         super(TimeWindow2, self).__init__()
 
     def update(self):
         #   1) Find the flying aircraft along with its position
+        print('This is update in TimeWindow PLugin!')
         if self.ntraf == 0:
             return
 
