@@ -182,7 +182,7 @@ class TimeWindow2(Traffic):
 
     def update(self):
         #   1) Find the flying aircraft along with its position
-        print('This is update in TimeWindow PLugin!')
+        # print('This is update in TimeWindow PLugin!')
         if self.ntraf == 0:
             return
 

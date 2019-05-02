@@ -110,7 +110,7 @@ class DataLogger(TrafficArrays):
             self.initmass[0] = traf.perf.mass[0]
             self.inittime[0] = str(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
             self.counter[0] = 0
-        print("AC {0} has been created at {1}.".format(traf.id[-1], self.inittime[-1]))
+        print("AC {0} [{1}] has been created at {2}.".format(traf.id[-1], traf.type[-1], self.inittime[-1]))
 
     def talko(self, delcounter):
         if len(delcounter) == 1:

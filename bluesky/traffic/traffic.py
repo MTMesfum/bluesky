@@ -418,11 +418,12 @@ class Traffic(TrafficArrays):
     def UpdateAirSpeed(self, simdt, simt):
         # Compute horizontal acceleration
         delta_spd = self.pilot.tas - self.tas
-        need_small_ax = np.abs(delta_spd) > kts * 0.1     # small threshold)
+        # need_small_ax = np.abs(delta_spd) > kts * 0.1     # small threshold)
         need_ax = np.abs(delta_spd) > kts     # small threshold
-        self.ax = (need_ax * need_small_ax + 0.1 * need_small_ax * np.logical_not(need_ax)) * np.sign(delta_spd) * self.perf.acceleration()
+        # print(self.perf.acceleration())
+        # self.ax = (need_ax * need_small_ax + 0.1 * need_small_ax * np.logical_not(need_ax)) * np.sign(delta_spd) * self.perf.acceleration()
         # need_ax = np.abs(delta_spd) > kts     # small threshold
-        # self.ax = need_ax * np.sign(delta_spd) * self.perf.acceleration()
+        self.ax = need_ax * np.sign(delta_spd) * self.perf.acceleration()
 
 
         # Update velocities

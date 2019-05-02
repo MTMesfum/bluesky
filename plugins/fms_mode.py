@@ -15,7 +15,10 @@ afms = None
 def init_plugin():
 
     # Additional initilisation code
-    global afms
+    global afms, acceleration_m_s2, deceleration_m_s2
+    acceleration_m_s2 = 0.5
+    deceleration_m_s2 = -0.5
+
     afms = Afms()
 
     # Configuration parameters
@@ -132,7 +135,7 @@ class Afms:
     def __init__(self):
         super(Afms, self).__init__()
         # Parameters of afms
-        self.dt = 60.0  # [s] frequency of afms update (simtime)
+        self.dt = 1.0  # [s] frequency of afms update (simtime)
         self.skip2next_rta_time_s = 120.0  # Time when skipping to the RTA beyond the active RTA
         self.rta_standard_window_size = 60.  # [s] standard time window size for rta in seconds
         self._patch_route(self.rta_standard_window_size)
@@ -484,8 +487,11 @@ class Afms:
             return tdelta.seconds
 
     def _rta_spd(self, distance_nm, time_s, current_tas_m_s):
-        acceleration_m_s2 = 1.94  # See standard coefficients for Bluesky
-        deceleration_m_s2 = -1.265
+        # acceleration_m_s2 = 1.94  # See standard coefficients for Bluesky
+        # deceleration_m_s2 = -1.265
+        # acceleration_m_s2 = 0.5 #1.94  # See standard coefficients for Bluesky
+        # deceleration_m_s2 = -0.5 #-1.265
+
         distance_m = distance_nm * 1852
         if time_s > 60:  # TODO From which time before it is not usefull anymore to change the speed?
             if distance_m / time_s > current_tas_m_s:
@@ -519,8 +525,8 @@ class Afms:
         :param current_cas_m_s: current CAS in m/s
         :return: CAS in m/s
         """
-        acceleration_m_s2 = 1.94/2  # See standard coefficients for Bluesky
-        deceleration_m_s2 = -1.265/2
+        acceleration_m_s2_est = acceleration_m_s2/2  # See standard coefficients for Bluesky
+        deceleration_m_s2_est = deceleration_m_s2/2
         distances_m = distances * 1852
         iterations = 3
         estimated_cas_m_s = current_cas_m_s
@@ -538,12 +544,12 @@ class Afms:
                 if i == 0:
                     if estimated_cas_m_s > current_cas_m_s + 1.0:
                         #Accelerate
-                        a = acceleration_m_s2
+                        a = acceleration_m_s2_est
                         delta_time_s = (next_tas_m_s - current_tas_m_s) / a
                         delta_dist_m = 0.5 * a * delta_time_s ** 2 + current_tas_m_s * delta_time_s
                     elif estimated_cas_m_s < current_cas_m_s - 1.0:
                         #Decelerate
-                        a = deceleration_m_s2
+                        a = deceleration_m_s2_est
                         delta_time_s = (-next_tas_m_s + current_tas_m_s) / a
                         delta_dist_m = 0.5 * a * delta_time_s ** 2 + current_tas_m_s * delta_time_s
                     else:
@@ -588,8 +594,8 @@ class Afms:
         return total_time_s
 
     def _eta_preferred_spd(self, distance_nm, current_tas_m_s, preferred_tas_m_s):
-        acceleration_m_s2 = 1.94  # See standard coefficients for Bluesky
-        deceleration_m_s2 = -1.265
+        # acceleration_m_s2 = 1.94  # See standard coefficients for Bluesky
+        # deceleration_m_s2 = -1.265
         distance_m = distance_nm * 1852
         if preferred_tas_m_s > current_tas_m_s:
             #Acceleration
