@@ -627,6 +627,7 @@ class Traffic(TrafficArrays):
             # Not found as airport, try waypoints & navaids
             else:
                 iwps = bs.navdb.getwpindices(wp,reflat,reflon)
+                print('iwps is: ', iwps)
                 if iwps[0]>=0:
                     typetxt = ""
                     desctxt = ""

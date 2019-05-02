@@ -20,6 +20,7 @@
 # Import the global bluesky objects. Uncomment the ones you need
 from bluesky import stack, settings, navdb #, traf, sim, scr, tools
 from bluesky.navdatabase import * # Navdatabase #navdb #.navdatabase import navdatabase
+from bluesky.traffic import route
 from bluesky.tools import geo
 from bluesky.tools import TrafficArrays, RegisterElementParameters
 from bluesky.tools.misc import latlon2txt
@@ -37,15 +38,16 @@ timewindow = None
 def init_plugin():
 
     # Addtional initilisation code
-    global timewindow
-    timewindow = TimeWindow()
+    global timewindow, timewindow2
+    timewindow      = TimeWindow()
+    timewindow2     = TimeWindow2()
 
     # Configuration parameters
     config = {
         # The name of your plugin
         'plugin_name'   :   'TIMEWINDOW',
         'plugin_type'   :   'sim',
-        'update'        :   update,
+        'update'        :   timewindow2.update,
         'preupdate'     :   preupdate,
         'reset'         :   timewindow.reset
         }
@@ -81,60 +83,71 @@ class TimeWindow(Navdatabase):
         # from bs.loadnavdata import load_aptsurface, load_coastlines
         # self.wpRTA =
 
-    # def defwpt(self,name=None,lat=None,lon=None,wptype=None):
-    #     print('Im in TimeWindow.')
-    #     stack.stack("DEFWPT %s, %s, %s " % (name, lat, lon) )
-    #     stack.stack("ECHO I'm testing!!!")
-        # super(TimeWindow, self).defwpt(name, lat, lon)
-        # self.wpRTA.append(None)
-        # self.wpTW.append(None)
+    def defwpt(self,name=None,lat=None,lon=None,wptype=None):
+        print('Im in TimeWindow.')
+        stack.stack("DEFWPT %s, %s, %s, %s " % (name, lat, lon, wptype))
+        # stack.stack("ECHO I'm testing!!!")
+        super(TimeWindow, self).defwpt(name, lat, lon, 'RTA')
+        self.wpRTA.append(None)
+        self.wpTW.append(None)
 
     def defwpt2(self, name=None, lat=None, lon=None, RTA=None, TW=None):
         # stack.stack("DEFWPT %s, %s, %s " % (name, lat, lon) )
         # Navdatabase.defwpt(name, lat, lon)
         print('The additional values are ', RTA, ' and ', TW)
-        super(TimeWindow, self).defwpt(name, lat, lon)
+        super(TimeWindow, self).defwpt(name, lat, lon, 'RTA')
+        stack.stack("DEFWPT %s, %s, %s, %s " % (name, lat, lon, 'RTA'))
         self.wpRTA.append(RTA)
         self.wpTW.append(TW)
-        print(len(self.wpid))
-        print(len(self.wplat))
-        print(len(self.wplon))
-        print(len(self.wpRTA))
-        print((self.wpid[-5:]))
-        print((self.wplat[-5:]))
-        print((self.wplon[-5:]))
-        print((self.wpRTA[-5:]))
-        print((self.wpTW[-5:]))
-
+        # self.wpid.index[-1] #(name) #[len(self.wpRTA)+1] = name
+        # print(len(self.wpid))
+        # print(len(self.wplat))
+        # print(len(self.wplon))
+        # print(len(self.wpRTA))
+        # print((self.wpid[-150:]))
+        # print((self.wplat[-150:]))
+        # print((self.wplon[-150:]))
+        # print((self.wpRTA[-150:]))
+        # print((self.wpTW[-150:]))
 
     def poscommand2(self, idxorwp):
         # stack.stack("POS %s " % idxorwp )
         # super(TimeWindow, self).poscommand(idxorwp)
-
         wp = idxorwp.upper()
-        try:
-            i = self.wpid.index(wp)
-        except:
-            return -1
-        print('i is: ', i)
+        reflat, reflon = bs.scr.getviewctr()
+        wp2 = bs.navdb.getwpindices(wp,reflat,reflon)
+
+        # try:
+        i = self.wpid.index(wp) #int(wp2[0])
+        # except:
+        #     return -1
+        # print('i is: ', i)
+        # print(len((self.wpRTA)))
+        # print(len((self.wpTW)))
 
         # Position report
         lines = "Info on " + wp + ":\n" \
-                + latlon2txt(bs.navdb.wplat[i], \
-                        bs.navdb.wplon[i]) + "\n" \
-                + "RTA: %s; TW: %s" % (self.wpRTA[i], self.wpTW[i])
+                + latlon2txt(bs.navdb.wplat[wp2[0]], \
+                        bs.navdb.wplon[wp2[0]]) + "\n" \
+                + "RTA: %s; TW: %s [s]" % (str(self.wpRTA[i]), str(self.wpTW[i]))
         print(lines)
         return True, lines
 
     def reset(self):
         super(TimeWindow, self).reset()
-        # wptdata['wpRTA'] = []
-        # wptdata['wpTW'] = []
-        self.wpRTA = len(self.wpid) * [None] #[] #wptdata['wpRTA']
-        self.wpTW = len(self.wpid) * [None] #[] #wptdata['wpTW']
+        self.wpRTA = len(self.wpid) * [None]
+        self.wpTW = len(self.wpid) * [None]
         # print(len(self.wpRTA))
         # print(type(self.wpRTA))
         pass
+
+# class TimeWindow2(Route):
+#     def __init__(self):
+#         super(TimeWindow2, self).__init__()
+#
+#     def _del_wpt_data(self, idx):
+#         del self.wpRTA[idx]
+#         del self.wpTW[idx]
 
 # class TimeWindow2(Traffic):
 #     def poscommand(self, idxorwp):
@@ -163,8 +176,21 @@ class TimeWindow(Navdatabase):
 def timewindow_talk(apple):
     print('This is timewindow!')
 
-def update():
-    pass
+class TimeWindow2(TrafficArrays):
+    def __init__(self):
+        super(TimeWindow2, self).__init__()
+
+    def update(self):
+        #   1) Find the flying aircraft along with its position
+        if self.ntraf == 0:
+            return
+
+        #   2) Find their active waypoints
+        #   3) Find the corresponding RTA and TW
+        #   4) Calculate the min/max speed of the aircraft to reach the waypoint
+        #   5) If the speed exceeds the range of these speeds,
+        #           then set the speed to either the minimum or maximum.
+        pass
 
 def preupdate():
     pass
