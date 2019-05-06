@@ -312,7 +312,7 @@ list_ensemble = list(range(1,5))
 # CreateSCN(False, 'Trajectories')
 # CreateSCNM(5, 1, "Trajectories-batch")
 # set_dt(1.0)
-bs_laptop()
+bs_desktop()
 
 # CreateSCNM(20, 5, 'Test10')
 # replace_ensemble(50)

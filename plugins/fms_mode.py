@@ -7,6 +7,7 @@ import numpy as np
 from bluesky import sim, stack, traf, tools  #, settings, navdb, sim, scr, tools
 from bluesky.traffic.route import Route
 from bluesky.traffic.performance.legacy.performance import PHASE
+from bluesky.tools import aero
 # import inspect  # TODO Remove after test
 
 # Global data
@@ -232,7 +233,24 @@ class Afms:
                                                axis=0)
                     flightlevels = np.concatenate((np.array([traf.alt[idx]]),
                                                    traf.ap.route[idx].wpalt[rta_init_index + 1:rta_last_index + 1]))
-                    rta_cas_kts = self._rta_cas_wfl(distances, flightlevels, time_s2rta, traf.cas[idx]) * 3600 / 1852
+                    rta_cas_kts = self._rta_cas_wfl(distances, flightlevels, time_s2rta, traf.cas[idx]) # * 3600 / 1852
+
+                    print(rta_cas_kts)
+                    # if the speed exceeds 1 Mach, change it into 0.99 Mach
+                    speed_of_sound = tools.aero.vtas2cas(tools.aero.vvsound(np.array([traf.alt[idx]])),
+                                                         traf.alt[idx])
+                    print('alt: ', traf.alt[idx])
+                    print('a speed: ', speed_of_sound)
+                    print('before comparison: ', rta_cas_kts)
+                    rta_cas_kts = np.minimum(speed_of_sound, rta_cas_kts)
+                    print('after comparison: ', rta_cas_kts)
+                    rta_cas_kts = str(rta_cas_kts * 3600 / 1852) #np.floor((time_window_cas_kts-1) * 3600 / 1852)
+                    rta_cas_kts = rta_cas_kts[1:7]
+                    print(rta_cas_kts)
+
+                    rta_cas_kts = np.minimum(tools.aero.vvsound(np.array([traf.alt[idx]])), rta_cas_kts) * 3600 / 1852
+                    print('after comparison: ', rta_cas_kts)
+                    #######################################################
 
                     stack.stack(f'SPD {traf.id[idx]}, {rta_cas_kts}')
                     stack.stack(f'VNAV {traf.id[idx]} ON')
@@ -287,7 +305,23 @@ class Afms:
                         time_window_cas_kts = self._rta_cas_wfl(distances, flightlevels, latest_time_s2rta,
                                                         traf.cas[idx]) * 3600 / 1852
                     else:
-                        time_window_cas_kts = preferred_cas_m_s * 3600 / 1852
+                        time_window_cas_kts = preferred_cas_m_s # * 3600 / 1852
+
+                    print(time_window_cas_kts)
+                    # if the speed exceeds 1 Mach, change it into 0.99 Mach
+                    speed_of_sound = tools.aero.vtas2cas(tools.aero.vvsound(np.array([traf.alt[idx]])),
+                                                         traf.alt[idx])
+                    print('alt: ', traf.alt[idx])
+                    print('a speed: ', speed_of_sound)
+                    print('before comparison: ', time_window_cas_kts)
+                    time_window_cas_kts = np.minimum(speed_of_sound, time_window_cas_kts)
+                    print('after comparison: ', time_window_cas_kts)
+                    time_window_cas_kts = str(time_window_cas_kts * 3600 / 1852) #np.floor((time_window_cas_kts-1) * 3600 / 1852)
+                    time_window_cas_kts = time_window_cas_kts[1:7]
+                    print(time_window_cas_kts)
+                    #print(str(time_window_cas_kts).lstrip('[').rstrip(']'))
+                    #time_window_cas_kts = str(time_window_cas_kts).lstrip('[').rstrip(']')
+                    #######################################################
 
                     stack.stack(f'SPD {traf.id[idx]}, {time_window_cas_kts}')
                     stack.stack(f'VNAV {traf.id[idx]} ON')

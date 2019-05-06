@@ -18,7 +18,7 @@
     *** The waypoints of this plugin should work interchangeably with the standard waypoints """
 
 # Import the global bluesky objects. Uncomment the ones you need
-from bluesky import stack, settings, navdb #, traf, sim, scr, tools
+from bluesky import stack, sim, settings, navdb #, traf, sim, scr, tools
 from bluesky.navdatabase import * # Navdatabase #navdb #.navdatabase import navdatabase
 from bluesky.traffic import route
 from bluesky.tools import geo
@@ -28,6 +28,7 @@ from bluesky.tools.misc import latlon2txt
 # from bluesky import navdatabase
 import numpy as np
 from bluesky.traffic import Traffic
+# from bluesky import settings
 import bluesky as bs
 
 # Global data
@@ -87,7 +88,7 @@ class TimeWindow(Navdatabase):
         print('Im in TimeWindow.')
         stack.stack("DEFWPT %s, %s, %s, %s " % (name, lat, lon, wptype))
         # stack.stack("ECHO I'm testing!!!")
-        super(TimeWindow, self).defwpt(name, lat, lon, 'RTA')
+        super(TimeWindow, self).defwpt(name, lat, lon, wptype)
         self.wpRTA.append(None)
         self.wpTW.append(None)
 
@@ -184,7 +185,8 @@ class TimeWindow2(Traffic):
         #   1) Find the flying aircraft along with its position
         # print('This is update in TimeWindow PLugin!')
         if self.ntraf == 0:
-            return
+            pass
+        # super(TimeWindow2, self).update(sim.simt, sim.simdt)
 
         #   2) Find their active waypoints
         #   3) Find the corresponding RTA and TW
