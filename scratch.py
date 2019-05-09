@@ -312,7 +312,7 @@ list_ensemble = list(range(1,5))
 # CreateSCN(False, 'Trajectories')
 # CreateSCNM(5, 1, "Trajectories-batch")
 # set_dt(1.0)
-bs_desktop()
+# bs_laptop()
 
 # CreateSCNM(20, 5, 'Test10')
 # replace_ensemble(50)
@@ -348,7 +348,7 @@ bs_desktop()
 
 #"IC C:\Documents\BlueSky\scenario\experimental\Trajectories.scn"
 
-# import pickle
-# df = pickle.load( open( "I:\Documents\Google Drive\Thesis 2018\BlueSky Git3\queries\pickle\\results_3600_1-50.p", "rb" ) )
-# print(df.to_string())
-# df.to_csv('Results_1-50')
+import pickle
+df = pickle.load( open( "I:\Documents\Google Drive\Thesis 2018\BlueSky Git3\queries\pickle\\results_3600_1-50.p", "rb" ) )
+print(df.to_string())
+df.to_csv('Results_1-50')
