@@ -1,0 +1,78 @@
+# Load wind data
+00:00:00.00> LOAD_WIND 50,Tigge_12_09_2014.nc
+00:00:00.00> DATE 12,9,2014
+#00:00:00.00> SAVEIC trajectories_saveic
+#00:00:00.00> CRELOG MYLOG 0.1 "FMS"
+#00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.perf.mass, traf.perf.ff
+#00:00:00.00> MYLOG ON
+#00:00:00.00> ASAS OFF
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_01
+00:00:00.00> SWRAD VOR
+00:00:00.00> PCALL "ADH931_LICC_LIRP_20140912072000.scn"
+00:00:00.00> FF
+#02:09:54.00> hold
+#23:59:00.00> HOLD
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_01
+#00:00:00.00> PCALL "Trajectories.scn" 01 B773
+#00:00:00.00> FF
+#02:09:54.00> hold
+#23:59:00.00> HOLD
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_02
+#00:00:00.00> PCALL "Trajectories afms.scn" 02 B773
+#00:00:00.00> FF
+#02:09:54.00> hold
+
+# Load trajectories for a run
+#00:00:00.00> SWRAD VOR
+#00:00:00.00> SCEN Test_06
+#00:00:00.00> SWRAD VOR
+#00:00:00.00> PCALL "Trajectories afms BACKUP.scn" 06
+#00:00:00.00> FF
+#02:10:04.00> hold
+#23:59:00.00> HOLD
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_11
+#00:00:00.00> PCALL "Trajectories.scn" 11 A343
+#00:00:00.00> FF
+#02:30:04.00> hold
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_12
+#00:00:00.00> PCALL "Trajectories afms.scn" 12 A343
+#00:00:00.00> FF
+#02:30:04.00> hold
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_21
+#00:00:00.00> PCALL "Trajectories.scn" 21 F27
+#00:00:00.00> FF
+#02:30:04.00> hold
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_22
+#00:00:00.00> PCALL "Trajectories afms.scn" 22 F27
+#00:00:00.00> FF
+#02:30:04.00> hold
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_31
+#00:00:00.00> PCALL "Trajectories.scn" 31 B773
+#00:00:00.00> FF
+#02:30:04.00> hold
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_32
+#00:00:00.00> PCALL "Trajectories afms.scn" 32 B773
+#00:00:00.00> FF
+#02:06:04.00> writer 
+#02:30:04.00> hold
+#02:10:04.00> hold
+#23:58:59.00> WRITER W50_dt_0.5
+#23:59:59.00> EXIT
