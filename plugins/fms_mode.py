@@ -141,8 +141,10 @@ class Afms:
         # self.update = 2.0
         # self.preupdate = 60.0
         self.apple = False
+        self.check = False
         self.counter = 0
         self.counter2 = self.dt/settings.simdt
+        self.currentWP = []
         self.skip2next_rta_time_s = 120.0  # Time when skipping to the RTA beyond the active RTA
         self.rta_standard_window_size = 60.  # [s] standard time window size for rta in seconds
         self._patch_route(self.rta_standard_window_size)
@@ -213,18 +215,21 @@ class Afms:
     def preupdate(self):
         # self.banana = str(bs.sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
         # print(self.banana)
-        if self.apple:
+        if self.apple or self.check:
             self.tw_update()
+
         if str(sim.utc.strftime("%d-%b-%Y %H:%M:%S")) == "09-Sep-2014 05:22:46":
-            print()
+            print(self.actwp)
             self.apple = True
         if str(sim.utc.strftime("%d-%b-%Y %H:%M:%S")) == "09-Sep-2014 05:23:46":
             self.apple = False
+        print(self.act)
         if self.counter % self.counter2 == 0:
             print(self.counter)
             print(self.counter2)
             self.tw_update()
         self.counter += 1
+        # print(traf.actwpt)
         pass
 
     def tw_update(self):
