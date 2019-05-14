@@ -207,6 +207,7 @@ class Afms:
         #     self.apple = True
         # if sim.utc.strftime("%d-%b-%Y %H:%M:%S") == "09-Sep-2014 05:23:46":
         #     self.apple = False
+        print('test')
         pass
 
     def preupdate(self):
