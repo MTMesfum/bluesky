@@ -109,7 +109,8 @@ class WindIris:
         self.__load_ensemble(ensemble)
 
         self.__loaded = True
-        print("File {0} with ensemble {1} has been loaded!".format(filename, ensemble))
+        print('\033[4m' + '\033[92m' +
+              "\nFile {0} with ensemble {1} has been loaded!\n".format(filename, ensemble) + '\033[0m')
 
     # -----  mimic windsim class API -------------------
     def get(self, lat, lon, alt=0):

@@ -35,7 +35,8 @@ def CreateSCN(alpha):
     nm  = 1852.  # m       1 nautical mile
     ft  = .3048  # m        1 foot
 
-    folder = "C:\\Users\Johannes\Desktop\Dropbox\# TU Delft Master\Thesis 2018\Main Phase\Queries\\trajectories"
+    #folder = "C:\\Users\Johannes\Desktop\Dropbox\# TU Delft Master\Thesis 2018\Main Phase\Queries\\trajectories"
+    folder = "C:\Documents\Git\scenario\\remon_raw_scenario"
     FileName = os.listdir(folder)
 
     # Tk().withdraw()

@@ -4,10 +4,11 @@ from datetime import date, datetime, time, timedelta
 from math import sqrt
 import numpy as np
 
-from bluesky import sim, stack, traf, tools  #, settings, navdb, sim, scr, tools
+from bluesky import sim, stack, traf, tools, settings #, settings, navdb, sim, scr, tools
 from bluesky.traffic.route import Route
 from bluesky.traffic.performance.legacy.performance import PHASE
 from bluesky.tools import aero
+import bluesky as bs
 # import inspect  # TODO Remove after test
 
 # Global data
@@ -33,7 +34,7 @@ def init_plugin():
         # Update interval in seconds. By default, your plugin's update function(s)
         # are called every timestep of the simulation. If your plugin needs less
         # frequent updates provide an update interval.
-        'update_interval': afms.dt,
+        # 'update_interval': afms.dt,
 
         # The update function is called after traffic is updated. Use this if you
         # want to do things as a result of what happens in traffic. If you need to
@@ -136,7 +137,12 @@ class Afms:
     def __init__(self):
         super(Afms, self).__init__()
         # Parameters of afms
-        self.dt = 1.0  # [s] frequency of afms update (simtime)
+        self.dt = 60.0  # [s] frequency of afms update (simtime)
+        # self.update = 2.0
+        # self.preupdate = 60.0
+        self.apple = False
+        self.counter = 0
+        self.counter2 = self.dt/settings.simdt
         self.skip2next_rta_time_s = 120.0  # Time when skipping to the RTA beyond the active RTA
         self.rta_standard_window_size = 60.  # [s] standard time window size for rta in seconds
         self._patch_route(self.rta_standard_window_size)
@@ -193,9 +199,34 @@ class Afms:
         Route._del_wpt_data = new_del_wpt_data
 
     def update(self):
+        # self.banana = str(bs.sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
+        # print(self.banana)
+        # if self.apple:
+        #     self.tw_update()
+        # if sim.utc.strftime("%d-%b-%Y %H:%M:%S") == "09-Sep-2014 05:22:46":
+        #     self.apple = True
+        # if sim.utc.strftime("%d-%b-%Y %H:%M:%S") == "09-Sep-2014 05:23:46":
+        #     self.apple = False
         pass
 
     def preupdate(self):
+        # self.banana = str(bs.sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
+        # print(self.banana)
+        if self.apple:
+            self.tw_update()
+        if str(sim.utc.strftime("%d-%b-%Y %H:%M:%S")) == "09-Sep-2014 05:22:46":
+            print()
+            self.apple = True
+        if str(sim.utc.strftime("%d-%b-%Y %H:%M:%S")) == "09-Sep-2014 05:23:46":
+            self.apple = False
+        if self.counter % self.counter2 == 0:
+            print(self.counter)
+            print(self.counter2)
+            self.tw_update()
+        self.counter += 1
+        pass
+
+    def tw_update(self):
         """
         update the AFMS mode settings before the traffic is updated.
         """
@@ -203,6 +234,9 @@ class Afms:
             fms_mode = self._current_fms_mode(idx)
             if int(traf.perf.phase[idx]) == PHASE['CR']:
                 if fms_mode == 0:  # AFMS_MODE OFF
+                    stack.stack('WRITER')
+                    # stack.stack('HOLD')
+                    stack.stack('EXIT')
                     pass
                 elif fms_mode == 1:  # AFMS_MODE CONTINUE
                     pass
@@ -224,19 +258,22 @@ class Afms:
                         time_s2rta = self._time_s2rta(rta)
                     else:
                         pass
-
+                    print('time_s2rta is: ', time_s2rta)
+                    print('lat/lon is: ', traf.ap.route[idx].wplat[rta_init_index],
+                                                    traf.ap.route[idx].wplon[rta_init_index])
                     _, dist2nwp = tools.geo.qdrdist(traf.lat[idx], traf.lon[idx],
                                                     traf.ap.route[idx].wplat[rta_init_index],
                                                     traf.ap.route[idx].wplon[rta_init_index])
                     distances = np.concatenate((np.array([dist2nwp]),
                                                 traf.ap.route[idx].wpdistto[rta_init_index + 1:rta_last_index + 1]),
                                                axis=0)
+                    print(distances)
                     flightlevels = np.concatenate((np.array([traf.alt[idx]]),
                                                    traf.ap.route[idx].wpalt[rta_init_index + 1:rta_last_index + 1]))
                     rta_cas_kts = self._rta_cas_wfl(distances, flightlevels, time_s2rta, traf.cas[idx]) # * 3600 / 1852
-
+                    print('current cas is: ', traf.cas[idx])
                     print(rta_cas_kts)
-                    # if the speed exceeds 1 Mach, change it into 0.99 Mach
+                    # if the speed exceeds 1 Mach, change it to the speed of sound
                     speed_of_sound = tools.aero.vtas2cas(tools.aero.vvsound(np.array([traf.alt[idx]])),
                                                          traf.alt[idx])
                     print('alt: ', traf.alt[idx])
@@ -247,9 +284,10 @@ class Afms:
                     rta_cas_kts = str(rta_cas_kts * 3600 / 1852) #np.floor((time_window_cas_kts-1) * 3600 / 1852)
                     rta_cas_kts = rta_cas_kts[1:7]
                     print(rta_cas_kts)
-
-                    rta_cas_kts = np.minimum(tools.aero.vvsound(np.array([traf.alt[idx]])), rta_cas_kts) * 3600 / 1852
-                    print('after comparison: ', rta_cas_kts)
+                    # print(tools.aero.vvsound(np.array([traf.alt[idx]])))
+                    # rta_cas_kts = np.minimum(tools.aero.vvsound(np.array([traf.alt[idx]])),
+                    #                          np.fromstring(rta_cas_kts, count=-1)) * 3600 / 1852
+                    # print('after comparison: ', rta_cas_kts)
                     #######################################################
 
                     stack.stack(f'SPD {traf.id[idx]}, {rta_cas_kts}')
@@ -298,27 +336,33 @@ class Afms:
                         pass
                     earliest_time_s2rta = time_s2rta - tw_size/2
                     latest_time_s2rta = time_s2rta + tw_size/2
+                    # print(earliest_time_s2rta)
+                    # print(latest_time_s2rta)
                     if eta_s_preferred < earliest_time_s2rta:
+                        # print('Speed increased!')
                         time_window_cas_kts = self._rta_cas_wfl(distances, flightlevels, earliest_time_s2rta,
-                                                        traf.cas[idx]) * 3600 / 1852
+                                                        traf.cas[idx]) # * 3600 / 1852
                     elif eta_s_preferred > latest_time_s2rta:
+                        # print('Speed decreased!')
                         time_window_cas_kts = self._rta_cas_wfl(distances, flightlevels, latest_time_s2rta,
-                                                        traf.cas[idx]) * 3600 / 1852
+                                                        traf.cas[idx]) # * 3600 / 1852
                     else:
+                        # print('Speed unchanged!')
                         time_window_cas_kts = preferred_cas_m_s # * 3600 / 1852
 
-                    print(time_window_cas_kts)
+                    # print(time_window_cas_kts)
                     # if the speed exceeds 1 Mach, change it into 0.99 Mach
                     speed_of_sound = tools.aero.vtas2cas(tools.aero.vvsound(np.array([traf.alt[idx]])),
                                                          traf.alt[idx])
-                    print('alt: ', traf.alt[idx])
-                    print('a speed: ', speed_of_sound)
-                    print('before comparison: ', time_window_cas_kts)
+                    # print('alt: ', traf.alt[idx])
+                    # print('a speed: ', speed_of_sound)
+                    # print('before comparison: ', time_window_cas_kts)
                     time_window_cas_kts = np.minimum(speed_of_sound, time_window_cas_kts)
-                    print('after comparison: ', time_window_cas_kts)
+                    # print('after comparison: ', time_window_cas_kts)
+                    # print(' ')
                     time_window_cas_kts = str(time_window_cas_kts * 3600 / 1852) #np.floor((time_window_cas_kts-1) * 3600 / 1852)
                     time_window_cas_kts = time_window_cas_kts[1:7]
-                    print(time_window_cas_kts)
+                    # print('cas [kts]: ', time_window_cas_kts)
                     #print(str(time_window_cas_kts).lstrip('[').rstrip(']'))
                     #time_window_cas_kts = str(time_window_cas_kts).lstrip('[').rstrip(']')
                     #######################################################
@@ -600,6 +644,8 @@ class Afms:
             total_time_s = np.sum(times_s)
             cas_rta_m_s = estimated_cas_m_s
             estimated_cas_m_s = cas_rta_m_s * total_time_s / time_s
+            # print('estimated_cas_m_s is: ', estimated_cas_m_s)
+            # print('current_cas_m_s is: ', current_cas_m_s)
         return cas_rta_m_s
 
     def _eta_wfl(self, distances, flightlevels, current_cas_m_s):
@@ -642,3 +688,4 @@ class Afms:
             return 0.0
         else:
             return t2_s
+

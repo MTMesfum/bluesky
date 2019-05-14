@@ -47,8 +47,23 @@ def replace_ensemble(ensemble):
     f = open(scenario_manager, 'w')
     f.write(filedata)
     f.close()
-    # os.startfile("C:\Documents\Git\\" + scenario_manager)
+    # os.startfile(scenario_manager)
     pass
+
+def replace_batch(scen_new):
+    f = open(scenario_manager, 'r')
+    filedata = f.read()
+    f.close()
+
+    apple = filedata.find('remon')
+    banana = filedata.find('.scn')
+    filedata = str("".join(filedata[0:apple] + str(scen_new) +
+                           filedata[banana+4:]))
+
+    f = open(scenario_manager, 'w')
+    f.write(filedata)
+    f.close()
+    # os.startfile(scenario_manager)
 
 # Changes the timestep in the settings config of BlueSky using the provided timestep
 # Keep in mind that the savefile doesn't change its name, unless the timestep is set into the global variable dt
@@ -74,8 +89,8 @@ def set_dt(timestep):
     f.close()
 
     apple = filedata.find('_dt_')
-    banana = filedata.find('> QUIT')
-    filedata = str("".join(filedata[0:apple+4] + str(timestep) + '\n' + filedata[banana-11:]))
+    banana = filedata.find('> EXIT')
+    filedata = str("".join(filedata[0:apple+4] + str(timestep) + filedata[apple+7:]))
 
     f = open(scenario_manager, 'w')
     f.write(filedata)
@@ -192,17 +207,21 @@ def CreateSCN(alpha, save_file):
                 speed = distance / deltatime.total_seconds()
                 speed = aero.tas2cas(speed, int(FlightLevel[2:]) * 100 * aero.ft) * 3600 / aero.nm
 
-                banana.append(apple + '.00> CRE ' + aircraftid + actype + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
-                              + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', ' + str(cut3(heading)) + ', 10, ' + str(cut3(speed))) #+ FlightLevel
-                banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG,' + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
+                banana.append(apple + '.00> CRE ' + aircraftid + actype + str(cut7(scenario['st_x(gpt.coords)'][i]))
+                              + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
+                              + str(cut3(heading)) + ', 10, ' + str(cut3(speed))) #+ FlightLevel
+                banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG,'
+                              + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
                               + str(cut7(scenario['st_y(gpt.coords)'][i])))
                 banana.append(apple + '.00> ORIG ' + aircraftid + ', ' + aircraftid + '-ORIG')
-                banana.append(apple + '.00> DEFWPT ' + aircraftid + '-DEST, ' + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0]-1]))
-                                + ', ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0]-1])))
+                banana.append(apple + '.00> DEFWPT ' + aircraftid + '-DEST, '
+                              + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0]-1]))
+                              + ', ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0]-1])))
                 banana.append(apple + '.00> DEST ' + aircraftid + ', ' + aircraftid + '-DEST' )
                 banana.append(apple + '.00> ' + aircraftid + ' AT ' + aircraftid + '-DEST' + ' FL00/0.0')
-                # banana.append(apple + '.00> DEST ' + aircraftid + ', ' + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0]-1]))
-                #                                     + ' ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0]-1])) )
+                # banana.append(apple + '.00> DEST ' + aircraftid + ', '
+                #                                + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0]-1]))
+                #                                + ' ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0]-1])) )
             else:
                 if i == scenario.shape[0]-1:
                     follow = aircraftid + '-' + str(i-1)
@@ -228,8 +247,9 @@ def CreateSCN(alpha, save_file):
                     else:
                         follow = aircraftid + '-' + str(i-1)
 
-                    banana.append(apple + '.00> DEFWPT ' + aircraftid + '-' + str(i) + ', '+ str(cut7(scenario['st_x(gpt.coords)'][i]))
-                                        + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])))
+                    banana.append(apple + '.00> DEFWPT ' + aircraftid + '-' + str(i) + ', '
+                                  + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
+                                  + str(cut7(scenario['st_y(gpt.coords)'][i])))
                     banana.append(apple + '.00> ' + aircraftid + ' after ' + follow + ' ADDWPT '
                                         + aircraftid + '-' + str(i) + ', ' + FlightLevel + ', ' + str(cut3(speed)))
                     if i >= 2:
@@ -256,7 +276,7 @@ def CreateSCNM(alpha, beta, save_file):
     gamma = list()
     gamma.append('# Load wind data')
     if beta < 10:
-        gamma.append('00:00:00.00> LOAD_WIND 0' +str(beta) +',Tigge_01_09_2017.nc')
+        gamma.append('00:00:00.00> LOAD_WIND 0' + str(beta) +',Tigge_01_09_2017.nc')
     else:
         gamma.append('00:00:00.00> LOAD_WIND ' + str(beta) + ',Tigge_01_09_2017.nc')
     gamma.append('00:00:00.00> DATE 1,9,2017')
@@ -296,7 +316,38 @@ def CreateSCNM(alpha, beta, save_file):
         fin.write('\n'.join(gamma))
     os.startfile(dir + '/scenario/' + save_file + '.scn')
 
+# Clean up,  and open the output file
+def writerfix(traj, dir, counter):
+    df = pd.read_csv('output\WRITER Standard File.csv')
+    # df = pd.read_csv('output\\runs\WRITER {0}.csv'.format(traj))
+    df = df.drop('Unnamed: 0', axis=1)
+    df.reset_index(inplace=True)
+    df.index = df.index + 1
+    df = df.drop('index', axis=1)
+    if not os.path.isdir('output\\runs\{0}'.format(dir)):
+        os.mkdir('output\\runs\{0}'.format(dir))
+    df.to_excel('output\\runs\{1}\{0}.xlsx'.format(traj[0:-4], dir))
+    os.remove('output\WRITER Standard File.csv')
+    print(bcolors.UBLUE     + 'Saved'   +
+          bcolors.FAIL      + ' [{1}] {0} '.format(traj, counter)   +
+          bcolors.UBLUE     + 'in'      +
+          bcolors.FAIL      + ' {0}'.format(
+                            'output\\runs\{1}\{0}.xlsx'.format(traj[0:-4], dir)) +
+          bcolors.ENDC)
+    # os.startfile('output\\runs\WRITER {0}.xlsx'.format(traj))
 #############################       Methods are described above this line ##############################################
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    UWARNING = '\033[4m' + '\033[93m'
+    UBLUE = '\033[4m' + '\033[94m'
 
 global scenario_manager, settings_config, dt
 scenario_manager = "scenario\Trajectories-batch.scn"
@@ -304,7 +355,71 @@ scenario_manager = "scenario\Trajectories-batch.scn"
 settings_config = "settings.cfg"
 dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(1,5))
+list_ensemble = list(range(1,51))
+dt = 2.0
+replace_dt()
+traj_folder = os.listdir('scenario\\remon')
+
+# print(traj[1])
+# print(traj[2])
+
+# bs_desktop()
+
+    # 'ADH931_LICC_LIRP_20140912072000'
+# run a trajectory for every ensemble
+for l in traj_folder:
+    k = 0
+    traj = os.listdir('scenario\\remon\\' + l)
+    for j in traj:
+        if k < len(traj):
+            scen_next = 'remon\\' + l + '\\' + traj[k]
+            replace_batch(scen_next)
+            print(bcolors.UWARNING  + '\nReplaced Trajectory to'  +
+                  bcolors.FAIL      + ' [{1}] {0}'.format(scen_next, k+1) +
+                  bcolors.ENDC)
+            # print(bcolors.UNDERLINE + bcolors.WARNING +
+            #       '\nReplaced Trajectory [{2}] {0} with [{3}] {1}\n'.format(
+            #           traj[k], traj[k+1], k, k+1) + bcolors.ENDC)
+        for i in list_ensemble:
+            replace_ensemble(i)
+            if i > 9:
+                print(bcolors.UWARNING  + '\nRunning Trajectory'        +
+                      bcolors.FAIL      + ' [{1}] {2}\{0} '.format(j, k+1, l)  +
+                      bcolors.UWARNING + 'with Ensemble'  +
+                      bcolors.FAIL + ' [{0}]\n'.format(i) +
+                      bcolors.ENDC)
+            else:
+                print(bcolors.UWARNING  + '\nRunning Trajectory'        +
+                      bcolors.FAIL      + ' [{1}] {2}\{0} '.format(j, k+1, l)  +
+                      bcolors.UWARNING  + 'with Ensemble'       +
+                      bcolors.FAIL      + ' [0{0}]\n'.format(i) +
+                      bcolors.ENDC)
+            # if i > 9:
+            #     print(bcolors.UWARNING  + '\nRunning Ensemble'  +
+            #           bcolors.FAIL      + ' [{0}]\n'.format(i)  +
+            #           bcolors.ENDC)
+            # else:
+            #     print(bcolors.UWARNING  + '\nRunning Ensemble'  +
+            #           bcolors.FAIL      + ' [0{0}]\n'.format(i) +
+            #           bcolors.ENDC)
+            bs_desktop()
+        writerfix(j, l, k)
+        k += 1
+        # if k == len(traj):
+        #     scen_reset = 'remon\\' + traj_folder[0] + '\\' + traj[0]
+        #     replace_batch(scen_reset)
+        #     print(bcolors.UWARNING  + '\nReplaced Trajectory'   +
+        #           bcolors.FAIL      + ' [{2}] {0}'              +
+        #           bcolors.UWARNING  + 'with'                    +
+        #           bcolors.FAIL      + ' [{3}] {1}\n'.format(
+        #                                     traj[k], traj[0], k, 0) +
+        #           bcolors.ENDC)
+
+# Open the folder with all the results
+os.startfile('output\\runs')
+# os.system("shutdown /s /t 60")
+
+# os.rename('output\WRITER Standard File.csv', 'output\\runs\WRITER {0}.csv'.format(traj))
 # print(dt)
 # scenario_manager = "scenario\Test10.scn"
 # CreateSCN(False, 'testtest')
@@ -312,7 +427,7 @@ list_ensemble = list(range(1,5))
 # CreateSCN(False, 'Trajectories')
 # CreateSCNM(5, 1, "Trajectories-batch")
 # set_dt(1.0)
-# bs_laptop()
+# bs_desktop()
 
 # CreateSCNM(20, 5, 'Test10')
 # replace_ensemble(50)
@@ -348,7 +463,8 @@ list_ensemble = list(range(1,5))
 
 #"IC C:\Documents\BlueSky\scenario\experimental\Trajectories.scn"
 
-import pickle
-df = pickle.load( open( "I:\Documents\Google Drive\Thesis 2018\BlueSky Git3\queries\pickle\\results_3600_1-50.p", "rb" ) )
-print(df.to_string())
-df.to_csv('Results_1-50')
+# import pickle
+# df = pickle.load( open(
+#   "I:\Documents\Google Drive\Thesis 2018\BlueSky Git3\queries\pickle\\results_3600_1-50.p", "rb" ) )
+# print(df.to_string())
+# df.to_csv('Results_1-50')

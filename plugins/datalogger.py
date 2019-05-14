@@ -6,42 +6,12 @@
 import numpy as np
 import pandas as pd
 import os
-from datetime import datetime as dt
+from datetime import datetime
 # Import the global bluesky objects. Uncomment the ones you need
 from bluesky import traf, sim, settings  #, settings, navdb, traf, sim, scr, tools
 from bluesky.tools import datalog, areafilter, \
     TrafficArrays, RegisterElementParameters
 from bluesky import settings
-
-# Log parameters for the flight statistics log
-header = \
-    "#######################################################\n" + \
-    "FLST LOG\n" + \
-    "Flight Statistics\n" + \
-    "#######################################################\n\n" + \
-    "Parameters [Units]:\n" + \
-    "Deletion Time [s], " + \
-    "Call sign [-], " + \
-    "Spawn Time [s], " + \
-    "Flight time [s], " + \
-    "Actual Distance 2D [m], " + \
-    "Actual Distance 3D [m], " + \
-    "Work Done [J], " + \
-    "Latitude [deg], " + \
-    "Longitude [deg], " + \
-    "Altitude [m], " + \
-    "TAS [m/s], " + \
-    "Vertical Speed [m/s], " + \
-    "Heading [deg], " + \
-    "Origin Lat [deg], " + \
-    "Origin Lon [deg], " + \
-    "Destination Lat [deg], " + \
-    "Destination Lon [deg], " + \
-    "ASAS Active [bool], " + \
-    "Pilot ALT [m], " + \
-    "Pilot SPD (TAS) [m/s], " + \
-    "Pilot HDG [deg], " + \
-    "Pilot VS [m/s]"  + "\n"
 
 # Global data
 datalogger = None
@@ -51,7 +21,14 @@ datalogger = None
 def init_plugin():
 
     # Addtional initilisation code
-    global datalogger
+    global datalogger, ensemble
+    scenario_manager = "scenario\Trajectories-batch.scn"
+    f = open(scenario_manager, 'r')
+    filedata = f.read()
+    f.close()
+    banana = filedata.find(',Tigge_')
+
+    ensemble = filedata[banana-2:banana]
     datalogger = DataLogger()
 
     # Configuration parameters
@@ -83,7 +60,8 @@ def init_plugin():
 class DataLogger(TrafficArrays):
     def __init__(self):
         super(DataLogger, self).__init__()
-        traf.resultstosave = pd.DataFrame(columns=['AC ID', 'Actual Departure Time', 'Arrival Time', 'Fuel Consumed'])
+        traf.resultstosave = pd.DataFrame(columns=['Ensemble', 'AC ID', 'Actual Departure Time',
+                                                   'Arrival Time', 'Fuel Consumed'])
 
         with RegisterElementParameters(self):
             self.counter  = np.array([])
@@ -125,9 +103,10 @@ class DataLogger(TrafficArrays):
 
     def save(self, results, delcounter):
         for i in delcounter:
-            holder = [[str(traf.id[int(i)]), str(self.inittime[int(i)]),
+            holder = [[ensemble, str(traf.id[int(i)]), str(self.inittime[int(i)]),
                             str(self.deltime[int(i)]), np.array2string(self.fuelused[int(i)], precision=3)]]
-            df = pd.DataFrame(holder, columns=['AC ID', 'Actual Departure Time', 'Arrival Time', 'Fuel Consumed'])
+            df = pd.DataFrame(holder, columns=['Ensemble', 'AC ID', 'Actual Departure Time',
+                                               'Arrival Time', 'Fuel Consumed'])
             results = results.append(df, ignore_index=True)
         return results
 
@@ -135,26 +114,45 @@ class DataLogger(TrafficArrays):
         curtime = []
         if traf.resultstosave.empty:
             curtime = str(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
-            for i in range(0,len(traf.id)):
-                holder = [[str(traf.id[int(i)]), str(self.inittime[int(i)]),
+            for i in range(0, len(traf.id)):
+                holder = [[ensemble, str(traf.id[int(i)]), str(self.inittime[int(i)]),
                            str(curtime), np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=3)]]
-                df = pd.DataFrame(holder, columns=['AC ID', 'Actual Departure Time', 'Arrival Time', 'Fuel Consumed'])
+                df = pd.DataFrame(holder, columns=['Ensemble', 'AC ID', 'Actual Departure Time', 'Arrival Time', 'Fuel Consumed'])
                 traf.resultstosave = traf.resultstosave.append(df, ignore_index=True)
-
+                print("\nAircraft {0} has been deleted at {1}.".format(traf.id[i], sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
+                print("Fuel used by {0} is {1} [kg].\n".format(traf.id[i],
+                                         np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
         if not args:
-            print('Now i will save a standard file!!!')
-            traf.resultstosave.to_csv('output\WRITER Standard File.csv')
-            os.startfile('output\WRITER Standard File.csv')
+            print('\033[94m' + '\033[4m' + 'Now I will save a standard file!!!\n' + '\033[0m')
+            # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
+            # check whether the file exist, if it does append it, otherwise create it
+            exists = os.path.isfile('output\WRITER Standard File.csv')
+            if exists:
+                # df = pd.read_csv('output\WRITER Standard File.csv', index_col=0)
+                with open('output\WRITER Standard File.csv', 'a') as f:
+                    # traf.resultstosave.set_index(traf.resultstosave.RangeIndex)
+                    traf.resultstosave.to_csv(f, header=False)
+            else:
+                # traf.resultstosave.set_index(traf.resultstosave.RangeIndex)
+                traf.resultstosave.to_csv('output\WRITER Standard File.csv')
+            # os.startfile('output\WRITER Standard File.csv')
         else:
             filename = str(args[0])
-            print('Now i will save a file in {0}!!!'.format(filename))
-            traf.resultstosave.to_csv('output\WRITER {0}.csv'.format(filename))
-            os.startfile('output\WRITER {0}.csv'.format(filename))
-        print(traf.resultstosave)
+            print('\033[94m' + '\033[4m' + 'Now I will save a file in {0}!!!\n'.format(filename) + '\033[0m')
+            # check whether the file exist, if it does append it, otherwise create it
+            exists = os.path.isfile('\output\WRITER {0}.csv'.format(filename))
+            if exists:
+                df = pd.read_csv('\output\WRITER {0}.csv'.format(filename), index_col=0)
+                with open('\output\WRITER {0}.csv'.format(filename), 'a') as f:
+                    df.to_csv(f, header=False)
+            else:
+                traf.resultstosave.to_csv('output\WRITER {0}.csv'.format(filename))
+            # os.startfile('output\WRITER {0}.csv'.format(filename))
+        # print(traf.resultstosave)
         
         if curtime:
             traf.resultstosave = pd.DataFrame(
-                columns=['AC ID', 'Actual Departure Time', 'Arrival Time', 'Fuel Consumed'])
+                columns=['Ensemble', 'AC ID', 'Actual Departure Time', 'Arrival Time', 'Fuel Consumed'])
 
     def log(self):
         apple = len(traf.id)

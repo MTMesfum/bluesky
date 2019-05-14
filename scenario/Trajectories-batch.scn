@@ -1,6 +1,6 @@
 # Load wind data
-00:00:00.00> LOAD_WIND 01, 24_06_2014.nc
-00:00:00.00> DATE 1,9,2017
+00:00:00.00> LOAD_WIND 02,Tigge_12_09_2014.nc
+00:00:00.00> DATE 12,9,2014
 00:00:00.00> SAVEIC trajectories_saveic
 #00:00:00.00> CRELOG MYLOG 0.1 "FMS"
 #00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.perf.mass, traf.perf.ff
@@ -9,16 +9,24 @@
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_01
-00:00:00.00> PCALL "Trajectories.scn" 01 B773
+00:00:00.00> SWRAD VOR
+00:00:00.00> PCALL "remon\det\ADH931_LICC_LIRP_20140912072000.scn"
 00:00:00.00> FF
-02:00:04.00> hold
+#02:09:54.00> hold
 #23:59:00.00> HOLD
 
 # Load trajectories for a run
-00:00:00.00> SCEN Test_02
-00:00:00.00> PCALL "Trajectories afms.scn" 02 B773
-00:00:00.00> FF
-02:00:04.00> hold
+#00:00:00.00> SCEN Test_01
+#00:00:00.00> PCALL "Trajectories.scn" 01 B773
+#00:00:00.00> FF
+#02:09:54.00> hold
+#23:59:00.00> HOLD
+
+# Load trajectories for a run
+#00:00:00.00> SCEN Test_02
+#00:00:00.00> PCALL "Trajectories afms.scn" 02 B773
+#00:00:00.00> FF
+#02:09:54.00> hold
 
 # Load trajectories for a run
 #00:00:00.00> SWRAD VOR
@@ -66,5 +74,5 @@
 #02:06:04.00> writer 
 #02:30:04.00> hold
 #02:10:04.00> hold
-#23:58:59.00> WRITER W01_dt_1.0
-23:58:59.00> EXIT
+#23:58:59.00> WRITER W02_dt_2.0
+#23:59:59.00> EXIT
