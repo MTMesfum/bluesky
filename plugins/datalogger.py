@@ -60,7 +60,7 @@ def init_plugin():
 class DataLogger(TrafficArrays):
     def __init__(self):
         super(DataLogger, self).__init__()
-        traf.resultstosave = pd.DataFrame(columns=['Ensemble', 'AC ID', 'Actual Departure Time',
+        traf.resultstosave = pd.DataFrame(columns=['Ensemble', 'AC ID', 'Date of Flight', 'Departure Time',
                                                    'Arrival Time', 'Fuel Consumed'])
 
         with RegisterElementParameters(self):
@@ -69,26 +69,28 @@ class DataLogger(TrafficArrays):
             self.fuelused = np.array([])
             self.inittime = ([])
             self.deltime  = ([])
+            self.wpcounter = -2
 
     def preupdate(self):
         print(self.initmass-traf.perf.mass)
 
     def update(self):
-        print(self.initmass)
-        print(traf.perf.mass)
-        print(self.initmass-traf.perf.mass)
+        # print(self.initmass)
+        # print(traf.perf.mass)
+        print("Fuel used up till now: ", self.initmass-traf.perf.mass)
 
     def create(self, n=1):
         super(DataLogger, self).create(n)
         if len(traf.id) > 1:
             self.initmass[-1] = traf.perf.mass[-1]
-            self.inittime[-1] = str(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
+            self.inittime[-1] = str(sim.utc.strftime("%H:%M:%S"))
             self.counter[-1] = 0
         else:
             self.initmass[0] = traf.perf.mass[0]
-            self.inittime[0] = str(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
+            self.inittime[0] = str(sim.utc.strftime("%H:%M:%S"))
             self.counter[0] = 0
-        print("AC {0} [{1}] has been created at {2}.".format(traf.id[-1], traf.type[-1], self.inittime[-1]))
+        print("AC {0} [{1}] has been created at {2}.".format(traf.id[-1], traf.type[-1],
+                                                             sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
 
     def talko(self, delcounter):
         if len(delcounter) == 1:
@@ -103,27 +105,48 @@ class DataLogger(TrafficArrays):
 
     def save(self, results, delcounter):
         for i in delcounter:
-            holder = [[ensemble, str(traf.id[int(i)]), str(self.inittime[int(i)]),
+            holder = [[ensemble, str(traf.id[int(i)]), str(sim.utc.strftime("%d-%b-%Y")), str(self.inittime[int(i)]),
                             str(self.deltime[int(i)]), np.array2string(self.fuelused[int(i)], precision=3)]]
-            df = pd.DataFrame(holder, columns=['Ensemble', 'AC ID', 'Actual Departure Time',
+            df = pd.DataFrame(holder, columns=['Ensemble', 'AC ID', 'Date of Flight', 'Departure Time',
                                                'Arrival Time', 'Fuel Consumed'])
             results = results.append(df, ignore_index=True)
         return results
 
+    # def save2(self):
+    #     if self.wpcounter == -2:
+    #         traf.resultstosave2 = pd.DataFrame()
+    #         # number_of_waypoints = traf.ap.route[bs.traf.id2idx(traf.id[-1])].nwp
+    #         for i in range(1, traf.ap.route[traf.id2idx(traf.id[-1])].nwp+1):
+    #             if i < 10:
+    #                 holder = pd.DataFrame(["[ 0{0} ]".format(i)], columns=['Waypoint {0}'.format(i)])
+    #             else:
+    #                 holder = pd.DataFrame(["[ {0} ]".format(i)], columns=['Waypoint {0}'.format(i)])
+    #             traf.resultstosave2 = pd.concat([traf.resultstosave2, holder], axis=1)
+    #         self.wpcounter = 0
+    #         print(traf.resultstosave2)
+    #     pass
+
     def write(self, *args):
         curtime = []
         if traf.resultstosave.empty:
-            curtime = str(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
+            curtime = str(sim.utc.strftime("%H:%M:%S"))
             for i in range(0, len(traf.id)):
-                holder = [[ensemble, str(traf.id[int(i)]), str(self.inittime[int(i)]),
+                holder = [[ensemble, str(traf.id[int(i)]), str(sim.utc.strftime("%d-%b-%Y")), str(self.inittime[int(i)]),
                            str(curtime), np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=3)]]
-                df = pd.DataFrame(holder, columns=['Ensemble', 'AC ID', 'Actual Departure Time', 'Arrival Time', 'Fuel Consumed'])
+                df = pd.DataFrame(holder, columns=['Ensemble', 'AC ID', 'Date of Flight', 'Departure Time',
+                                                   'Arrival Time', 'Fuel Consumed'])
                 traf.resultstosave = traf.resultstosave.append(df, ignore_index=True)
                 print("\nAircraft {0} has been deleted at {1}.".format(traf.id[i], sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
                 print("Fuel used by {0} is {1} [kg].\n".format(traf.id[i],
                                          np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
+        # print(traf.resultstosave2)
+        # print(traf.resultstosave3)
+        # traf.resultstosave = pd.DataFrame(traf.resultstosave[traf.resultstosave2])
+        # print(traf.resultstosave4)
+        traf.resultstosave = pd.concat([traf.resultstosave, traf.resultstosave2], axis=1)
+        # print(traf.resultstosave)
         if not args:
-            print('\033[94m' + '\033[4m' + 'Now I will save a standard file!!!\n' + '\033[0m')
+            print('\033[94m' + '\033[4m' + '\nSaving the results in a standard file!!!\n\n' + '\033[0m')
             # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
             # check whether the file exist, if it does append it, otherwise create it
             exists = os.path.isfile('output\WRITER Standard File.csv')
@@ -138,7 +161,7 @@ class DataLogger(TrafficArrays):
             # os.startfile('output\WRITER Standard File.csv')
         else:
             filename = str(args[0])
-            print('\033[94m' + '\033[4m' + 'Now I will save a file in {0}!!!\n'.format(filename) + '\033[0m')
+            print('\033[94m' + '\033[4m' + '\nSaving the results in {0}!!!\n\n'.format(filename) + '\033[0m')
             # check whether the file exist, if it does append it, otherwise create it
             exists = os.path.isfile('\output\WRITER {0}.csv'.format(filename))
             if exists:
@@ -151,8 +174,8 @@ class DataLogger(TrafficArrays):
         # print(traf.resultstosave)
         
         if curtime:
-            traf.resultstosave = pd.DataFrame(
-                columns=['Ensemble', 'AC ID', 'Actual Departure Time', 'Arrival Time', 'Fuel Consumed'])
+            traf.resultstosave = pd.DataFrame(columns=['Ensemble', 'AC ID', 'Date of Flight', 'Departure Time',
+                                                        'Arrival Time', 'Fuel Consumed'])
 
     def log(self):
         apple = len(traf.id)
@@ -162,6 +185,7 @@ class DataLogger(TrafficArrays):
         if apple > 0:
             self.counter += np.ones(apple) * np.logical_and(traf.alt<1, True)  # _and , traf.M<0.007
 
+            # datalogger.save2()
             if np.size((np.nonzero(self.counter > limit))) > 0:
                 delcounter = np.delete(traf.id2idx(traf.id), np.nonzero(self.counter < limit))
                 if len(range(0, len(delcounter))) > 0:

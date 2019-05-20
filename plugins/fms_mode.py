@@ -3,11 +3,16 @@
 from datetime import date, datetime, time, timedelta
 from math import sqrt
 import numpy as np
+import pandas as pd
 
 from bluesky import sim, stack, traf, tools, settings #, settings, navdb, sim, scr, tools
 from bluesky.traffic.route import Route
 from bluesky.traffic.performance.legacy.performance import PHASE
 from bluesky.tools import aero
+from bluesky.traffic.route import Route
+# from geo import qdrdist as dist
+from bluesky.tools import geo
+from bluesky.tools.position import txt2pos
 import bluesky as bs
 # import inspect  # TODO Remove after test
 
@@ -141,14 +146,17 @@ class Afms:
         # self.update = 2.0
         # self.preupdate = 60.0
         self.apple = False
-        self.check = False
         self.counter = 0
-        self.counter2 = self.dt/settings.simdt
-        self.currentWP = []
+        self.currentwp = -1
         self.skip2next_rta_time_s = 120.0  # Time when skipping to the RTA beyond the active RTA
         self.rta_standard_window_size = 60.  # [s] standard time window size for rta in seconds
         self._patch_route(self.rta_standard_window_size)
         self._fms_modes = ['OFF', 'CONTINUE', 'OWN', 'RTA', 'TW']
+        traf.resultstosave2 = pd.DataFrame()
+        self.lat = []
+        self.lon = []
+        self.partial_fuel = 64000
+        # traf.resultstosave3 = list()
 
     @staticmethod
     def _patch_route(rta_standard_window_size):
@@ -209,27 +217,120 @@ class Afms:
         #     self.apple = True
         # if sim.utc.strftime("%d-%b-%Y %H:%M:%S") == "09-Sep-2014 05:23:46":
         #     self.apple = False
-        print('test')
+        # print(traf.actwp.lat)
+        # traf.ap.route.i
+
+        # acid = traf.id[-1]
+        # idx = bs.traf.id2idx(acid)
+
+        # print(traf.ap.route[idx].wpname)
+        # print(traf.ap.route[idx].nwp)
+
+        # print(traf.ap.route[bs.traf.id2idx(traf.id[-1])].iactwp)
+
+        # print(traf.ap.route[idx].actwp)
+        # print(traf.ap.route[idx].findact(idx))
+
+        # if len(traf.id) > 0:
+        #     print(bs.traf.ap.route) # traf.Route.wpname[traf.Route.iactwp])
+        #     print(bs.traf.ap.route[idx1].findact(idx1))
+        #     success, posobj = txt2pos(name, ctrlat, ctrlon)
         pass
 
     def preupdate(self):
         # self.banana = str(bs.sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
         # print(self.banana)
-        if self.apple or self.check:
-            self.tw_update()
+        # print()
+        # if self.apple:
+        #     self.tw_update()
+        # if str(sim.utc.strftime("%d-%b-%Y %H:%M:%S")) == "09-Sep-2014 05:22:46":
+            # print()
+            # self.apple = True
+        # if str(sim.utc.strftime("%d-%b-%Y %H:%M:%S")) == "09-Sep-2014 05:23:46":
+        #     self.apple = False
+        # self.counter2 = self.dt / settings.simdt
+        if traf.id == []:
+            holder = -1
+        else:
+            holder = traf.ap.route[bs.traf.id2idx(traf.id[-1])].iactwp
 
-        if str(sim.utc.strftime("%d-%b-%Y %H:%M:%S")) == "09-Sep-2014 05:22:46":
-            print(self.actwp)
-            self.apple = True
-        if str(sim.utc.strftime("%d-%b-%Y %H:%M:%S")) == "09-Sep-2014 05:23:46":
-            self.apple = False
-        print(self.act)
-        if self.counter % self.counter2 == 0:
-            print(self.counter)
-            print(self.counter2)
+        if self.counter % 60 == 0 and traf.id != []:
+            # print('wind is;')
+            stack.stack('GETWIND {0} {1} {2}'.format(traf.lat[-1], traf.lon[-1], traf.alt[-1]))
+
+        # print("currentwp is: ", self.currentwp)
+        # print("holder is: ", holder)
+        if self.currentwp != holder:
+            # df_holder = pd.DataFrame([str(sim.utc.strftime("%H:%M:%S"))], columns=['Waypoint {0}'.format(holder)])
+            if holder < 10:
+                print("\nWaypoint [ 0{0} ] has been reached at {1}!".format(holder, str(sim.utc.strftime("%H:%M:%S"))))
+                column_name =  '[ 0{0} ]'.format(holder) #columns=i, str(sim.utc.strftime("%H:%M:%S")))
+                # traf.resultstosave2.assign('[ 0{0} ]'.format(holder) = [str(sim.utc.strftime("%H:%M:%S"))])
+                # traf.resultstosave2[column_name] = [str(sim.utc.strftime("%H:%M:%S"))]
+            else:
+                print("\nWaypoint [ {0} ] has been reached at {1}!".format(holder, str(sim.utc.strftime("%H:%M:%S"))))
+                column_name = '[ {0} ]'.format(holder)
+
+            distance = 1
+            if holder > 1:
+                # print(self.lat)
+                # print(self.lon)
+                # print(traf.lat)
+                # print(traf.lon)
+                heading, distance = geo.qdrdist(self.lat, self.lon, traf.lat[-1], traf.lon[-1])
+                print('Distance flown between waypoints: {0} [nm]'.format(distance))
+            self.lat = traf.lat[-1]
+            self.lon = traf.lon[-1]
+            # column_name2 = pd.DataFrame([[str(sim.utc.strftime("%H:%M:%S"))]], columns=[column_name])
+            # traf.resultstosave2 = pd.concat([traf.resultstosave2, column_name2], axis=1)
+            # traf.resultstosave3.append(column_name)
+            # traf.resultstosave2.append(str(sim.utc.strftime("%H:%M:%S")))
+            print("Fuel used up till now: {0} [kg]".format(64000 - traf.perf.mass))
+            print("Fuel used between waypoints: {0} [kg]".format(self.partial_fuel - traf.perf.mass))
+            print("Fuel used: {0} [kg/nm]".format((self.partial_fuel - traf.perf.mass)/distance))
+            self.partial_fuel = traf.perf.mass
+            traf.resultstosave2[column_name] = [str(sim.utc.strftime("%H:%M:%S"))]
+            # print(bs.traf.ap.route[bs.traf.id2idx(traf.id[-1])].wpname)#[bs.traf.id2idx(traf.id[-1])])
+            # print(holder)
+
+            if holder == traf.ap.route[bs.traf.id2idx(traf.id[-1])].nwp-1:
+                stack.stack('WRITER')
+                stack.stack('EXIT')
+            # for i in range(0, len(months)):
+            #     apple[months[i]] = [days[i]]
+                # print(traf.resultstosave2)
+            # print(traf.resultstosave3)
+            # print(self.currentwp)
+            # print(holder)
+            # traf.resultstosave2.insert(0, column_name, [str(sim.utc.strftime("%H:%M:%S"))], True)
+            # traf.resultstosave3 = pd.concat([traf.resultstosave3, traf.resultstosave2], axis=1)
+            #.append(df_holder, ignore_index=True)
+            # print(traf.resultstosave3)
+
+            # if self.wpcounter == -2:
+            #     traf.resultstosave2 = pd.DataFrame()
+            #     # number_of_waypoints = traf.ap.route[bs.traf.id2idx(traf.id[-1])].nwp
+            #     for i in range(1, traf.ap.route[traf.id2idx(traf.id[-1])].nwp + 1):
+            #         if i < 10:
+            #             holder = pd.DataFrame(["[ 0{0} ]".format(i)], columns=['Waypoint {0}'.format(i)])
+            #         else:
+            #             holder = pd.DataFrame(["[ {0} ]".format(i)], columns=['Waypoint {0}'.format(i)])
+            #         traf.resultstosave2 = pd.concat([traf.resultstosave2, holder], axis=1)
+            #     self.wpcounter = 0
+            #     print(traf.resultstosave2)
+
+        if self.counter % (self.dt/settings.simdt) == 0 or \
+           self.currentwp != holder or \
+                self.apple:
+            # print(settings.simdt)
+            # print(self.counter)
+            # print(self.dt/settings.simdt)
             self.tw_update()
+            self.counter = 0
+            # print("currentwp used to be: ", self.currentwp)
+            self.currentwp = holder
+            # print("currentwp has become: ", self.currentwp)
         self.counter += 1
-        # print(traf.actwpt)
         pass
 
     def tw_update(self):
@@ -240,9 +341,9 @@ class Afms:
             fms_mode = self._current_fms_mode(idx)
             if int(traf.perf.phase[idx]) == PHASE['CR']:
                 if fms_mode == 0:  # AFMS_MODE OFF
-                    stack.stack('WRITER')
+                    # stack.stack('WRITER')
                     # stack.stack('HOLD')
-                    stack.stack('EXIT')
+                    # stack.stack('EXIT')
                     pass
                 elif fms_mode == 1:  # AFMS_MODE CONTINUE
                     pass

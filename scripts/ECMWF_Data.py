@@ -21,7 +21,7 @@ server.retrieve({
     "time": "00:00:00",
     "type": "pf",
     "format": "netcdf",
-    "target": "I:\Documents\Google Drive\Thesis 2018\BlueSky Git3\\Tigge_08_09_2014_00.nc",
+    "target": "C:\Documents\Git\\Tigge_2014-09-08_00_243036.nc"
 })
 
 winsound.Beep(freq, duration)

@@ -324,17 +324,30 @@ def writerfix(traj, dir, counter):
     df.reset_index(inplace=True)
     df.index = df.index + 1
     df = df.drop('index', axis=1)
+    name = dir + " " + traj[0:-4]
     if not os.path.isdir('output\\runs\{0}'.format(dir)):
         os.mkdir('output\\runs\{0}'.format(dir))
-    df.to_excel('output\\runs\{1}\{0}.xlsx'.format(traj[0:-4], dir))
+    df.to_excel('output\\runs\{1}\{0}.xlsx'.format(name, dir))
     os.remove('output\WRITER Standard File.csv')
-    print(bcolors.UBLUE     + 'Saved'   +
+    print(bcolors.UBLUE     + '\n\nSaved'   +
           bcolors.FAIL      + ' [{1}] {0} '.format(traj, counter)   +
           bcolors.UBLUE     + 'in'      +
           bcolors.FAIL      + ' {0}'.format(
-                            'output\\runs\{1}\{0}.xlsx'.format(traj[0:-4], dir)) +
+                            'output\\runs\{1}\{0}.xlsx'.format(name, dir)) +
           bcolors.ENDC)
     # os.startfile('output\\runs\WRITER {0}.xlsx'.format(traj))
+
+def movelog(i, j, l):
+    if not os.path.isdir('output\\runs\\logs'):
+        os.makedirs("output\\runs\\logs")
+    dest_dir = "output\\runs\\logs"
+    if i < 10:
+        new_name = "\\" + l + " " + j[:-4] + " E0" + str(i) + ".scn"
+    else:
+        new_name = "\\" + l + " " + j[:-4] + " E" + str(i) + ".scn"
+    os.rename("scenario\\trajectories_saveic.scn", dest_dir + new_name)
+    pass
+
 #############################       Methods are described above this line ##############################################
 
 class bcolors:
@@ -355,8 +368,8 @@ scenario_manager = "scenario\Trajectories-batch.scn"
 settings_config = "settings.cfg"
 dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(1,51))
-dt = 2.0
+list_ensemble = list(range(1, 6))
+dt = 0.5
 replace_dt()
 traj_folder = os.listdir('scenario\\remon')
 
@@ -383,13 +396,13 @@ for l in traj_folder:
         for i in list_ensemble:
             replace_ensemble(i)
             if i > 9:
-                print(bcolors.UWARNING  + '\nRunning Trajectory'        +
+                print(bcolors.UWARNING  + '\n\nRunning Trajectory'        +
                       bcolors.FAIL      + ' [{1}] {2}\{0} '.format(j, k+1, l)  +
                       bcolors.UWARNING + 'with Ensemble'  +
-                      bcolors.FAIL + ' [{0}]\n'.format(i) +
+                      bcolors.FAIL + ' [{0}]'.format(i) +
                       bcolors.ENDC)
             else:
-                print(bcolors.UWARNING  + '\nRunning Trajectory'        +
+                print(bcolors.UWARNING  + '\n\nRunning Trajectory'        +
                       bcolors.FAIL      + ' [{1}] {2}\{0} '.format(j, k+1, l)  +
                       bcolors.UWARNING  + 'with Ensemble'       +
                       bcolors.FAIL      + ' [0{0}]\n'.format(i) +
@@ -403,8 +416,12 @@ for l in traj_folder:
             #           bcolors.FAIL      + ' [0{0}]\n'.format(i) +
             #           bcolors.ENDC)
             bs_desktop()
+            movelog(i, j, l) # Move the log file into a log folder
         writerfix(j, l, k)
+        # exit()
         k += 1
+        # if l == traj_folder[0]:
+        #     exit()
         # if k == len(traj):
         #     scen_reset = 'remon\\' + traj_folder[0] + '\\' + traj[0]
         #     replace_batch(scen_reset)
