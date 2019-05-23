@@ -17,6 +17,7 @@ from bluesky.tools import aero
 global scenario_manager, settings_config, dt
 settings_config = "settings.cfg"
 scenario_manager = "scenario\Trajectories-batch.scn"
+exp = "scenario\Trajectories-batch2.scn"
 
 dt = 0.5
 
@@ -123,6 +124,22 @@ def replace_dt():
     set_dt(dt)
     pass
 
+# Switches the speed in run_experiment
+def replace_speed(speed):
+    f = open(exp, 'r')
+    filedata = f.read()
+    f.close()
+
+    apple = filedata.find('run_experiment') #+16
+    banana = filedata.find('00:00:00.00> FF')
+    filedata = str("".join(filedata[0:apple+16] + str(speed) + filedata[banana-1:]))
+
+    f = open(exp, 'w')
+    f.write(filedata)
+    f.close()
+    # os.startfile(exp)
+    pass
+
 # Run a simulation of BlueSky using the desktop path
 def bs_desktop():
     os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
@@ -131,7 +148,7 @@ def bs_desktop():
 # Run a simulation of BlueSky using the laptop path
 def bs_laptop():
     os.system("call I:\Programs\Anaconda\Program\Scripts\\activate.bat && \
-                    cd I:\Documents\Google Drive\Thesis 2018\BlueSky Git3 && python BlueSky.py")
+                    cd I:\Documents\Google Drive\Thesis 2018\BlueSky Git4 && python BlueSky.py")
 
 # Cut the number to 3 digits
 def cut3(one):
