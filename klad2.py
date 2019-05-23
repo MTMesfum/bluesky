@@ -1,250 +1,380 @@
 """
-WIND ENSEMBLE 3 WITH TIMEWINDOWS [600]
+WIND ENSEMBLE 2 WITH TIMEWINDOWS [3600]
 
 AC ADH931 [A320] has been created at 09-Sep-2014 05:12:46.
-Waypoint [ 00 ] has been reached at 05:12:46!
-Fuel used up till now:  [0.]
-Waypoint [ 01 ] has been reached at 05:12:47!
-Fuel used up till now:  [1.53430805]
-WIND AT 37.75084, 15.51677: 212/3
-Heading of the AC is  22.540310291172936
-WIND AT 37.80349, 15.50903: 209/3
-Heading of the AC is  325.48083252180874
-WIND AT 37.84351, 15.45922: 208/3
-Heading of the AC is  314.1769381028407
-WIND AT 37.88282, 15.40693: 206/2
-Heading of the AC is  313.25805781675285
-Waypoint [ 02 ] has been reached at 05:15:03!
-Fuel used up till now:  [190.53707804]
-WIND AT 37.95399, 15.34410: 203/2
-Heading of the AC is  337.0421865698553
-WIND AT 38.00803, 15.31532: 201/2
-Heading of the AC is  337.9390722970688
-WIND AT 38.06309, 15.28650: 202/2
-Heading of the AC is  337.9390722970688
-WIND AT 38.11931, 15.25815: 203/1
-Heading of the AC is  338.81401781732006
-Waypoint [ 03 ] has been reached at 05:17:33!
-Fuel used up till now:  [372.31083475]
-WIND AT 38.17647, 15.23168: 202/1
-Heading of the AC is  342.2677162780533
-WIND AT 38.23377, 15.20427: 203/1
-Heading of the AC is  339.67744243250337
-WIND AT 38.29168, 15.17549: 206/1
-Heading of the AC is  338.8298292407309
-Waypoint [ 04 ] has been reached at 05:18:59!
-Fuel used up till now:  [465.63346885]
-WIND AT 38.39969, 15.11773: 209/1
-Heading of the AC is  337.98680447308226
-WIND AT 38.45885, 15.08782: 211/1
-Heading of the AC is  339.6306780672109
-Waypoint [ 05 ] has been reached at 05:20:07!
-Fuel used up till now:  [534.71792754]
-WIND AT 38.53460, 15.05113: 216/0
-Heading of the AC is  338.81045483442557
-WIND AT 38.59517, 15.02063: 220/0
-Heading of the AC is  338.01106362050757
-WIND AT 38.65585, 14.98866: 211/0
-Heading of the AC is  336.42036131988914
-Waypoint [ 06 ] has been reached at 05:21:51!
-Fuel used up till now:  [636.55461624]
-WIND AT 38.74454, 14.93971: 204/0
-Heading of the AC is  337.2125097030925
-WIND AT 38.80533, 14.90730: 200/0
-Heading of the AC is  337.2125097030925
-WIND AT 38.86593, 14.87500: 190/0
-Heading of the AC is  337.2125097030925
-WIND AT 38.92651, 14.84303: 169/0
-Heading of the AC is  338.0110896241177
-WIND AT 38.98738, 14.81203: 156/0
-Heading of the AC is  338.80885989732406
-Waypoint [ 07 ] has been reached at 05:24:48!
-Fuel used up till now:  [746.63759023]
-WIND AT 39.10388, 14.75603: 137/0
-Heading of the AC is  338.80966954514287
-WIND AT 39.16472, 14.72560: 132/0
-Heading of the AC is  338.0053757448205
-WIND AT 39.22519, 14.69414: 114/0
-Heading of the AC is  337.1994343585126
-Waypoint [ 08 ] has been reached at 05:26:45!
-Fuel used up till now:  [872.66011324]
-WIND AT 39.33904, 14.63149: 099/0
-Heading of the AC is  337.20108363030135
-WIND AT 39.39864, 14.59964: 098/0
-Heading of the AC is  337.20108363030135
-WIND AT 39.45804, 14.56797: 092/1
-Heading of the AC is  337.20108363030135
-WIND AT 39.51782, 14.53744: 087/1
-Heading of the AC is  338.82628320853144
-Waypoint [ 09 ] has been reached at 05:29:07!
-Fuel used up till now:  [931.95776815]
-WIND AT 39.62131, 14.48401: 078/1
-Heading of the AC is  336.3884838411863
-WIND AT 39.68051, 14.45130: 075/1
-Heading of the AC is  336.3884838411863
-WIND AT 39.73955, 14.41797: 071/1
-Heading of the AC is  335.5750440080308
-WIND AT 39.79848, 14.38417: 068/1
-Heading of the AC is  335.5750440080308
-WIND AT 39.85746, 14.35037: 064/1
-Heading of the AC is  335.5750440080308
-WIND AT 39.91638, 14.31627: 061/1
-Heading of the AC is  334.76244421891573
-WIND AT 39.97506, 14.28140: 058/1
-Heading of the AC is  334.76244421891573
-WIND AT 40.03372, 14.24637: 057/1
-Heading of the AC is  333.9498444298007
-WIND AT 40.09208, 14.21043: 059/1
-Heading of the AC is  333.9498444298007
-WIND AT 40.15007, 14.17337: 059/1
-Heading of the AC is  332.3229647634896
-Waypoint [ 10 ] has been reached at 05:34:20!
-Fuel used up till now:  [989.1162523]
-WIND AT 40.21965, 14.09691: 058/1
-Heading of the AC is  308.7458102625864
-WIND AT 40.26010, 14.03156: 056/1
-Heading of the AC is  307.9332104734714
-Waypoint [ 11 ] has been reached at 05:35:36!
-Fuel used up till now:  [1004.39272514]
-WIND AT 40.31896, 13.93140: 055/1
-Heading of the AC is  307.12061242298404
-WIND AT 40.35635, 13.86936: 055/1
-Heading of the AC is  307.98593607290593
-WIND AT 40.39436, 13.80790: 053/1
-Heading of the AC is  308.8512597228278
-Waypoint [ 12 ] has been reached at 05:37:27!
-Fuel used up till now:  [1063.74496791]
-WIND AT 40.46070, 13.70511: 050/1
-Heading of the AC is  308.8512597228278
-WIND AT 40.49891, 13.64369: 047/1
-Heading of the AC is  307.98593607290593
-Waypoint [ 13 ] has been reached at 05:38:54!
-Fuel used up till now:  [1122.53827095]
-WIND AT 40.56871, 13.52406: 054/1
-Heading of the AC is  307.12061242298404
-WIND AT 40.60590, 13.46149: 060/1
-Heading of the AC is  307.12061242298404
-WIND AT 40.64321, 13.39899: 067/1
-Heading of the AC is  307.98593607290593
-WIND AT 40.68133, 13.33727: 075/1
-Heading of the AC is  308.8512597228278
-Waypoint [ 14 ] has been reached at 05:41:12!
-Fuel used up till now:  [1214.96950332]
-WIND AT 40.74375, 13.23990: 089/0
-Heading of the AC is  308.8512597228278
-WIND AT 40.78208, 13.17822: 099/0
-Heading of the AC is  307.98593607290593
-WIND AT 40.82014, 13.11618: 113/0
-Heading of the AC is  307.98593607290593
-WIND AT 40.85768, 13.05354: 134/0
-Heading of the AC is  307.12061242298404
-WIND AT 40.89449, 12.99010: 163/0
-Heading of the AC is  305.38996512314026
-Waypoint [ 15 ] has been reached at 05:43:55!
-Fuel used up till now:  [1324.40196117]
-WIND AT 40.95108, 12.90324: 179/0
-Heading of the AC is  312.3125543225154
-WIND AT 40.99282, 12.84489: 185/0
-Heading of the AC is  312.3125543225154
-WIND AT 41.03458, 12.78647: 183/1
-Heading of the AC is  312.3125543225154
-WIND AT 41.07635, 12.72800: 183/1
-Heading of the AC is  312.3125543225154
-WIND AT 41.11880, 12.67031: 184/1
-Heading of the AC is  313.1778779724373
-WIND AT 41.16138, 12.61273: 186/1
-Heading of the AC is  314.04320162235916
-WIND AT 41.20475, 12.55610: 188/1
-Heading of the AC is  314.90852527228105
-Waypoint [ 16 ] has been reached at 05:47:37!
-Fuel used up till now:  [1473.33813598]
-WIND AT 41.26578, 12.47717: 190/2
-Heading of the AC is  314.04320162235916
-WIND AT 41.30891, 12.42009: 189/2
-Heading of the AC is  314.04320162235916
-WIND AT 41.35186, 12.36274: 189/2
-Heading of the AC is  313.1778779724373
-WIND AT 41.39431, 12.30469: 189/2
-Heading of the AC is  313.1778779724373
-WIND AT 41.43642, 12.24617: 190/2
-Heading of the AC is  312.3125543225154
-WIND AT 41.47774, 12.18664: 191/2
-Heading of the AC is  310.5819070226716
-Waypoint [ 17 ] has been reached at 05:50:48!
-Fuel used up till now:  [1600.92912043]
-WIND AT 41.53346, 12.10432: 190/3
-Heading of the AC is  312.3125543225154
-WIND AT 41.57525, 12.04525: 189/3
-Heading of the AC is  312.3125543225154
-WIND AT 41.61706, 11.98616: 188/3
-Heading of the AC is  312.3125543225154
-WIND AT 41.65942, 11.92773: 186/3
-Heading of the AC is  313.1778779724373
-Waypoint [ 18 ] has been reached at 05:53:17!
-Fuel used up till now:  [1700.63755698]
-WIND AT 41.74415, 11.81453: 184/3
-Heading of the AC is  313.1778779724373
-WIND AT 41.78610, 11.75550: 184/4
-Heading of the AC is  311.4472306725935
-Waypoint [ 19 ] has been reached at 05:54:30!
-Fuel used up till now:  [1749.45821514]
-WIND AT 41.84487, 11.66922: 183/4
-Heading of the AC is  311.4472306725935
-WIND AT 41.88612, 11.60930: 184/4
-Heading of the AC is  311.4472306725935
-WIND AT 41.92740, 11.54939: 184/4
-Heading of the AC is  311.4472306725935
-WIND AT 41.96909, 11.48996: 184/4
-Heading of the AC is  312.3125543225154
-WIND AT 42.01123, 11.43107: 183/4
-Heading of the AC is  313.1778779724373
-Waypoint [ 20 ] has been reached at 05:57:28!
-Fuel used up till now:  [1867.97649382]
-WIND AT 42.09447, 11.31920: 176/4
-Heading of the AC is  313.1778779724373
-WIND AT 42.13689, 11.26038: 173/4
-Heading of the AC is  312.3125543225154
-WIND AT 42.17896, 11.20104: 170/4
-Heading of the AC is  312.3125543225154
-WIND AT 42.22068, 11.14119: 168/4
-Heading of the AC is  311.4472306725935
-WIND AT 42.26173, 11.08047: 165/4
-Heading of the AC is  310.5819070226716
-Waypoint [ 21 ] has been reached at 06:00:16!
-Fuel used up till now:  [1979.53975019]
-WIND AT 42.32736, 10.98098: 166/4
-Heading of the AC is  311.4174816610432
-Waypoint [ 22 ] has been reached at 06:01:13!
-Fuel used up till now:  [1984.41178956]
-WIND AT 42.40706, 10.86902: 170/4
-Heading of the AC is  312.24815887243466
-Waypoint [ 23 ] has been reached at 06:02:13!
-Fuel used up till now:  [1989.88056091]
-WIND AT 42.44627, 10.81049: 171/3
-Heading of the AC is  309.5232776126483
-WIND AT 42.48456, 10.75288: 172/3
-Heading of the AC is  312.29296491924714
-Waypoint [ 24 ] has been reached at 06:02:56!
-Fuel used up till now:  [1993.98076369]
-WIND AT 42.54031, 10.67407: 170/2
-Heading of the AC is  312.2737756116145
-Waypoint [ 25 ] has been reached at 06:03:35!
-Fuel used up till now:  [1997.80259407]
-WIND AT 42.58802, 10.60204: 168/1
-Heading of the AC is  312.2938661923619
-Waypoint [ 26 ] has been reached at 06:04:25!
-Fuel used up till now:  [2002.86139225]
-WIND AT 42.65033, 10.51521: 162/0
-Heading of the AC is  314.26142203146003
-WIND AT 42.68638, 10.46345: 346/0
-Heading of the AC is  313.247852084654
-WIND AT 42.72112, 10.41151: 342/1
-Heading of the AC is  311.1711817458655
-Waypoint [ 27 ] has been reached at 06:05:59!
-Fuel used up till now:  [2013.440395]
-Waypoint [ 28 ] has been reached at 06:06:20!
-Fuel used up till now:  [2018.39397094]
 
-Aircraft ADH931 has been deleted at 09-Sep-2014 06:06:20.
-Fuel used by ADH931 is 2018.39 [kg].
+Waypoint [ 00 ] has been reached at 05:12:46!
+Fuel used up till now: [0.] [kg]
+Fuel used between waypoints: [0.] [kg]
+Fuel used: [0.] [kg/nm]
+
+Waypoint [ 01 ] has been reached at 05:12:47!
+Fuel used up till now: [1.53430805] [kg]
+Fuel used between waypoints: [1.53430805] [kg]
+Fuel used: [1.53430805] [kg/nm]
+WIND AT 37.75045, 15.51393: 064/2
+Heading of the AC is  19.930491630906648
+WIND AT 37.79711, 15.50086: 070/2
+Heading of the AC is  318.1942639861534
+WIND AT 37.83545, 15.45774: 073/2
+Heading of the AC is  318.1942639861534
+WIND AT 37.87383, 15.41316: 074/2
+Heading of the AC is  317.1593649855571
+
+Waypoint [ 02 ] has been reached at 05:15:12!
+Distance flown between waypoints: 12.029002009495763 [nm]
+Fuel used up till now: [202.16692469] [kg]
+Fuel used between waypoints: [200.63261664] [kg]
+Fuel used: [16.67907416] [kg/nm]
+WIND AT 37.95255, 15.34438: 074/2
+Heading of the AC is  337.4047483412964
+WIND AT 38.00254, 15.31800: 073/2
+Heading of the AC is  337.4047483412964
+WIND AT 38.05323, 15.29124: 072/2
+Heading of the AC is  337.4047483412964
+WIND AT 38.10511, 15.26501: 070/1
+Heading of the AC is  338.37819329101114
+WIND AT 38.15785, 15.23963: 070/2
+Heading of the AC is  340.2966035795282
+
+Waypoint [ 03 ] has been reached at 05:17:52!
+Distance flown between waypoints: 17.577191023807092 [nm]
+Fuel used up till now: [392.67954318] [kg]
+Fuel used between waypoints: [190.51261849] [kg]
+Fuel used: [10.83862707] [kg/nm]
+WIND AT 38.22901, 15.20655: 068/2
+Heading of the AC is  339.34323209532926
+WIND AT 38.28307, 15.17993: 065/1
+Heading of the AC is  338.4046222928873
+WIND AT 38.33707, 15.15130: 064/2
+Heading of the AC is  335.618701498633
+
+Waypoint [ 04 ] has been reached at 05:19:25!
+Distance flown between waypoints: 10.758983274143409 [nm]
+Fuel used up till now: [490.1388045] [kg]
+Fuel used between waypoints: [97.45926132] [kg]
+Fuel used: [9.05840811] [kg/nm]
+WIND AT 38.39661, 15.11917: 058/1
+Heading of the AC is  337.4716187834195
+WIND AT 38.45197, 15.09100: 056/1
+Heading of the AC is  338.3841055985481
+
+Waypoint [ 05 ] has been reached at 05:20:37!
+Distance flown between waypoints: 8.539416269865804 [nm]
+Fuel used up till now: [560.42858553] [kg]
+Fuel used between waypoints: [70.28978104] [kg]
+Fuel used: [8.23121614] [kg/nm]
+WIND AT 38.53071, 15.05303: 047/1
+Heading of the AC is  338.3883260245139
+WIND AT 38.58785, 15.02446: 032/1
+Heading of the AC is  337.5025462412241
+WIND AT 38.64504, 14.99457: 029/1
+Heading of the AC is  336.6197477773048
+
+Waypoint [ 06 ] has been reached at 05:22:28!
+Distance flown between waypoints: 13.60359374635347 [nm]
+Fuel used up till now: [663.97953684] [kg]
+Fuel used between waypoints: [103.5509513] [kg]
+Fuel used: [7.61202909] [kg/nm]
+WIND AT 38.74229, 14.94094: 014/1
+Heading of the AC is  336.61382071913727
+WIND AT 38.80104, 14.90921: 354/1
+Heading of the AC is  336.61382071913727
+WIND AT 38.86035, 14.87742: 336/1
+Heading of the AC is  337.4559907813601
+WIND AT 38.92040, 14.84600: 334/1
+Heading of the AC is  337.4559907813601
+WIND AT 38.98051, 14.81535: 334/1
+Heading of the AC is  338.2936780203171
+WIND AT 39.04119, 14.78656: 340/1
+Heading of the AC is  341.64442697614516
+
+Waypoint [ 07 ] has been reached at 05:25:29!
+Distance flown between waypoints: 23.227045069847303 [nm]
+Fuel used up till now: [817.7419691] [kg]
+Fuel used between waypoints: [153.76243226] [kg]
+Fuel used: [6.61997391] [kg/nm]
+WIND AT 39.10412, 14.75615: 360/0
+Heading of the AC is  339.12868512632804
+WIND AT 39.16559, 14.72505: 088/0
+Heading of the AC is  338.3067483292637
+WIND AT 39.22694, 14.69315: 088/1
+Heading of the AC is  337.49246671343997
+
+Waypoint [ 08 ] has been reached at 05:27:25!
+Distance flown between waypoints: 15.278707401485185 [nm]
+Fuel used up till now: [908.65902917] [kg]
+Fuel used between waypoints: [90.91706007] [kg]
+Fuel used: [5.95057276] [kg/nm]
+WIND AT 39.34079, 14.63016: 110/1
+Heading of the AC is  337.4799090639277
+WIND AT 39.40193, 14.59756: 118/2
+Heading of the AC is  337.4799090639277
+WIND AT 39.46299, 14.56531: 115/2
+Heading of the AC is  338.29250885304276
+WIND AT 39.52443, 14.53418: 111/2
+Heading of the AC is  339.1051086421578
+
+Waypoint [ 09 ] has been reached at 05:29:43!
+Distance flown between waypoints: 18.255277416028353 [nm]
+Fuel used up till now: [966.46288509] [kg]
+Fuel used between waypoints: [57.80385592] [kg]
+Fuel used: [3.16641893] [kg/nm]
+WIND AT 39.62237, 14.48326: 105/2
+Heading of the AC is  336.6656291867317
+WIND AT 39.68302, 14.44958: 102/2
+Heading of the AC is  336.6656291867317
+WIND AT 39.74364, 14.41583: 100/2
+Heading of the AC is  335.85302939761664
+WIND AT 39.80390, 14.38100: 097/3
+Heading of the AC is  335.85302939761664
+WIND AT 39.86416, 14.34615: 095/3
+Heading of the AC is  335.85302939761664
+WIND AT 39.92442, 14.31127: 093/3
+Heading of the AC is  335.85302939761664
+WIND AT 39.98445, 14.27569: 091/3
+Heading of the AC is  335.0395895644611
+WIND AT 40.04433, 14.23962: 090/3
+Heading of the AC is  335.0395895644611
+WIND AT 40.10394, 14.20277: 089/3
+Heading of the AC is  334.22698977534606
+WIND AT 40.16307, 14.16465: 088/3
+Heading of the AC is  332.6009501530755
+
+Waypoint [ 10 ] has been reached at 05:34:49!
+Distance flown between waypoints: 40.36230959643675 [nm]
+Fuel used up till now: [1022.27044021] [kg]
+Fuel used between waypoints: [55.80755512] [kg]
+Fuel used: [1.38266506] [kg/nm]
+WIND AT 40.21859, 14.09796: 087/3
+Heading of the AC is  309.2510590246863
+WIND AT 40.25800, 14.03486: 085/3
+Heading of the AC is  308.3914075825851
+
+Waypoint [ 11 ] has been reached at 05:36:07!
+Distance flown between waypoints: 9.723519148838147 [nm]
+Fuel used up till now: [1064.29805167] [kg]
+Fuel used between waypoints: [42.02761145] [kg]
+Fuel used: [4.32226345] [kg/nm]
+WIND AT 40.31865, 13.93239: 085/3
+Heading of the AC is  307.5308304764622
+WIND AT 40.35685, 13.86876: 086/3
+Heading of the AC is  308.3971067797856
+WIND AT 40.39576, 13.80583: 087/3
+Heading of the AC is  309.263383083109
+
+Waypoint [ 12 ] has been reached at 05:37:56!
+Distance flown between waypoints: 13.46397322186144 [nm]
+Fuel used up till now: [1136.58977831] [kg]
+Fuel used between waypoints: [72.29172665] [kg]
+Fuel used: [5.36927142] [kg/nm]
+WIND AT 40.46089, 13.70470: 088/2
+Heading of the AC is  309.263383083109
+WIND AT 40.49995, 13.64188: 089/2
+Heading of the AC is  308.3971067797856
+
+Waypoint [ 13 ] has been reached at 05:39:22!
+Distance flown between waypoints: 10.61765715627056 [nm]
+Fuel used up till now: [1194.42274862] [kg]
+Fuel used between waypoints: [57.83297031] [kg]
+Fuel used: [5.44686737] [kg/nm]
+WIND AT 40.57013, 13.52178: 096/2
+Heading of the AC is  307.5308304764622
+WIND AT 40.60813, 13.45785: 104/2
+Heading of the AC is  307.5308304764622
+WIND AT 40.64628, 13.39409: 116/1
+Heading of the AC is  308.3971067797856
+WIND AT 40.68523, 13.33118: 130/1
+Heading of the AC is  309.263383083109
+
+Waypoint [ 14 ] has been reached at 05:41:37!
+Distance flown between waypoints: 16.643722838439576 [nm]
+Fuel used up till now: [1285.01133106] [kg]
+Fuel used between waypoints: [90.58858244] [kg]
+Fuel used: [5.44280768] [kg/nm]
+WIND AT 40.74497, 13.23826: 149/1
+Heading of the AC is  309.263383083109
+WIND AT 40.78384, 13.17530: 160/2
+Heading of the AC is  308.3971067797856
+WIND AT 40.82263, 13.11227: 168/2
+Heading of the AC is  307.5308304764622
+WIND AT 40.86071, 13.04852: 174/2
+Heading of the AC is  307.5308304764622
+WIND AT 40.89792, 12.98393: 179/2
+Heading of the AC is  305.7982778698154
+
+Waypoint [ 15 ] has been reached at 05:44:17!
+Distance flown between waypoints: 19.675692603439792 [nm]
+Fuel used up till now: [1391.97702276] [kg]
+Fuel used between waypoints: [106.9656917] [kg]
+Fuel used: [5.43643845] [kg/nm]
+WIND AT 40.95165, 12.90238: 181/2
+Heading of the AC is  312.72848829640253
+WIND AT 40.99401, 12.84345: 183/3
+Heading of the AC is  312.72848829640253
+WIND AT 41.03636, 12.78452: 183/3
+Heading of the AC is  312.72848829640253
+WIND AT 41.07873, 12.72559: 183/3
+Heading of the AC is  312.72848829640253
+WIND AT 41.12135, 12.66697: 183/3
+Heading of the AC is  313.5947645997259
+WIND AT 41.16439, 12.60886: 183/4
+Heading of the AC is  313.5947645997259
+WIND AT 41.20824, 12.55178: 182/4
+Heading of the AC is  315.3273172063727
+
+Waypoint [ 16 ] has been reached at 05:47:57!
+Distance flown between waypoints: 27.020920397819424 [nm]
+Fuel used up till now: [1539.05835426] [kg]
+Fuel used between waypoints: [147.08133149] [kg]
+Fuel used: [5.44323914] [kg/nm]
+WIND AT 41.26706, 12.47613: 180/4
+Heading of the AC is  314.4610409030493
+WIND AT 41.31054, 12.41855: 179/4
+Heading of the AC is  313.5947645997259
+WIND AT 41.35360, 12.36040: 177/4
+Heading of the AC is  313.5947645997259
+WIND AT 41.39649, 12.30203: 176/4
+Heading of the AC is  312.72848829640253
+WIND AT 41.43885, 12.24300: 174/4
+Heading of the AC is  311.86221199307914
+WIND AT 41.48028, 12.18285: 172/4
+Heading of the AC is  310.12965938643237
+
+Waypoint [ 17 ] has been reached at 05:51:07!
+Distance flown between waypoints: 23.295694259259026 [nm]
+Fuel used up till now: [1665.9922402] [kg]
+Fuel used between waypoints: [126.93388594] [kg]
+Fuel used: [5.44881318] [kg/nm]
+WIND AT 41.53513, 12.10224: 170/4
+Heading of the AC is  311.86221199307914
+WIND AT 41.57677, 12.04242: 168/4
+Heading of the AC is  311.86221199307914
+WIND AT 41.61902, 11.98338: 167/4
+Heading of the AC is  312.72848829640253
+WIND AT 41.66156, 11.92477: 166/4
+Heading of the AC is  313.5947645997259
+
+Waypoint [ 18 ] has been reached at 05:53:35!
+Distance flown between waypoints: 18.090777245821176 [nm]
+Fuel used up till now: [1764.78938717] [kg]
+Fuel used between waypoints: [98.79714697] [kg]
+Fuel used: [5.46118863] [kg/nm]
+WIND AT 41.74520, 11.81338: 165/4
+Heading of the AC is  312.72848829640253
+WIND AT 41.78709, 11.75413: 164/4
+Heading of the AC is  311.86221199307914
+
+Waypoint [ 19 ] has been reached at 05:54:48!
+Distance flown between waypoints: 8.895263101309755 [nm]
+Fuel used up till now: [1813.83429546] [kg]
+Fuel used between waypoints: [49.04490829] [kg]
+Fuel used: [5.51359839] [kg/nm]
+WIND AT 41.84565, 11.66749: 163/4
+Heading of the AC is  311.86221199307914
+WIND AT 41.88699, 11.60766: 162/4
+Heading of the AC is  311.86221199307914
+WIND AT 41.92829, 11.54784: 161/3
+Heading of the AC is  311.86221199307914
+WIND AT 41.96999, 11.48854: 160/3
+Heading of the AC is  312.72848829640253
+WIND AT 42.01210, 11.42980: 159/3
+Heading of the AC is  313.5947645997259
+
+Waypoint [ 20 ] has been reached at 05:57:45!
+Distance flown between waypoints: 21.502702837548064 [nm]
+Fuel used up till now: [1931.70988545] [kg]
+Fuel used between waypoints: [117.87558999] [kg]
+Fuel used: [5.48189643] [kg/nm]
+WIND AT 42.09364, 11.31975: 155/3
+Heading of the AC is  313.5947645997259
+WIND AT 42.13612, 11.26100: 153/3
+Heading of the AC is  313.5947645997259
+WIND AT 42.17841, 11.20182: 151/3
+Heading of the AC is  312.72848829640253
+WIND AT 42.22015, 11.14180: 149/3
+Heading of the AC is  312.72848829640253
+WIND AT 42.26138, 11.08098: 147/3
+Heading of the AC is  310.99593568975575
+
+Waypoint [ 21 ] has been reached at 06:00:33!
+Distance flown between waypoints: 20.47854566576874 [nm]
+Fuel used up till now: [2042.71500847] [kg]
+Fuel used between waypoints: [111.00512302] [kg]
+Fuel used: [5.42055695] [kg/nm]
+WIND AT 42.32730, 10.98108: 146/3
+Heading of the AC is  312.7004810921911
+
+Waypoint [ 22 ] has been reached at 06:01:30!
+Distance flown between waypoints: 7.064018623255851 [nm]
+Fuel used up till now: [2047.58719498] [kg]
+Fuel used between waypoints: [4.87218651] [kg]
+Fuel used: [0.68971881] [kg/nm]
+WIND AT 42.40732, 10.86864: 141/2
+Heading of the AC is  313.53388803016855
+
+Waypoint [ 23 ] has been reached at 06:02:30!
+Distance flown between waypoints: 7.113388513407429 [nm]
+Fuel used up till now: [2053.05660229] [kg]
+Fuel used between waypoints: [5.46940731] [kg]
+Fuel used: [0.76888916] [kg/nm]
+WIND AT 42.44660, 10.80987: 135/2
+Heading of the AC is  309.8870115795648
+WIND AT 42.48499, 10.75219: 128/2
+Heading of the AC is  313.581009659688
+
+Waypoint [ 24 ] has been reached at 06:03:13!
+Distance flown between waypoints: 4.911920668204477 [nm]
+Fuel used up till now: [2057.15609333] [kg]
+Fuel used between waypoints: [4.09949104] [kg]
+Fuel used: [0.83460042] [kg/nm]
+WIND AT 42.54078, 10.67339: 112/1
+Heading of the AC is  312.6083661218261
+
+Waypoint [ 25 ] has been reached at 06:03:52!
+Distance flown between waypoints: 4.356138802342671 [nm]
+Fuel used up till now: [2061.06271072] [kg]
+Fuel used between waypoints: [3.90661739] [kg]
+Fuel used: [0.89680737] [kg/nm]
+WIND AT 42.58841, 10.60132: 094/1
+Heading of the AC is  313.59974651796335
+
+Waypoint [ 26 ] has been reached at 06:04:42!
+Distance flown between waypoints: 5.438556032879643 [nm]
+Fuel used up till now: [2066.72208328] [kg]
+Fuel used between waypoints: [5.65937256] [kg]
+Fuel used: [1.04060205] [kg/nm]
+WIND AT 42.65064, 10.51475: 076/2
+Heading of the AC is  314.58285000062494
+WIND AT 42.68663, 10.46320: 072/2
+Heading of the AC is  313.56928005381894
+WIND AT 42.72123, 10.41140: 070/2
+Heading of the AC is  311.49534650561293
+
+Waypoint [ 27 ] has been reached at 06:06:16!
+Distance flown between waypoints: 9.819305109933431 [nm]
+Fuel used up till now: [2077.29999212] [kg]
+Fuel used between waypoints: [10.57790884] [kg]
+Fuel used: [1.07725636] [kg/nm]
+
+Waypoint [ 28 ] has been reached at 06:06:37!
+Distance flown between waypoints: 2.1219810924554627 [nm]
+Fuel used up till now: [2082.24838219] [kg]
+Fuel used between waypoints: [4.94839007] [kg]
+Fuel used: [2.33196709] [kg/nm]
+WIND AT 42.79930, 10.34566: 073/2
+Heading of the AC is  332.5141277561777
+WIND AT 42.84266, 10.31367: 075/2
+Heading of the AC is  331.43078443034926
+WIND AT 42.88492, 10.28121: 078/3
+Heading of the AC is  330.3245963626576
+
+Waypoint [ 29 ] has been reached at 06:08:20!
+Distance flown between waypoints: 10.12131935600212 [nm]
+Fuel used up till now: [2095.16686124] [kg]
+Fuel used between waypoints: [12.91847905] [kg]
+Fuel used: [1.27636315] [kg/nm]
+
+Aircraft ADH931 has been deleted at 09-Sep-2014 06:08:20.
+Fuel used by ADH931 is 2095.17 [kg].
 """
