@@ -35,17 +35,27 @@ class bcolors:
 # scenario_manager = "scenario\Trajectories-batch.scn"
 # scenario_manager = "scenario\Test10.scn"
 # settings_config = "settings.cfg"
-dt = find_dt() # format '#.##'
+# dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = list(range(1, 51))
 # dt = 0.5
-replace_dt()
+# replace_dt()
 traj_folder = os.listdir('scenario\\remon')
 
 # print(traj[1])
 # print(traj[2])
 
-# bs_desktop()
+# bs_laptop()
+
+# print(range(200, 273, 10))
+# exit()
+for i in range(257, 264, 1):
+    replace_speed(i)
+    print('\nThe AC is flying at {0} [kts].\n'.format(i))
+    bs_laptop()
+
+exit()
+
 
     # 'ADH931_LICC_LIRP_20140912072000'
 # run a trajectory for every ensemble

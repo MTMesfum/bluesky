@@ -1,0 +1,8 @@
+# Load wind data
+00:00:00.00> ASAS OFF
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_01
+00:00:00.00> SWRAD VOR
+00:00:00.00> PCALL "run_experiment" 263
+00:00:00.00> FF
