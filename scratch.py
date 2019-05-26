@@ -37,35 +37,40 @@ class bcolors:
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(1, 51))
+list_ensemble = list(range(1, 3))
 # dt = 0.5
 # replace_dt()
-traj_folder = os.listdir('scenario\\remon')
+traj_folder1 = 'scenario\\remon'
+traj_folder2 = 'scenario\\remon scen'
 
 # print(traj[1])
 # print(traj[2])
 
 # bs_laptop()
-
+# set_dt()
+# set_dt(5.0)
+# set_dt(1.5)
+# exit()
 # print(range(200, 273, 10))
 # exit()
-for i in range(257, 264, 1):
-    replace_speed(i)
-    print('\nThe AC is flying at {0} [kts].\n'.format(i))
-    bs_laptop()
-
-exit()
-
+# for i in range(257, 264, 1):
+#     replace_speed(i)
+#     print('\nThe AC is flying at {0} [kts].\n'.format(i))
+#     bs_desktop()
+#
+CreateSCN_Cruise(False, 280)
+# exit()
+traj_folder = traj_folder2
 
     # 'ADH931_LICC_LIRP_20140912072000'
 # run a trajectory for every ensemble
-for l in traj_folder:
+for l in os.listdir(traj_folder):
     k = 0
-    traj = os.listdir('scenario\\remon\\' + l)
-    for j in traj[0:2]:
+    traj = os.listdir(traj_folder + "\\" + l)
+    for j in traj:
     # j = traj[0]
         if k < len(traj):
-            scen_next = 'remon\\' + l + '\\' + traj[k]
+            scen_next = traj_folder[9:] + '\\' + l + '\\' + j
             replace_batch(scen_next)
             print(bcolors.UWARNING  + '\nReplaced Trajectory to'  +
                   bcolors.FAIL      + ' [{1}] {0}'.format(scen_next, k+1) +
@@ -98,6 +103,7 @@ for l in traj_folder:
             bs_desktop()
             # Move the input and output log files into their log folders
             movelog(i, j, l)
+            # exit()
         writerfix(j, l, k)
         # exit()
         k += 1

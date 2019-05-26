@@ -14,12 +14,16 @@ from bluesky.tools import aero
 #sys.argv.append("--headless")
 #sys.arg,"--scenfile","\experimental\Trajectories.scn"])
 #main()
-global scenario_manager, settings_config, dt
+
 settings_config = "settings.cfg"
 scenario_manager = "scenario\Trajectories-batch.scn"
 exp = "scenario\Trajectories-batch2.scn"
-
+save_ic = "scenario\\trajectories_saveic.scn"
+dest_dir_input_logs = "output\\runs\\xlogs input"
+dest_dir_output_logs = "output\\runs\\xlogs output"
 dt = 0.5
+TW_inf = 3600  # [s]
+TW_min = 60  # [s]
 
 class bcolors:
     HEADER = '\033[95m'
@@ -33,16 +37,28 @@ class bcolors:
     UWARNING = '\033[4m' + '\033[93m'
     UBLUE = '\033[4m' + '\033[94m'
 
+def find_index(to_search, target):
+    for number, i in enumerate(to_search):
+        if target == i:
+            return number
+    return
+
 # Scenario batch file
 # Find the timestep which is defined in the settings config
+
 def find_dt():
     #   Replace the dt in the settings.cfg
-    f = open(settings_config, 'r')
-    filedata = f.read()
+    # f = open(settings_config, 'r')
+    # filedata = f.read()
+    # f.close()
+
+    with open(settings_config, 'r') as f:
+        filedata = f.read()
+
     apple = filedata.find('simdt =')
     banana = filedata.find('# Snaplog dt')
     dt_settings = filedata[apple+8:banana-3]
-    f.close()
+
     return dt_settings
 
 # Switches the ensemble in the scenario manager and adapts the name using the ensemble # and global dt
@@ -50,9 +66,12 @@ def replace_ensemble(ensemble):
     if ensemble < 10:
         ensemble = str(0) + str(ensemble)
 
-    f = open(scenario_manager, 'r')
-    filedata = f.read()
-    f.close()
+    # f = open(scenario_manager, 'r')
+    # filedata = f.read()
+    # f.close()
+
+    with open(scenario_manager, 'r') as f:
+        filedata = f.read()
 
     ensemble = str(ensemble)
     apple = filedata.find('LOAD_WIND')
@@ -62,81 +81,72 @@ def replace_ensemble(ensemble):
     filedata = str("".join(filedata[0:apple+10] + str(ensemble) + filedata[banana:citrus+8]
                            + str(ensemble) + filedata[date:]))
 
-    f = open(scenario_manager, 'w')
-    f.write(filedata)
-    f.close()
+    with open(scenario_manager, 'w') as f:
+        f.write(filedata)
+
+    # f = open(scenario_manager, 'w')
+    # f.write(filedata)
+    # f.close()
+
     # os.startfile(scenario_manager)
     pass
 
 def replace_batch(scen_new):
-    f = open(scenario_manager, 'r')
-    filedata = f.read()
-    f.close()
+    with open(scenario_manager, 'r') as f:
+        filedata = f.read()
 
-    apple = filedata.find('remon')
+    apple = filedata.find('PCALL "')
     banana = filedata.find('.scn')
-    filedata = str("".join(filedata[0:apple] + str(scen_new) +
+    filedata = str("".join(filedata[0:apple+7] + str(scen_new) +
                            filedata[banana+4:]))
 
-    f = open(scenario_manager, 'w')
-    f.write(filedata)
-    f.close()
+    with open(scenario_manager, 'w') as f:
+        f.write(filedata)
+
     # os.startfile(scenario_manager)
 
 # Changes the timestep in the settings config of BlueSky using the provided timestep
 # Keep in mind that the savefile doesn't change its name, unless the timestep is set into the global variable dt
-def set_dt(timestep):
+def set_dt(timestep=dt):
+    global dt
+    dt = timestep
 
-    #   Replace the dt in the settings.cfg
-    f = open(settings_config, 'r')
-    filedata = f.read()
-    f.close()
+    with open(settings_config, 'r') as f:
+        filedata = f.read()
 
     apple = filedata.find('simdt =')
     banana = filedata.find('# Snaplog dt')
     filedata = str("".join(filedata[0:apple+8] + str(timestep) + '\n \n' + filedata[banana:]))
 
-    f = open(settings_config, 'w')
-    f.write(filedata)
-    f.close()
-    # os.startfile("C:\Documents\Git\\" + settings_config)
+    with open(settings_config, 'w') as f:
+        f.write(filedata)
 
-    #   Replace the dt in the save file
-    f = open(scenario_manager, 'r')
-    filedata = f.read()
-    f.close()
+    with open(scenario_manager, 'r') as f:
+        filedata = f.read()
 
     apple = filedata.find('_dt_')
-    banana = filedata.find('> EXIT')
     filedata = str("".join(filedata[0:apple+4] + str(timestep) + filedata[apple+7:]))
 
-    f = open(scenario_manager, 'w')
-    f.write(filedata)
-    f.close()
-    dt = timestep
-    print('The timestep has been changed to {0} seconds.'.format(timestep))
-    # os.startfile("C:\Documents\Git\\" + scenario_manager)
+    with open(scenario_manager, 'w') as f:
+        f.write(filedata)
 
-    pass
-
-# This functions replaces the dt in the settings.cfg with the globally defined dt
-def replace_dt():
-    set_dt(dt)
+    print('The timestep has been changed to {0} seconds.'.format(dt))
+    # print('The dt is {0} seconds.\n'.format(dt))
+    # os.startfile(settings_config)
     pass
 
 # Switches the speed in run_experiment
 def replace_speed(speed):
-    f = open(exp, 'r')
-    filedata = f.read()
-    f.close()
+    with open(exp, 'r') as f:
+        filedata = f.read()
 
     apple = filedata.find('run_experiment') #+16
     banana = filedata.find('00:00:00.00> FF')
     filedata = str("".join(filedata[0:apple+16] + str(speed) + filedata[banana-1:]))
 
-    f = open(exp, 'w')
-    f.write(filedata)
-    f.close()
+    with open(exp, 'w') as f:
+        f.write(filedata)
+
     # os.startfile(exp)
     pass
 
@@ -160,7 +170,7 @@ def cut7(one):
 
 # Add a random delay to the time provided
 def addSecs(tm, secs, secs2):
-    secs = secs*60
+    secs = secs*60 # delay is minute based
     fulldate = datetime.datetime(100, 1, 1, tm.hour, tm.minute, tm.second)
     if secs2 == 0:
         fulldate = fulldate + datetime.timedelta(seconds=(secs))
@@ -172,19 +182,17 @@ def addSecs(tm, secs, secs2):
 
 # Create a scenario file from the provided trajectories and save it in the provided name
 # The first entry in the method decides whether a random delay is added
-def CreateSCN(alpha, save_file):
-    # Constants
-    # nm  = 1852.  # m       1 nautical mile
-    # ft  = .3048  # m        1 foot
-
-    folder = "queries\\"
+def CreateSCN(alpha, save_file, folder = "queries\\"):
     FileName = os.listdir(folder)
-    FileName.remove('hide')
+    # FileName.remove('hide')
     traj = 0
     banana = list()
     scenario2 = pd.DataFrame()
 
     for k in FileName:
+        _, ext = os.path.splitext(k)
+        if ext != '.csv':
+            continue
         if not scenario2.empty:
             scenario2 = scenario2.append(pd.read_csv(folder + "\\" + k))
         else:
@@ -297,11 +305,133 @@ def CreateSCN(alpha, save_file):
         fin.write('\n'.join(banana))
     os.startfile(dir + '/scenario/' + save_file + '.scn')
 
-    # save.to_csv('test1.scn', sep=',', index=False, header=False, quoting=0)
-    # banana.to_csv('test2.scn', sep=',')
-    # writer = pd. Writer('{0}/{1}.xlsx'.format(name, i))
-    # save.to_excel(writer)
-    # writer.save()
+    # os.startfile("F:\Documents\Python Scripts\ThesisScript")
+
+# alpha = random delay
+def CreateSCN_Cruise(alpha, fl_ref):
+    folder = "scenario\\remon_raw_scenario\\"
+    type_file = "AC Type 2.xlsx"
+    FileName = os.listdir(folder)
+
+    for k in FileName:
+        acid, ext = os.path.splitext(k)
+        if ext != '.csv':
+            continue
+        scenario = pd.read_csv(folder + k)
+        aircraftid = acid + '-%0'
+        actype_file = pd.read_excel(folder + type_file)
+        actype = actype_file[actype_file['id'].str.contains(k[0:7])]['AC type'].reset_index(drop=True)[0] + ', '
+        TW_det = actype_file[actype_file['id'].str.contains(k[0:7])]['TW Det'].reset_index(drop=True)[0]
+        TW_stoch = actype_file[actype_file['id'].str.contains(k[0:7])]['TW Stoch'].reset_index(drop=True)[0]
+
+        scenario = scenario[scenario['fl']>fl_ref].reset_index(drop=True)
+        apple = scenario.time_over[0]
+        [heading, _] = dist(scenario['st_x(gpt.coords)'][0], scenario['st_y(gpt.coords)'][0],
+                                    scenario['st_x(gpt.coords)'][1], scenario['st_y(gpt.coords)'][1])
+        if heading < 0:
+            heading += 360
+
+        if alpha:
+            apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
+            apple, delay = addSecs(apple, random.randrange(16), random.randrange(1))
+        else:
+            apple = apple[-8:]
+            delay = 0
+        m = 0
+
+        for l in ['min', 'det', 'prob', 'inf']:
+            banana = list()
+            banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
+            m += 1
+            for i in range(scenario.shape[0]):
+                FlightLevel = 'FL' + str(scenario['fl'][i])
+
+                if i == 0:
+                    banana.append(apple + '.00> CRE ' + aircraftid + ', ' + actype + str(cut7(scenario['st_x(gpt.coords)'][i]))
+                                  + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
+                                  + str(cut3(heading)) + ', ' + FlightLevel + ', 190')
+                    banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG, '
+                                  + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
+                                  + str(cut7(scenario['st_y(gpt.coords)'][i])))
+                    banana.append(apple + '.00> ORIG ' + aircraftid + ', ' + aircraftid + '-ORIG')
+                    banana.append(apple + '.00> DEFWPT ' + aircraftid + '-DEST, '
+                                  + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0]-1]))
+                                  + ', ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0]-1])))
+                    banana.append(apple + '.00> DEST ' + aircraftid + ', ' + aircraftid + '-DEST' )
+                    banana.append(apple + '.00> ' + aircraftid + ' AT ' + aircraftid
+                                                    + '-DEST, ' + 'FL' + str(scenario['fl'][-1:].reset_index(drop=True)[0]))
+                else:
+                    if i == scenario.shape[0]-1:
+                        follow = aircraftid + '-' + str(i-1)
+                        follow2 = aircraftid + '-' + str(i)
+                        banana.append(apple + '.00> DEFWPT ' + follow2 + ', '
+                                      + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0] - 1]))
+                                      + ', ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0] - 1])))
+                        banana.append(apple + '.00> ' + aircraftid + ' after ' + follow + ' ADDWPT '
+                                      + follow2 + ', ' + FlightLevel)
+                        banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow +
+                                            ' ' + FL_OLD)
+                        banana.append(apple + '.00> ' + aircraftid + ' after ' + follow2 + ' ADDWPT '
+                                      + aircraftid + "-DEST" + ', ' + FlightLevel)
+                        banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow2 +
+                                            ' ' + FL_OLD)
+                        o = list(range(0, scenario.shape[0], 5))
+                        o.append(scenario.shape[0])
+                        o.pop(0)
+                        citrus1 = list()
+                        citrus2 = list()
+                        citrus3 = list()
+                        for n in o:
+                            wp = aircraftid + '-' + str(n-1) + ' '
+                            time = scenario.time_over[n-1]
+                            time = datetime.datetime(100, 1, 1, int(time[-8:-6]), int(time[-5:-3]), int(time[-2:]))
+                            if l == 'min':
+                                secs = TW_min/2
+                            elif l == 'det':
+                                secs = TW_det/2 * 60
+                            elif l == 'prob':
+                                secs = TW_stoch/2 * 60
+                            elif l == 'inf':
+                                secs = TW_inf/2
+                            time = (time + datetime.timedelta(seconds=(secs))).time()
+                            # time = time[-8:]
+                            banana.append(apple + '.00> ' + aircraftid + ' RTA_AT ' + wp + str(time))
+                            citrus1.append(apple + '.00> ' + aircraftid + ' TW_SIZE_AT ' + wp + str(int(secs*2)))
+                            citrus2.append(apple + '.00> ' + aircraftid + ' OWN_SPD_FROM ' + wp)
+                            citrus3.append(apple + '.00> ' + aircraftid + '  AFMS_FROM ' + wp + 'tw')
+                            del secs
+                        banana = banana + citrus1 + citrus2 + citrus3[0:-1]
+                        banana.append(apple + '.00> ' + aircraftid + ' AFMS_FROM ' + wp + 'off')
+                        banana.append(apple + '.00> VNAV ' + aircraftid + ' ON')
+                        banana.append(apple + '.00> LNAV ' + aircraftid + ' ON')
+                        # banana.append(apple + '.00> dt 0.5')
+                        banana.append(apple + '.00> FF')
+
+                    else:
+                        if i == 1:
+                            follow = aircraftid + '-ORIG'
+                        else:
+                            follow = aircraftid + '-' + str(i-1)
+
+                        banana.append(apple + '.00> DEFWPT ' + aircraftid + '-' + str(i) + ', '
+                                      + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
+                                      + str(cut7(scenario['st_y(gpt.coords)'][i])))
+                        banana.append(apple + '.00> ' + aircraftid + ' after ' + follow + ' ADDWPT '
+                                            + aircraftid + '-' + str(i) + ', ' + FlightLevel)
+                        if i >= 2:
+                            banana.append(apple + '.00> ' + aircraftid + ' AT ' + aircraftid + '-' + str(i-1) +
+                                            ' ' + FL_OLD)
+                FL_OLD = FlightLevel
+
+                dir = os.getcwd()
+                dest_dir = dir + '/scenario/remon scen/' + str(m) + ' ' + l + '/'
+                if not os.path.isdir(dest_dir):
+                    os.makedirs(dest_dir)
+                with open(dest_dir + l + ' ' + k[0:6] + '.scn', "w") as fin:
+                    fin.write('\n'.join(banana))
+
+    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+    #     print(scenario)
 
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
 
@@ -359,10 +489,17 @@ def writerfix(traj, dir, counter):
     df.reset_index(inplace=True)
     df.index = df.index + 1
     df = df.drop('index', axis=1)
-    name = dir + " " + traj[0:7]
+    name, _ = os.path.splitext(traj)
+
+    with open(dest_dir_input_logs + "\\" + dir[0:7] + " " + traj[4:-4] + " IE01 D0.scn", 'r') as f:
+        filedata = f.read()
+    apple = filedata.find('TW_SIZE_AT ')
+    banana = filedata[apple+len('TW_SIZE_AT '):].find('TW_SIZE_AT ') + apple
+    _, _, TW_size, *_ = filedata[apple:banana].split()
+
     if not os.path.isdir(dest_dir):
         os.mkdir(dest_dir)
-    df.to_excel(dest_dir + '\{0}.xlsx'.format(name))
+    df.to_excel(dest_dir + '\{0} TW={1}.xlsx'.format(name, TW_size))
     os.remove('output\WRITER Standard File.csv')
     print(bcolors.UBLUE     + '\n\nSaved'   +
           bcolors.FAIL      + ' [{1}] {0} '.format(traj, counter)   +
@@ -372,29 +509,31 @@ def writerfix(traj, dir, counter):
           bcolors.ENDC)
     # os.startfile('output\\runs\WRITER {0}.xlsx'.format(traj))
 
-def movelog(i, j, l):
+def movelog(i, j, l): # ensemble, traj, dir
     #Move the input log file into the input log folder
-    dest_dir = "output\\runs\\xlogs input"
-    if not os.path.isdir(dest_dir):
-        os.makedirs(dest_dir)
-    if i < 10:
-        new_name = "\\" + l[:7] + " " + j[:-4] + " IE0" + str(i) + ".scn"
-    else:
-        new_name = "\\" + l[:7] + " " + j[:-4] + " IE" + str(i) + ".scn"
-    os.rename("scenario\\trajectories_saveic.scn", dest_dir + new_name)
+    if not os.path.isdir(dest_dir_input_logs):
+        os.makedirs(dest_dir_input_logs)
+
+    with open(save_ic, 'r') as f:
+        filedata = f.read()
+
+    apple = filedata.find('PRINTER A delay of') #+16
+    banana = filedata.find('seconds has been added')
+    delay = filedata[apple+len('PRINTER A delay of '):banana]
+
+    new_name = "\\" + l[0:7] + " " + j[4:-4] + \
+               " IE" + str(i).zfill(2) + " D" + str(delay).strip() + ".scn"
+    os.rename(save_ic, dest_dir_input_logs + new_name)
 
     #Move the output log file into the output log folder if the file exists
-    dest_dir = "output\\runs\\xlogs output"
-    if not os.path.isdir(dest_dir):
-        os.makedirs(dest_dir)
+    if not os.path.isdir(dest_dir_output_logs):
+        os.makedirs(dest_dir_output_logs)
     files = os.listdir('output\\')
-    files = str([files[files.index(i)] for i in files if 'MYLOG' in i])
+    files = [files[files.index(i)] for i in files if 'MYLOG' in i]
     if files == []:
         pass
     else:
-        if i < 10:
-            new_name = "\\" + l[0:7] + " " + j[:-4] + " OE0" + str(i) + ".log"
-        else:
-            new_name = "\\" + l[0:7] + " " + j[:-4] + " OE" + str(i) + ".log"
-        os.rename("output\\" + files[2:-2], dest_dir + new_name)
+        files = str(files[-1])
+        new_name = "\\" + l[0:7] + " " + j[4:-4] + " OE" + str(i).zfill(2) + ".log"
+        os.rename("output\\" + files, dest_dir_output_logs + new_name)
     pass

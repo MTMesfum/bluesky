@@ -218,16 +218,17 @@ class Afms:
         #     stack.stack('GETWIND {0} {1} {2}'.format(traf.lat[-1], traf.lon[-1], traf.alt[-1]))
 
         if self.currentwp != holder:
-            if holder < 10:
-                print("\nWaypoint [ 0{0} ] has been reached at {1}!".format(holder, str(sim.utc.strftime("%H:%M:%S"))))
-                column_name =  '[ 0{0} ]'.format(holder) #columns=i, str(sim.utc.strftime("%H:%M:%S")))
-            else:
-                print("\nWaypoint [ {0} ] has been reached at {1}!".format(holder, str(sim.utc.strftime("%H:%M:%S"))))
-                column_name = '[ {0} ]'.format(holder)
+            # if holder < 11:
+            #     print("\nWaypoint [ 0{0} ] has been reached at {1}!".format(holder, str(sim.utc.strftime("%H:%M:%S"))))
+            #     column_name =  '[ 0{0} ]'.format(holder-1) #columns=i, str(sim.utc.strftime("%H:%M:%S")))
+            # else:
+            print("\nWaypoint [ {0} ] has been reached at {1}!".format(str(holder).zfill(2), str(sim.utc.strftime("%H:%M:%S"))))
+            column_name = '[ {0} ]'.format(holder-1)
 
             distance = 1
             if holder > 1:
                 heading, distance = geo.qdrdist(self.lat, self.lon, traf.lat[-1], traf.lon[-1])
+                distance = np.array2string(distance, precision=3)
                 print('Distance flown between waypoints: {0} [nm]'.format(distance))
             self.lat = traf.lat[-1]
             self.lon = traf.lon[-1]
