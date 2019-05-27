@@ -508,10 +508,11 @@ def writerfix(traj, dir, counter):
           bcolors.ENDC)
     # os.startfile('output\\runs\WRITER {0}.xlsx'.format(traj))
 
-def movelog(i, j, l): # ensemble, traj, dir
+def movelog(ensemble, traj, dir):
     #Move the input log file into the input log folder
-    if not os.path.isdir(dest_dir_input_logs):
-        os.makedirs(dest_dir_input_logs)
+    dest_dir_input_logs2 = dest_dir_input_logs + "\\" + dir[0:7] + "\\" + traj[4:10]
+    if not os.path.isdir(dest_dir_input_logs2):
+        os.makedirs(dest_dir_input_logs2)
 
     with open(save_ic, 'r') as f:
         filedata = f.read()
@@ -520,22 +521,23 @@ def movelog(i, j, l): # ensemble, traj, dir
     banana = filedata.find('seconds has been added')
     delay = filedata[apple+len('PRINTER A delay of '):banana]
 
-    new_name = "\\" + l[0:7] + " " + j[4:10] + \
-               " IE" + str(i).zfill(2) + " D" + str(delay).strip() + ".scn"
-    os.rename(save_ic, dest_dir_input_logs + new_name)
+    new_name = "\\" + dir[0:7] + " " + traj[4:10] + \
+               " IE" + str(ensemble).zfill(2) + " D" + str(delay).strip() + ".scn"
+    os.rename(save_ic, dest_dir_input_logs2 + new_name)
 
     #Move the output log file into the output log folder if the file exists
-    if not os.path.isdir(dest_dir_output_logs):
-        os.makedirs(dest_dir_output_logs)
+    dest_dir_output_logs2 = dest_dir_output_logs + "\\" + dir[0:7] + "\\" + traj[4:10]
+    if not os.path.isdir(dest_dir_output_logs2):
+        os.makedirs(dest_dir_output_logs2)
     files = os.listdir('output\\')
     files = [files[files.index(i)] for i in files if 'MYLOG' in i]
     if files == []:
         pass
     else:
         files = str(files[-1])
-        new_name = "\\" + l[0:7] + " " + j[4:-4] + \
-                   " OE" + str(i).zfill(2) + " D" + str(delay).strip() + ".log"
-        os.rename("output\\" + files, dest_dir_output_logs + new_name)
+        new_name = "\\" + dir[0:7] + " " + traj[4:-4] + \
+                   " OE" + str(ensemble).zfill(2) + " D" + str(delay).strip() + ".log"
+        os.rename("output\\" + files, dest_dir_output_logs2 + new_name)
     pass
 
 def talk_time(runs):

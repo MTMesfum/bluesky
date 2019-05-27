@@ -38,6 +38,8 @@ class bcolors:
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = list(range(1, 2))
+skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
+
 # dt = 0.5
 set_dt()
 traj_folder1 = 'scenario\\remon'
@@ -56,7 +58,7 @@ traj_folder = traj_folder2
 runs = 0
 # run a trajectory for every ensemble
 for dir in os.listdir(traj_folder):
-    if dir in ['1 min', '2 det']:
+    if dir in skip_entire_dir:
         continue
     traj_counter = 0
     traj = os.listdir(traj_folder + "\\" + dir)
@@ -78,7 +80,7 @@ for dir in os.listdir(traj_folder):
             bs_desktop()
             # Move the input and output log files into their log folders
             movelog(ensemble, sgl_traj, dir)
-            # exit()
+            exit()
 
         writerfix(sgl_traj, dir, traj_counter)
         # exit()
