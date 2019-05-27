@@ -366,10 +366,10 @@ class Afms:
 
                     earliest_time_s2rta = max(time_s2rta - tw_size/2, 0)
                     latest_time_s2rta = max(time_s2rta + tw_size/2, 0)
-                    # print('RTA is: ', rta)
-                    # print('Time left till RTA: ', time_s2rta)
-                    # print('earliest RTA: ', earliest_time_s2rta)
-                    # print('latest RTA: ', latest_time_s2rta)
+                    print('RTA is: ', rta)
+                    print('Time left till RTA: ', time_s2rta)
+                    print('earliest RTA: ', earliest_time_s2rta)
+                    print('latest RTA: ', latest_time_s2rta)
                     if eta_s_preferred < earliest_time_s2rta:  # Prefer earlier then TW
                         # print('Speed Increased!')
                         time_window_cas_m_s = self._cas2rta(distances_nm, flightlevels_m, earliest_time_s2rta,
@@ -378,6 +378,8 @@ class Afms:
                         # print('Speed Decreased!')
                         time_window_cas_m_s = self._cas2rta(distances_nm, flightlevels_m, latest_time_s2rta,
                                                             traf.cas[idx])
+                    elif time_s2rta < 0:  # If the TW can't be reached, fly at max speed
+                        time_window_cas_m_s = 1000
                     else:
                         # print('Speed unchanged!')
                         time_window_cas_m_s = preferred_cas_m_s

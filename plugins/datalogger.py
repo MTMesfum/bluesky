@@ -69,7 +69,7 @@ class DataLogger(TrafficArrays):
     def __init__(self):
         super(DataLogger, self).__init__()
         self.dataframe_holder = \
-            ['Ensemble', 'Delay', 'AC ID', 'Date of Flight', 'Departure Time', 'Arrival Time', 'Fuel Consumed']
+            ['Ensemble', 'Delay', 'AC ID', 'Date', 'Departure', 'Arrival', 'Fuel Consumed']
         traf.resultstosave = pd.DataFrame(columns=self.dataframe_holder)
 
         with RegisterElementParameters(self):

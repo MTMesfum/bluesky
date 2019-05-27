@@ -9,6 +9,7 @@ import pandas as pd, os, datetime, random
 from bluesky.tools.geo import qdrdist as dist
 from bluesky.tools.geo import latlondist as dist2
 from bluesky.tools import aero
+import timeit
 #from BlueSky import main
 # print(sys.argv)
 #sys.argv.append("--headless")
@@ -24,6 +25,7 @@ dest_dir_output_logs = "output\\runs\\xlogs output"
 dt = 0.5
 TW_inf = 3600  # [s]
 TW_min = 60  # [s]
+set_of_delays = [0, 90, 720, 1050]  # [s]
 
 class bcolors:
     HEADER = '\033[95m'
@@ -169,16 +171,12 @@ def cut7(one):
     return round(one, 7)
 
 # Add a random delay to the time provided
-def addSecs(tm, secs, secs2):
-    secs = secs*60 # delay is minute based
-    fulldate = datetime.datetime(100, 1, 1, tm.hour, tm.minute, tm.second)
-    if secs2 == 0:
-        fulldate = fulldate + datetime.timedelta(seconds=(secs))
-        delay = secs
-    else:
-        fulldate = fulldate - datetime.timedelta(seconds=(secs))
-        delay = -secs
-    return str(fulldate.time()), delay
+# def addSecs(tm, secs, secs2):
+def addSecs(time, set_of_delays2):
+    if set_of_delays2 == []:
+        set_of_delays2 = [0]
+    list_of_times = [time + datetime.timedelta(seconds=x) for x in set_of_delays2]
+    return list_of_times, set_of_delays2
 
 # Create a scenario file from the provided trajectories and save it in the provided name
 # The first entry in the method decides whether a random delay is added
@@ -331,104 +329,105 @@ def CreateSCN_Cruise(alpha, fl_ref):
         if heading < 0:
             heading += 360
 
-        if alpha:
-            apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
-            apple, delay = addSecs(apple, random.randrange(16), random.randrange(1))
-        else:
-            apple = apple[-8:]
-            delay = 0
-        m = 0
+        apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
+        basket_of_apples, set_of_delays2 = addSecs(apple, set_of_delays*alpha)
+        replacement = zip(basket_of_apples, set_of_delays2)
 
-        for l in ['min', 'det', 'prob', 'inf']:
-            banana = list()
-            banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
-            m += 1
-            for i in range(scenario.shape[0]):
-                FlightLevel = 'FL' + str(scenario['fl'][i])
+        for apple, delay in replacement:
+            apple = str(apple.time())
+            m = 0
+            for l in ['min', 'det', 'prob', 'inf']:
+                banana = list()
+                banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
+                m += 1
+                for i in range(scenario.shape[0]):
+                    FlightLevel = 'FL' + str(scenario['fl'][i])
 
-                if i == 0:
-                    banana.append(apple + '.00> CRE ' + aircraftid + ', ' + actype + str(cut7(scenario['st_x(gpt.coords)'][i]))
-                                  + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
-                                  + str(cut3(heading)) + ', ' + FlightLevel + ', 190')
-                    banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG, '
-                                  + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
-                                  + str(cut7(scenario['st_y(gpt.coords)'][i])))
-                    banana.append(apple + '.00> ORIG ' + aircraftid + ', ' + aircraftid + '-ORIG')
-                    banana.append(apple + '.00> DEFWPT ' + aircraftid + '-DEST, '
-                                  + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0]-1]))
-                                  + ', ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0]-1])))
-                    banana.append(apple + '.00> DEST ' + aircraftid + ', ' + aircraftid + '-DEST' )
-                    banana.append(apple + '.00> ' + aircraftid + ' AT ' + aircraftid
-                                                    + '-DEST, ' + 'FL' + str(scenario['fl'][-1:].reset_index(drop=True)[0]))
-                else:
-                    if i == scenario.shape[0]-1:
-                        follow = aircraftid + '-' + str(i-1)
-                        follow2 = aircraftid + '-' + str(i)
-                        banana.append(apple + '.00> DEFWPT ' + follow2 + ', '
-                                      + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0] - 1]))
-                                      + ', ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0] - 1])))
-                        banana.append(apple + '.00> ' + aircraftid + ' after ' + follow + ' ADDWPT '
-                                      + follow2 + ', ' + FlightLevel)
-                        banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow +
-                                            ' ' + FL_OLD)
-                        banana.append(apple + '.00> ' + aircraftid + ' after ' + follow2 + ' ADDWPT '
-                                      + aircraftid + "-DEST" + ', ' + FlightLevel)
-                        banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow2 +
-                                            ' ' + FL_OLD)
-                        o = list(range(0, scenario.shape[0], 5))
-                        o.append(scenario.shape[0])
-                        o.pop(0)
-                        citrus1 = list()
-                        citrus2 = list()
-                        citrus3 = list()
-                        for n in o:
-                            wp = aircraftid + '-' + str(n-1) + ' '
-                            time = scenario.time_over[n-1]
-                            time = datetime.datetime(100, 1, 1, int(time[-8:-6]), int(time[-5:-3]), int(time[-2:]))
-                            if l == 'min':
-                                secs = TW_min/2
-                            elif l == 'det':
-                                secs = TW_det/2 * 60
-                            elif l == 'prob':
-                                secs = TW_stoch/2 * 60
-                            elif l == 'inf':
-                                secs = TW_inf/2
-                            time = (time + datetime.timedelta(seconds=(secs))).time()
-                            # time = time[-8:]
-                            banana.append(apple + '.00> ' + aircraftid + ' RTA_AT ' + wp + str(time))
-                            citrus1.append(apple + '.00> ' + aircraftid + ' TW_SIZE_AT ' + wp + str(int(secs*2)))
-                            citrus2.append(apple + '.00> ' + aircraftid + ' OWN_SPD_FROM ' + wp)
-                            citrus3.append(apple + '.00> ' + aircraftid + '  AFMS_FROM ' + wp + 'tw')
-                            del secs
-                        banana = banana + citrus1 + citrus2 + citrus3[0:-1]
-                        banana.append(apple + '.00> ' + aircraftid + ' AFMS_FROM ' + wp + 'off')
-                        banana.append(apple + '.00> VNAV ' + aircraftid + ' ON')
-                        banana.append(apple + '.00> LNAV ' + aircraftid + ' ON')
-                        # banana.append(apple + '.00> dt 0.5')
-                        banana.append(apple + '.00> FF')
-
-                    else:
-                        if i == 1:
-                            follow = aircraftid + '-ORIG'
-                        else:
-                            follow = aircraftid + '-' + str(i-1)
-
-                        banana.append(apple + '.00> DEFWPT ' + aircraftid + '-' + str(i) + ', '
+                    if i == 0:
+                        banana.append(apple + '.00> CRE ' + aircraftid + ', ' + actype + str(cut7(scenario['st_x(gpt.coords)'][i]))
+                                      + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
+                                      + str(cut3(heading)) + ', ' + FlightLevel + ', 190')
+                        banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG, '
                                       + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
                                       + str(cut7(scenario['st_y(gpt.coords)'][i])))
-                        banana.append(apple + '.00> ' + aircraftid + ' after ' + follow + ' ADDWPT '
-                                            + aircraftid + '-' + str(i) + ', ' + FlightLevel)
-                        if i >= 2:
-                            banana.append(apple + '.00> ' + aircraftid + ' AT ' + aircraftid + '-' + str(i-1) +
-                                            ' ' + FL_OLD)
-                FL_OLD = FlightLevel
+                        banana.append(apple + '.00> ORIG ' + aircraftid + ', ' + aircraftid + '-ORIG')
+                        banana.append(apple + '.00> DEFWPT ' + aircraftid + '-DEST, '
+                                      + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0]-1]))
+                                      + ', ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0]-1])))
+                        banana.append(apple + '.00> DEST ' + aircraftid + ', ' + aircraftid + '-DEST' )
+                        banana.append(apple + '.00> ' + aircraftid + ' AT ' + aircraftid
+                                                        + '-DEST, ' + 'FL' + str(scenario['fl'][-1:].reset_index(drop=True)[0]))
+                    else:
+                        if i == scenario.shape[0]-1:
+                            follow = aircraftid + '-' + str(i-1)
+                            follow2 = aircraftid + '-' + str(i)
+                            banana.append(apple + '.00> DEFWPT ' + follow2 + ', '
+                                          + str(cut7(scenario['st_x(gpt.coords)'][scenario.shape[0] - 1]))
+                                          + ', ' + str(cut7(scenario['st_y(gpt.coords)'][scenario.shape[0] - 1])))
+                            banana.append(apple + '.00> ' + aircraftid + ' after ' + follow + ' ADDWPT '
+                                          + follow2 + ', ' + FlightLevel)
+                            banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow +
+                                                ' ' + FL_OLD)
+                            banana.append(apple + '.00> ' + aircraftid + ' after ' + follow2 + ' ADDWPT '
+                                          + aircraftid + "-DEST" + ', ' + FlightLevel)
+                            banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow2 +
+                                                ' ' + FL_OLD)
+                            o = list(range(0, scenario.shape[0], 5))
+                            o.append(scenario.shape[0])
+                            o.pop(0)
+                            citrus1, citrus2, citrus3 = ([], [], [])
 
-                dir = os.getcwd()
-                dest_dir = dir + '/scenario/remon scen/' + str(m) + ' ' + l + '/'
-                if not os.path.isdir(dest_dir):
-                    os.makedirs(dest_dir)
-                with open(dest_dir + l + ' ' + k[0:6] + '.scn', "w") as fin:
-                    fin.write('\n'.join(banana))
+                            for n in o:
+                                if n == o[0]:
+                                    wp_0 = aircraftid + '-' + str(1) + ' '
+                                wp_1 = aircraftid + '-' + str(n-1) + ' '
+                                time = scenario.time_over[n-1]
+                                time = datetime.datetime(100, 1, 1, int(time[-8:-6]), int(time[-5:-3]), int(time[-2:]))
+
+                                if l == 'min':      secs = TW_min/2
+                                elif l == 'det':    secs = TW_det/2 * 60
+                                elif l == 'prob':   secs = TW_stoch/2 * 60
+                                elif l == 'inf':    secs = TW_inf/2
+
+                                time = (time + datetime.timedelta(seconds=(secs))).time()
+                                banana.append(apple + '.00> ' + aircraftid + ' RTA_AT ' + wp_1 + str(time))
+                                citrus1.append(apple + '.00> ' + aircraftid + ' TW_SIZE_AT ' + wp_1 + str(int(secs*2)))
+                                citrus2.append(apple + '.00> ' + aircraftid + ' OWN_SPD_FROM ' + wp_0)
+                                citrus3.append(apple + '.00> ' + aircraftid + ' AFMS_FROM ' + wp_0 + 'tw')
+                                wp_0 = wp_1
+                                del secs
+                            banana = banana + citrus1 + citrus2 + citrus3
+                            banana.append(apple + '.00> ' + aircraftid + ' AFMS_FROM ' + wp_1 + 'off')
+                            banana.append(apple + '.00> VNAV ' + aircraftid + ' ON')
+                            banana.append(apple + '.00> LNAV ' + aircraftid + ' ON')
+                            # banana.append(apple + '.00> dt 0.5')
+                            banana.append(apple + '.00> FF')
+
+                        else:
+                            if i == 1:
+                                follow = aircraftid + '-ORIG'
+                            else:
+                                follow = aircraftid + '-' + str(i-1)
+
+                            banana.append(apple + '.00> DEFWPT ' + aircraftid + '-' + str(i) + ', '
+                                          + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
+                                          + str(cut7(scenario['st_y(gpt.coords)'][i])))
+                            banana.append(apple + '.00> ' + aircraftid + ' after ' + follow + ' ADDWPT '
+                                                + aircraftid + '-' + str(i) + ', ' + FlightLevel)
+                            if i >= 2:
+                                banana.append(apple + '.00> ' + aircraftid + ' AT ' + aircraftid + '-' + str(i-1) +
+                                                ' ' + FL_OLD)
+                    FL_OLD = FlightLevel
+
+                    dir = os.getcwd()
+                    dest_dir = dir + '/scenario/remon scen/' + str(m) + ' ' + l + '/'
+                    if not os.path.isdir(dest_dir):
+                        os.makedirs(dest_dir)
+                    with open(dest_dir + l + ' ' + acid + " D" + str(delay).strip() + '.scn', "w") as fin:
+                        fin.write('\n'.join(banana))
+
+            if not alpha:
+                break
 
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
     #     print(scenario)
@@ -491,7 +490,7 @@ def writerfix(traj, dir, counter):
     df = df.drop('index', axis=1)
     name, _ = os.path.splitext(traj)
 
-    with open(dest_dir_input_logs + "\\" + dir[0:7] + " " + traj[4:-4] + " IE01 D0.scn", 'r') as f:
+    with open(dest_dir_input_logs + "\\" + dir[0:7] + " " + traj[4:10] + " IE01 D0.scn", 'r') as f:
         filedata = f.read()
     apple = filedata.find('TW_SIZE_AT ')
     banana = filedata[apple+len('TW_SIZE_AT '):].find('TW_SIZE_AT ') + apple
@@ -521,7 +520,7 @@ def movelog(i, j, l): # ensemble, traj, dir
     banana = filedata.find('seconds has been added')
     delay = filedata[apple+len('PRINTER A delay of '):banana]
 
-    new_name = "\\" + l[0:7] + " " + j[4:-4] + \
+    new_name = "\\" + l[0:7] + " " + j[4:10] + \
                " IE" + str(i).zfill(2) + " D" + str(delay).strip() + ".scn"
     os.rename(save_ic, dest_dir_input_logs + new_name)
 
@@ -534,6 +533,27 @@ def movelog(i, j, l): # ensemble, traj, dir
         pass
     else:
         files = str(files[-1])
-        new_name = "\\" + l[0:7] + " " + j[4:-4] + " OE" + str(i).zfill(2) + ".log"
+        new_name = "\\" + l[0:7] + " " + j[4:-4] + \
+                   " OE" + str(i).zfill(2) + " D" + str(delay).strip() + ".log"
         os.rename("output\\" + files, dest_dir_output_logs + new_name)
     pass
+
+def talk_time(runs):
+    print(bcolors.UWARNING + "\nExecuting simulation {1} and {0} seconds have passed!".format(
+        int(timeit.default_timer()), runs) + bcolors.ENDC)
+    if runs > 1:
+        print(bcolors.UWARNING +
+              "This results in {0} seconds per run!".format(int(timeit.default_timer() / (runs - 1)))
+              + bcolors.ENDC)
+
+def talk_traj(scen_next, traj_counter):
+    print(bcolors.UWARNING + '\nReplaced Trajectory to' +
+          bcolors.FAIL + ' [{1}] {0}'.format(scen_next, traj_counter + 1) +
+          bcolors.ENDC)
+
+def talk_run(ensemble, sgl_traj, traj_counter, dir):
+    print(bcolors.UWARNING + '\nRunning Trajectory' +
+          bcolors.FAIL + ' [{1}] {2}\{0} '.format(sgl_traj, traj_counter + 1, dir) +
+          bcolors.UWARNING + 'with Ensemble' +
+          bcolors.FAIL + ' [{0}]\n'.format(str(ensemble).zfill(2)) +
+          bcolors.ENDC)
