@@ -37,7 +37,7 @@ class bcolors:
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(1, 3))
+list_ensemble = list(range(1, 2))
 # dt = 0.5
 set_dt()
 traj_folder1 = 'scenario\\remon'
@@ -56,7 +56,7 @@ traj_folder = traj_folder2
 runs = 0
 # run a trajectory for every ensemble
 for dir in os.listdir(traj_folder):
-    if dir == '1 min':
+    if dir in ['1 min', '2 det']:
         continue
     traj_counter = 0
     traj = os.listdir(traj_folder + "\\" + dir)
@@ -66,10 +66,10 @@ for dir in os.listdir(traj_folder):
             scen_next = traj_folder[9:] + '\\' + dir + '\\' + sgl_traj
             replace_batch(scen_next)
             talk_traj(scen_next, traj_counter)
-        if dir == '2 det':
-            if sgl_traj in ['det ADH931 D0.scn',
-                            'det ADH931 D720.scn', 'det ADH931 D1050.scn']:
-                continue
+        # if dir == '2 det':
+        #     if sgl_traj in ['det ADH931 D0.scn',
+        #                     'det ADH931 D720.scn', 'det ADH931 D1050.scn']:
+        #         continue
         for ensemble in list_ensemble:
             replace_ensemble(ensemble)
             runs += 1
