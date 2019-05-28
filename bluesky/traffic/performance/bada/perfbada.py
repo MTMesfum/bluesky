@@ -429,7 +429,12 @@ class PerfBADA(TrafficArrays):
         maxthr = Tj*self.jet + Tt*self.turbo + Tp*self.piston
 
         # 2. level flight: Thr = D.
+        # print('\nTime is: ', str(bs.sim.utc.strftime("%H:%M:%S")))
+        # print('Mass is: ', self.mass)
+        # print('ax is: ', bs.traf.ax)
+        # print('lvl is: ', lvl)
         Tlvl = lvl * (self.D + self.mass * bs.traf.ax)
+        # print('Tlvl is: ', Tlvl)
         # Tlvl = lvl * self.D
         # 3. Descent: condition: vs negative/ H>hdes: fixed formula. H<hdes: phase cr, ap, ld
 
@@ -514,6 +519,7 @@ class PerfBADA(TrafficArrays):
         fcrp = self.cf1*self.cf_cruise*pdf
         #merge
         fcr = fcrjt + fcrp
+        # print(eta, self.Thr, self.cf_cruise, jt)
 
         # approach/landing fuel flow
         fal = np.maximum(fnom, fmin)
@@ -549,7 +555,9 @@ class PerfBADA(TrafficArrays):
         self.ff = np.maximum.reduce([ffto, ffic, ffcc, ffcrl, ffcd, ffap, ffld, ffgd])/60. # convert from kg/min to kg/sec
 
         # update mass
-        self.mass = self.mass - self.ff * dt # Use fuelflow in kg/min
+        # print('fuel flow is: ', self.ff)
+        # print('fuel flow cruise and lvl: ', ffcrl/60)
+        self.mass = self.mass - self.ff * dt  # Use fuelflow in kg/min
 
 
 

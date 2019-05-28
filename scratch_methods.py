@@ -22,6 +22,8 @@ exp = "scenario\Trajectories-batch2.scn"
 save_ic = "scenario\\trajectories_saveic.scn"
 dest_dir_input_logs = "output\\runs\\xlogs input"
 dest_dir_output_logs = "output\\runs\\xlogs output"
+wind_ensemble = "Tigge_2014-09-08_00_243036.nc"
+flight_date = "9,9,2014"
 dt = 0.5
 TW_inf = 3600  # [s]
 TW_min = 60  # [s]
@@ -38,6 +40,10 @@ class bcolors:
     UNDERLINE = '\033[4m'
     UWARNING = '\033[4m' + '\033[93m'
     UBLUE = '\033[4m' + '\033[94m'
+
+def set_delays(input= [0, 90, 720, 1050]):
+    global set_of_delays
+    set_of_delays = input
 
 def find_index(to_search, target):
     for number, i in enumerate(to_search):
@@ -65,13 +71,6 @@ def find_dt():
 
 # Switches the ensemble in the scenario manager and adapts the name using the ensemble # and global dt
 def replace_ensemble(ensemble):
-    if ensemble < 10:
-        ensemble = str(0) + str(ensemble)
-
-    # f = open(scenario_manager, 'r')
-    # filedata = f.read()
-    # f.close()
-
     with open(scenario_manager, 'r') as f:
         filedata = f.read()
 
@@ -80,15 +79,11 @@ def replace_ensemble(ensemble):
     banana = filedata.find(',Tigge_')
     citrus = filedata.find('WRITER')
     date = filedata.find('_dt_')
-    filedata = str("".join(filedata[0:apple+10] + str(ensemble) + filedata[banana:citrus+8]
-                           + str(ensemble) + filedata[date:]))
+    filedata = str("".join(filedata[0:apple+10] + str(ensemble).zfill(2) +
+                           filedata[banana:citrus+8] + str(ensemble) + filedata[date:]))
 
     with open(scenario_manager, 'w') as f:
         f.write(filedata)
-
-    # f = open(scenario_manager, 'w')
-    # f.write(filedata)
-    # f.close()
 
     # os.startfile(scenario_manager)
     pass
@@ -107,6 +102,22 @@ def replace_batch(scen_new):
 
     # os.startfile(scenario_manager)
 
+def replace_batch_set(scen_new, source, save_file):
+    print(set_of_delays)
+    dir = os.getcwd()
+    with open("scenario\\" + source + '.scn', 'r') as f:
+        filedata = f.read()
+    for i, j in enumerate(set_of_delays):
+        apple = filedata.find('"Trajectories.scn"')
+        banana = apple + len('"Trajectories.scn" ')
+        filedata = str("".join(filedata[:apple] + str(scen_new) + ' D' + str(j) +
+                               '.scn" ' + str(i+1).zfill(2) + filedata[banana+2:]))
+        dest_dir = dir + "\\scenario\\" + save_file + '.scn'
+        with open(dest_dir, 'w') as f:
+            f.write(filedata)
+        with open("scenario\\" + save_file + '.scn', 'r') as f:
+            filedata = f.read()
+    # os.startfile(dest_dir)
 # Changes the timestep in the settings config of BlueSky using the provided timestep
 # Keep in mind that the savefile doesn't change its name, unless the timestep is set into the global variable dt
 def set_dt(timestep=dt):
@@ -306,12 +317,14 @@ def CreateSCN(alpha, save_file, folder = "queries\\"):
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
 
 # alpha = random delay
-def CreateSCN_Cruise(alpha, fl_ref):
+def CreateSCN_Cruise(alpha, fl_ref, cap=999):
     folder = "scenario\\remon_raw_scenario\\"
     type_file = "AC Type 2.xlsx"
     FileName = os.listdir(folder)
 
-    for k in FileName:
+    for index, k in enumerate(FileName):
+        if cap == index-1:
+            return
         acid, ext = os.path.splitext(k)
         if ext != '.csv':
             continue
@@ -338,15 +351,17 @@ def CreateSCN_Cruise(alpha, fl_ref):
             m = 0
             for l in ['min', 'det', 'prob', 'inf']:
                 banana = list()
-                banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
                 m += 1
                 for i in range(scenario.shape[0]):
                     FlightLevel = 'FL' + str(scenario['fl'][i])
 
                     if i == 0:
+                        banana.append('00:00:00.00> FF')
                         banana.append(apple + '.00> CRE ' + aircraftid + ', ' + actype + str(cut7(scenario['st_x(gpt.coords)'][i]))
                                       + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
                                       + str(cut3(heading)) + ', ' + FlightLevel + ', 190')
+                        banana.append(apple + '.00> ASAS OFF')
+                        banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
                         banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG, '
                                       + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
                                       + str(cut7(scenario['st_y(gpt.coords)'][i])))
@@ -379,7 +394,8 @@ def CreateSCN_Cruise(alpha, fl_ref):
 
                             for n in o:
                                 if n == o[0]:
-                                    wp_0 = aircraftid + '-' + str(1) + ' '
+                                    wp_0 = aircraftid + '-ORIG ' #+ str(1) + ' '
+
                                 wp_1 = aircraftid + '-' + str(n-1) + ' '
                                 time = scenario.time_over[n-1]
                                 time = datetime.datetime(100, 1, 1, int(time[-8:-6]), int(time[-5:-3]), int(time[-2:]))
@@ -401,7 +417,6 @@ def CreateSCN_Cruise(alpha, fl_ref):
                             banana.append(apple + '.00> VNAV ' + aircraftid + ' ON')
                             banana.append(apple + '.00> LNAV ' + aircraftid + ' ON')
                             # banana.append(apple + '.00> dt 0.5')
-                            banana.append(apple + '.00> FF')
 
                         else:
                             if i == 1:
@@ -429,6 +444,7 @@ def CreateSCN_Cruise(alpha, fl_ref):
             if not alpha:
                 break
 
+
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
     #     print(scenario)
 
@@ -438,10 +454,7 @@ def CreateSCN_Cruise(alpha, fl_ref):
 def CreateSCNM(alpha, beta, save_file):
     gamma = list()
     gamma.append('# Load wind data')
-    if beta < 10:
-        gamma.append('00:00:00.00> LOAD_WIND 0' + str(beta) +',Tigge_01_09_2017.nc')
-    else:
-        gamma.append('00:00:00.00> LOAD_WIND ' + str(beta) + ',Tigge_01_09_2017.nc')
+    gamma.append('00:00:00.00> LOAD_WIND ' + str(beta).zfill(2) + ',Tigge_01_09_2017.nc')
     gamma.append('00:00:00.00> DATE 1,9,2017')
     gamma.append('00:00:00.00> FF')
 
@@ -449,35 +462,60 @@ def CreateSCNM(alpha, beta, save_file):
         gamma.append('')
         gamma.append('# Load trajectories for a run')
         gamma.append('00:00:00.00> SWRAD VOR')
-        if i < 10:
-            gamma.append('00:00:00.00> SCEN Test_0'+str(i))
-            gamma.append('00:00:00.00> PCALL "Trajectories.scn" 0' + str(i))
-        else:
-            gamma.append('00:00:00.00> SCEN Test_' + str(i))
-            gamma.append('00:00:00.00> PCALL "Trajectories.scn" ' + str(i))
+        gamma.append('00:00:00.00> SCEN Test_' + str(i).zfill(2))
+        gamma.append('00:00:00.00> PCALL "Trajectories.scn" ' + str(i).zfill(2))
         gamma.append('00:00:00.00> FF')
         gamma.append('23:59:00.00> HOLD')
 
     gamma.append('')
     gamma.append('# Load trajectories for a run')
-    if alpha < 10:
-        gamma.append('00:00:00.00> SCEN Test_0' + str(alpha))
-        gamma.append('00:00:00.00> PCALL "Trajectories.scn" 0' + str(alpha))
-    else:
-        gamma.append('00:00:00.00> SCEN Test_' + str(alpha))
-        gamma.append('00:00:00.00> PCALL "Trajectories.scn" ' + str(alpha))
+    gamma.append('00:00:00.00> SCEN Test_' + str(alpha).zfill(2))
+    gamma.append('00:00:00.00> PCALL "Trajectories.scn" ' + str(alpha).zfill(2))
     gamma.append('00:00:00.00> SWRAD VOR')
     gamma.append('00:00:00.00> FF')
-    if beta < 10:
-        gamma.append('23:58:59.00> WRITER W0' +str(beta) +'_dt_' +str(dt))
-    else:
-        gamma.append('23:58:59.00> WRITER W' + str(beta) +'_dt_' +str(dt))
+    gamma.append('23:58:59.00> WRITER W' + str(beta).zfill(2) + '_dt_' + str(dt))
     gamma.append('23:58:59.00> QUIT')
 
     dir = os.getcwd()
     with open(dir + '/scenario/' + save_file + '.scn', "w") as fin:
         fin.write('\n'.join(gamma))
     os.startfile(dir + '/scenario/' + save_file + '.scn')
+
+# Create a different scenario manager to run a file [alpha times], load wind ensemble beta and save the file in save_file
+def CreateSCNM2(save_file):
+    alpha = len(set_of_delays)
+    beta = 1
+    gamma = list()
+    gamma.append('# Load wind data')
+    gamma.append('#00:00:00.00> LOAD_WIND ' + str(beta).zfill(2) +', ' + wind_ensemble)
+    gamma.append('00:00:00.00> DATE ' + flight_date)
+    gamma.append('00:00:00.00> SAVEIC trajectories_saveic')
+    gamma.append('00:00:00.00> CRELOG MYLOG 0.1 "MYLOG"')
+    gamma.append('00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.perf.mass, traf.perf.ff')
+    gamma.append('00:00:00.00> MYLOG ON')
+    gamma.append('00:00:00.00> ASAS OFF')
+    gamma.append('00:00:00.00> FF')
+
+    for i in range(1, alpha):
+        gamma.append('')
+        gamma.append('# Load trajectories for a run')
+        gamma.append('00:00:00.00> SCEN Test_' + str(i).zfill(2))
+        gamma.append('00:00:00.00> PCALL "Trajectories.scn" ' + str(i).zfill(2))
+        gamma.append('00:00:00.00> FF')
+        gamma.append('23:59:00.00> HOLD')
+
+    gamma.append('')
+    gamma.append('# Load trajectories for a run')
+    gamma.append('00:00:00.00> SWRAD VOR')
+    gamma.append('00:00:00.00> SCEN Test_' + str(alpha).zfill(2))
+    gamma.append('00:00:00.00> PCALL "Trajectories.scn" ' + str(alpha).zfill(2))
+    gamma.append('00:00:00.00> FF')
+    # gamma.append('23:58:59.00> WRITER W' + str(beta).zfill(2) +'_dt_' +str(dt))
+    gamma.append('23:58:59.00> QUIT')
+
+    with open('scenario\\' + save_file + '.scn', "w") as fin:
+        fin.write('\n'.join(gamma))
+    # os.startfile('scenario\\' + save_file + '.scn')
 
 # Clean up,  and open the output file
 def writerfix(traj, dir, counter):
@@ -490,7 +528,8 @@ def writerfix(traj, dir, counter):
     df = df.drop('index', axis=1)
     name, _ = os.path.splitext(traj)
 
-    with open(dest_dir_input_logs + "\\" + dir[0:7] + " " + traj[4:10] + " IE01 D0.scn", 'r') as f:
+    dest_dir_input_logs2 = dest_dir_input_logs + "\\" + dir[0:7] + "\\" + traj[4:10]
+    with open(dest_dir_input_logs2 + "\\" + dir[0:7] + " " + traj[4:10] + " IE01 D0.scn", 'r') as f:
         filedata = f.read()
     apple = filedata.find('TW_SIZE_AT ')
     banana = filedata[apple+len('TW_SIZE_AT '):].find('TW_SIZE_AT ') + apple

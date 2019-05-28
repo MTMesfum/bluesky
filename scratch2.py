@@ -37,9 +37,9 @@ class bcolors:
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(1, 51))
+list_ensemble = list(range(1, 2))
 skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
-set_of_delays = [0, 300, 720, 1020]  # [s]
+set_of_delays = [0, 90, 300,]  # [s]
 
 # dt = 0.5
 set_dt()
@@ -53,11 +53,14 @@ traj_folder2 = 'scenario\\remon scen'
 #
 timeit.default_timer()
 set_delays(set_of_delays)
-CreateSCN_Cruise(True, 280, 1)
-# CreateSCNM2(len(set_of_delays), 1, 'Trajectories-batch3')
-# bs_desktop()
-# replace_batch_set('"Testtttuuuu"', "Trajectories-batch3", "Trajectories-batch4")
-# exit()
+CreateSCN_Cruise(True, 280, 3)
+CreateSCNM2('Trajectories-batch3')
+
+orig = "\"remon scen\\1 min" + '\\min ADH931'
+replace_batch_set(orig, "Trajectories-batch3", "Trajectories-batch4")
+bs_desktop()
+exit()
+
 traj_folder = traj_folder2
 runs = 0
 # run a trajectory for every ensemble
@@ -87,8 +90,8 @@ for dir in os.listdir(traj_folder):
             # exit()
 
         writerfix(sgl_traj, dir, traj_counter)
-        # if traj_counter == 3:
-        #     exit()
+        if traj_counter == 3:
+            exit()
         traj_counter += 1
 
 # Open the folder with all the results

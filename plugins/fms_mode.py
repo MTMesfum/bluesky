@@ -10,6 +10,7 @@ import bluesky as bs
 from bluesky import sim, stack, traf, tools, settings#, navdb, sim, scr, tools
 from bluesky.traffic.route import Route
 from bluesky.traffic.performance.legacy.performance import PHASE
+from bluesky.tools.trafficarrays import RegisterElementParameters, TrafficArrays
 # import inspect  # TODO Remove after test
 
 # Global data
@@ -135,7 +136,7 @@ def init_plugin():
 ### Periodic update functions that are called by the simulation. You can replace
 ### this by anything, so long as you communicate this in init_plugin
 
-class Afms:
+class Afms(TrafficArrays):
     """ Advanced FMS: dynamically adjust speed of flights based on set AFMS mode and/or RTA/Time Window"""
     def __init__(self):
         super(Afms, self).__init__()
@@ -145,15 +146,20 @@ class Afms:
         self.rta_standard_window_size = 60.  # [s] standard time window size for rta in seconds
         self._patch_route(self.rta_standard_window_size)
         self._fms_modes = ['OFF', 'CONTINUE', 'OWN', 'RTA', 'TW']
+        traf.resultstosave2 = pd.DataFrame()
+        traf.resultstosave3 = pd.DataFrame()
+        traf.index = 0
 
         # Adaptations by Johannes
-        self.apple = False
-        self.counter = 0
-        self.currentwp = -1
-        traf.resultstosave2 = pd.DataFrame()
-        self.lat = []
-        self.lon = []
-        self.partial_fuel = 64000 #A320 starting weight
+        with RegisterElementParameters(self):
+            # Set required for multiple fms-mode runs
+            self.interval_counter = np.array([0])
+            self.currentwp = np.array([])
+            self.lat = np.array([])
+            self.lon = np.array([])
+            self.index = np.array([])
+
+        # self.partial_fuel = 64000 #A320 starting weight
 
     @staticmethod
     def _patch_route(rta_standard_window_size):  #
@@ -208,59 +214,84 @@ class Afms:
     def update(self):  #
         pass
 
+    def create(self, n=1):
+        super(Afms, self).create(n)
+        if len(traf.id) > 1:
+            self.index[-1] = traf.index
+        else:
+            self.index[0] = traf.index
+            # traf.resultstosave2['Numbering'] = self.index[0]
+            # traf.resultstosave2.set_index('Numbering', inplace=True, drop=True)
+        traf.index += 1
+        traf.resultstosave2 = traf.resultstosave2.append(pd.Series(), ignore_index=True)
+
+        # traf.resultstosave2['Numbering'][self.index[-1]] = self.index[-1]
+        # print('self.index is: ', self.index)
+        # print('traf.index is: ', self.index)
+
+    # def delete(self, idx):
+
     def preupdate(self):
         if traf.id == []:
-            holder = -1
+            return
+
+        holder = list()
+        list_to_update = list()
+        # print('the mass of the aircrafts are: ', traf.perf.mass)
+        for i in range(0, len(traf.id)):
+            holder.append(traf.ap.route[bs.traf.id2idx(traf.id[i])].iactwp)
+        if np.logical_and(self.currentwp == holder, True).all():
+            self.interval_counter += 1
+            return
+
+        # if holder[0] == 4:
+        #     stack.stack('HOLD')
+        if holder[0] == 5:
+            stack.stack('EXIT')
+        for index, traf_id in enumerate(traf.id):
+            # print('looping index: {}, traf: {}'.format(index, traf_id))
+            if holder[index] == traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-1:
+                stack.stack('WRITER2 {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index]))
+                # del self.interval_counter[index], self.currentwp[index],\
+                #     self.lat[index], self.lon[index], self.index[index]
+                continue
+            elif self.interval_counter[index] % (self.dt/settings.simdt) == 0 or \
+               self.currentwp[index] != holder[index] or \
+                    self.currentwp[index] == []:
+                # print('\nMass at waypoint {} for AC {} is {}.\n'.format(
+                    # holder[index], traf_id, traf.perf.mass[index]))
+                self.interval_counter[index] = 0
+                self.currentwp[index] = holder[index]
+                list_to_update.append(index)
+            else:
+                self.interval_counter[index] += 1
+                continue
+
+            column_name = '[ {0} ]'.format(holder[index]-1)
+
+            # distance = 1
+            # if holder[index] > 1:
+                # heading, distance = geo.qdrdist(self.lat[index], self.lon[index], traf.lat[index], traf.lon[index])
+                # distance = np.array2string(distance, precision=3)
+                # print('Distance flown between waypoints: {0} [nm]'.format(distance))
+            self.lat[index] = traf.lat[index]
+            self.lon[index] = traf.lon[index]
+            if column_name not in traf.resultstosave2:
+                traf.resultstosave2[column_name] = None
+            traf.resultstosave2[column_name][int(self.index[index])] = [str(sim.utc.strftime("%H:%M:%S"))]
+            # print('Pinging the following aircraft: ', traf_id)
+        if list_to_update == []:
+            pass
         else:
-            holder = traf.ap.route[bs.traf.id2idx(traf.id[-1])].iactwp
-
-        # if self.counter % 60 == 0 and traf.id != []:
-        #     stack.stack('GETWIND {0} {1} {2}'.format(traf.lat[-1], traf.lon[-1], traf.alt[-1]))
-
-        if self.currentwp != holder:
-            # if holder < 11:
-            #     print("\nWaypoint [ 0{0} ] has been reached at {1}!".format(holder, str(sim.utc.strftime("%H:%M:%S"))))
-            #     column_name =  '[ 0{0} ]'.format(holder-1) #columns=i, str(sim.utc.strftime("%H:%M:%S")))
-            # else:
-            print("\nWaypoint [ {0} ] has been reached at {1}!".format(str(holder).zfill(2), str(sim.utc.strftime("%H:%M:%S"))))
-            column_name = '[ {0} ]'.format(holder-1)
-
-            distance = 1
-            if holder > 1:
-                heading, distance = geo.qdrdist(self.lat, self.lon, traf.lat[-1], traf.lon[-1])
-                distance = np.array2string(distance, precision=3)
-                print('Distance flown between waypoints: {0} [nm]'.format(distance))
-            self.lat = traf.lat[-1]
-            self.lon = traf.lon[-1]
-
-            # print("Fuel used up till now: {0} [kg]".format(64000 - traf.perf.mass))
-            # print("Fuel used between waypoints: {0} [kg]".format(self.partial_fuel - traf.perf.mass))
-            # print("Fuel used: {0} [kg/nm]".format((self.partial_fuel - traf.perf.mass)/distance))
-            self.partial_fuel = traf.perf.mass
-            traf.resultstosave2[column_name] = [str(sim.utc.strftime("%H:%M:%S"))]
-
-            if holder == traf.ap.route[bs.traf.id2idx(traf.id[-1])].nwp-1:
-                stack.stack('WRITER')
-                stack.stack('EXIT')
-        if self.counter % (self.dt/settings.simdt) == 0 or \
-           self.currentwp != holder or \
-                self.apple:
-            # print(settings.simdt)
-            # print(self.counter)
-            # print(self.dt/settings.simdt)
-            self.tw_update()
-            self.counter = 0
-            # print("currentwp used to be: ", self.currentwp)
-            self.currentwp = holder
-            # print("currentwp has become: ", self.currentwp)
-        self.counter += 1
+            # print('Passing the following aircraft: {} \n'.format(list_to_update))
+            self.tw_update(list_to_update)
         pass
 
-    def tw_update(self):  #
+    def tw_update(self, list_to_update):  #
         """
         update the AFMS mode settings before the traffic is updated.
         """
-        for idx, _ in enumerate(traf.id):
+        for _, idx in enumerate(list_to_update):
             fms_mode = self._current_fms_mode(idx)
             if int(traf.perf.phase[idx]) == PHASE['CR']:
                 # if traf.ap.route[idx].iactwp < 0:
@@ -365,10 +396,7 @@ class Afms:
 
                     earliest_time_s2rta = max(time_s2rta - tw_size/2, 0)
                     latest_time_s2rta = max(time_s2rta + tw_size/2, 0)
-                    print('RTA is: ', rta)
-                    print('Time left till RTA: ', time_s2rta)
-                    print('earliest RTA: ', earliest_time_s2rta)
-                    print('latest RTA: ', latest_time_s2rta)
+
                     if earliest_time_s2rta == 0 and latest_time_s2rta == 0:  # Fly at Vmax if TW can't be reached
                         time_window_cas_m_s = 1000
                     elif eta_s_preferred < earliest_time_s2rta:  # Prefer earlier then TW
@@ -383,16 +411,35 @@ class Afms:
                         # print('Speed unchanged!')
                         time_window_cas_m_s = preferred_cas_m_s
 
+                    # if time_window_cas_m_s < 90:
+                    #     print('RTA is: ', rta)
+                    #     print('eta pref: ', eta_s_preferred)
+                    #     print('Time left till RTA: ', time_s2rta)
+                    #     print('earliest RTA: ', earliest_time_s2rta)
+                    #     print('latest RTA: ', latest_time_s2rta)
+                    #     print('distance: ', distances_nm)
+                    #     print('TW spd: ', time_window_cas_m_s)
+                    #     print('Pref cas: ', preferred_cas_m_s)
+
+                    # Hard coded fix for SPD 0 input
+                    if time_window_cas_m_s == 0:
+                        time_window_cas_m_s = 1000
+                    # Hard coded fix for big speed decreases
+
+
                     if abs(traf.cas[idx] - time_window_cas_m_s) > 0.5:  # Don't give very small speed changes
                         if abs(traf.vs[idx]) < 2.5:  # Don't give a speed change when changing altitude
                             if tools.aero.vcas2mach(time_window_cas_m_s, flightlevels_m[0]) > 0.95:
+                                abcd = '0.95'
                                 stack.stack(f'SPD {traf.id[idx]}, {0.95}')
                             elif flightlevels_m[0] > 7620:
-                                stack.stack(f'SPD {traf.id[idx]}, {tools.aero.vcas2mach(time_window_cas_m_s, flightlevels_m[0])}')
+                                abcd = '{0:.3f}'.format(tools.aero.vcas2mach(time_window_cas_m_s, flightlevels_m[0]))
+                                stack.stack(f'SPD {traf.id[idx]}, {abcd}')
                             else:
-                                stack.stack(f'SPD {traf.id[idx]}, {time_window_cas_m_s * 3600 / 1852}')
+                                abcd = '{0:.3f}'.format(time_window_cas_m_s * 3600 / 1852)
+                                stack.stack(f'SPD {traf.id[idx]}, {abcd}')
                             stack.stack(f'VNAV {traf.id[idx]} ON')
-                            # print('Speed changed to: ', time_window_cas_m_s)
+                            # print('Speed changed to: {}'.format(abcd))
                     else:
                         pass
                 else:
@@ -584,13 +631,20 @@ class Afms:
         """
         iterations = 4
         estimated_cas_m_s = current_cas_m_s
+        # print('\n')
         for i in range(iterations):
             estimated_time2rta_s = self._eta2tw_new_cas_wfl(distances_nm, flightlevels_m, current_cas_m_s,
                                                             estimated_cas_m_s)
             previous_estimate_m_s = estimated_cas_m_s
+            # print('Previous cas m/s: ', previous_estimate_m_s)
+            # print('RTA: ', time2rta_s)
+            # print('Estimated cas m/s 1: ', estimated_cas_m_s)
+            # print('Estimated RTA: ', estimated_time2rta_s)
             estimated_cas_m_s = estimated_cas_m_s * estimated_time2rta_s / (time2rta_s + 0.00001)
+            # print('Estimated cas m/s 2: ', estimated_cas_m_s)
             if abs(previous_estimate_m_s - estimated_cas_m_s) < 0.1:
                 break
+        # print('\n')
         return estimated_cas_m_s
 
     def _eta2tw_cas_wfl(self, distances_nm, flightlevels_m, cas_m_s):
@@ -653,9 +707,14 @@ class Afms:
         :param new_cas_m_s: new CAS in m/s
         :return: ETA in seconds
         """
+        # print('t1:', self._eta2tw_cas_wfl(distances_nm, flightlevels_m, new_cas_m_s))
+        # print('t2:', self._dtime2new_cas(flightlevels_m[0], current_cas_m_s, new_cas_m_s))
         total_time_s = self._eta2tw_cas_wfl(distances_nm, flightlevels_m, new_cas_m_s) - \
                        self._dtime2new_cas(flightlevels_m[0], current_cas_m_s, new_cas_m_s)
         if total_time_s < 0:
             return 0.0
         else:
             return total_time_s
+
+
+

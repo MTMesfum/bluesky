@@ -8,7 +8,7 @@ import pandas as pd
 import os
 from datetime import datetime
 # Import the global bluesky objects. Uncomment the ones you need
-from bluesky import traf, sim, settings, scr  #, settings, navdb, traf, sim, scr, tools
+from bluesky import traf, sim, stack, settings, scr  #, settings, navdb, traf, sim, scr, tools
 from bluesky.tools import datalog, areafilter, \
     TrafficArrays, RegisterElementParameters
 from bluesky import settings
@@ -53,6 +53,13 @@ def init_plugin():
             '[txt]',
             datalogger.write,
             'Write the results of traf.resultstosave into a file.'
+        ],
+        'WRITER2': [
+            'WRITER <FILENAME>',
+            '[txt, txt]',
+            datalogger.write2,
+            'Save the fuel consumption into traf.resultstosave.'
+            'If one AC remains, write the results of traf.resultstosave into a file.'
         ],
         'PRINTER': [
             'PRINTER',
@@ -99,7 +106,7 @@ class DataLogger(TrafficArrays):
             self.initmass[0] = traf.perf.mass[0]
             self.inittime[0] = str(sim.utc.strftime("%H:%M:%S"))
             self.counter[0] = 0
-        print("AC {0} [{1}] has been created at {2}.".format(traf.id[-1], traf.type[-1],
+        print("\nAC {0} [{1}] has been created at {2}.".format(traf.id[-1], traf.type[-1],
                                                              sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
 
     def talko(self, delcounter):
@@ -178,13 +185,87 @@ class DataLogger(TrafficArrays):
         if curtime:
             traf.resultstosave = pd.DataFrame(columns=self.dataframe_holder)
 
+    def write2(self, acid, traf_id, *args):
+        curtime = []
+        # print(args)
+        print("I'm in WRITER2 !!!!")
+        i = int(acid)
+        curtime = str(sim.utc.strftime("%H:%M:%S"))
+
+        # print('i is: ', i)
+        # print('delay is: ', self.delay)
+        # print('ensemble is: ', ensemble)
+        # print('traf id is: ', traf.id)
+        # pd.DataFrame(columns=self.dataframe_holder)
+        # print('before: \n', traf.resultstosave3)
+        print('self.initmass is: ', self.initmass)
+        print('traf.perfmass is: ', traf.perf.mass)
+        print('aircraft {} is #{}'.format(traf_id, i))
+        traf.resultstosave = pd.DataFrame([[ensemble, str(self.delay[int(i)]), str(traf.id[int(i)]),
+                   str(sim.utc.strftime("%d-%b-%Y")), str(self.inittime[int(i)]),
+                   str(curtime), np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=3)]],
+                              columns=self.dataframe_holder)
+        traf.resultstosave3 = traf.resultstosave3.append(traf.resultstosave, ignore_index=True)
+        # df = pd.DataFrame(holder, columns=self.dataframe_holder)
+        # print(df)
+        # df.set_index([pd.Index([int(ind)]), 'Ensemble'])
+        # df['Numbering'] = int(ind)
+        # df.set_index('Numbering', inplace=True, drop=True)
+        # df.set_index(str(ind), inplace=True, drop=True)
+        # print(df)
+        # df.set_index([str(ind)])
+        # traf.resultstosave = traf.resultstosave.append(df)
+        # print('after: \n', traf.resultstosave3)
+        stack.stack('DEL {}'.format(traf_id))
+        print('before: ', traf.id)
+        print('Deleted aircraft: ', traf_id)
+        print("\nAircraft {0} has been deleted at {1}.".format(traf.id[i], sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
+        print("Fuel used by {0} is {1} [kg].\n".format(traf.id[i],
+                                 np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
+        print('after :', traf.id)
+        if traf.resultstosave2.iloc[-1,-1] is not None and len(traf.id) == 1:
+            traf.resultstosave = pd.concat([traf.resultstosave3,
+                                            traf.resultstosave2], axis=1)
+            # traf.resultstosave = pd.merge(traf.resultstosave, traf.resultstosave2,
+            #                               left_on='Departure', right_on='[ 0 ]')
+            # df_merge_difkey = pd.merge(df_row, df3, left_on='id', right_on='id')
+
+        # if not args:
+            print('\033[94m' + '\033[4m' + '\nSaving the results in a standard file!!!\n\n' + '\033[0m')
+            # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
+            # check whether the file exist, if it does append it, otherwise create it
+            exists = os.path.isfile('output\WRITER Standard File.csv')
+            if exists:
+                with open('output\WRITER Standard File.csv', 'a') as f:
+                    traf.resultstosave.to_csv(f, header=False)
+            else:
+                traf.resultstosave.to_csv('output\WRITER Standard File.csv')
+            # os.startfile('output\WRITER Standard File.csv')
+        elif args:
+            filename = str(args[0])
+            print('\033[94m' + '\033[4m' + '\nSaving the results in {0}!!!\n\n'.format(filename) + '\033[0m')
+            # check whether the file exist, if it does append it, otherwise create it
+            exists = os.path.isfile('\output\WRITER {0}.csv'.format(filename))
+            if exists:
+                df = pd.read_csv('\output\WRITER {0}.csv'.format(filename), index_col=0)
+                with open('\output\WRITER {0}.csv'.format(filename), 'a') as f:
+                    df.to_csv(f, header=False)
+            else:
+                traf.resultstosave.to_csv('output\WRITER {0}.csv'.format(filename))
+            # os.startfile('output\WRITER {0}.csv'.format(filename))
+
+        if curtime:
+            traf.resultstosave = pd.DataFrame(columns=self.dataframe_holder)
+
     def printer(self, delay):
-        # print('The delay is {} seconds.'.format(delay[7:]))
-        self.delay = np.array(delay.split()[3])
+        # if len(traf.id) > 1:
+        self.delay[-1] = delay.split()[3]
+        # else:
+        #     self.delay[0] = delay.split()[3]
         # print('Echo starting now!')
         print('\n' + delay + '\n')
         # print(self.delay)
-        scr.echo(delay)
+        # scr.echo(delay)
         pass
 
     def log(self):
