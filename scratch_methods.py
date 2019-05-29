@@ -76,7 +76,7 @@ def replace_ensemble(ensemble):
 
     ensemble = str(ensemble)
     apple = filedata.find('LOAD_WIND')
-    banana = filedata.find(',Tigge_')
+    banana = filedata.find(', Tigge_')
     citrus = filedata.find('WRITER')
     date = filedata.find('_dt_')
     filedata = str("".join(filedata[0:apple+10] + str(ensemble).zfill(2) +
@@ -454,7 +454,7 @@ def CreateSCN_Cruise(alpha, fl_ref, cap=999):
 def CreateSCNM(alpha, beta, save_file):
     gamma = list()
     gamma.append('# Load wind data')
-    gamma.append('00:00:00.00> LOAD_WIND ' + str(beta).zfill(2) + ',Tigge_01_09_2017.nc')
+    gamma.append('00:00:00.00> LOAD_WIND ' + str(beta).zfill(2) + ', Tigge_01_09_2017.nc')
     gamma.append('00:00:00.00> DATE 1,9,2017')
     gamma.append('00:00:00.00> FF')
 
@@ -487,7 +487,7 @@ def CreateSCNM2(save_file):
     beta = 1
     gamma = list()
     gamma.append('# Load wind data')
-    gamma.append('#00:00:00.00> LOAD_WIND ' + str(beta).zfill(2) +', ' + wind_ensemble)
+    gamma.append('00:00:00.00> LOAD_WIND ' + str(beta).zfill(2) +', ' + wind_ensemble)
     gamma.append('00:00:00.00> DATE ' + flight_date)
     gamma.append('00:00:00.00> SAVEIC trajectories_saveic')
     gamma.append('00:00:00.00> CRELOG MYLOG 0.1 "MYLOG"')
@@ -578,6 +578,13 @@ def movelog(ensemble, traj, dir):
                    " OE" + str(ensemble).zfill(2) + " D" + str(delay).strip() + ".log"
         os.rename("output\\" + files, dest_dir_output_logs2 + new_name)
     pass
+
+def clear_mylog():
+    files = os.listdir('output\\')
+    files = [files[files.index(i)] for i in files if 'MYLOG' in i]
+    for i in files:
+        os.remove('output\\' + i)
+        print('The file {} has been deleted!'.format(i))
 
 def talk_time(runs):
     print(bcolors.UWARNING + "\nExecuting simulation {1} and {0} seconds have passed!".format(

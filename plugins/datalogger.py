@@ -23,11 +23,11 @@ def init_plugin():
     # Addtional initilisation code
     global datalogger, ensemble
     scenario_manager = "scenario\Trajectories-batch.scn"
-
+    # scenario_manager = "scenario\Trajectories-batch4.scn"
     with open(scenario_manager, 'r') as f:
         filedata = f.read()
 
-    banana = filedata.find(',Tigge_')
+    banana = filedata.find(', Tigge_')
 
     ensemble = filedata[banana-2:banana]
     datalogger = DataLogger()
@@ -188,7 +188,7 @@ class DataLogger(TrafficArrays):
     def write2(self, acid, traf_id, *args):
         curtime = []
         # print(args)
-        print("I'm in WRITER2 !!!!")
+        print("I'm in WRITER2 !!!! ", acid)
         i = int(acid)
         curtime = str(sim.utc.strftime("%H:%M:%S"))
 

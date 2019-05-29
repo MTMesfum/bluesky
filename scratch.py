@@ -37,7 +37,7 @@ class bcolors:
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(1, 51))
+list_ensemble = list(range(1, 4))
 skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 300, 720, 1020]  # [s]
 
@@ -52,6 +52,7 @@ traj_folder2 = 'scenario\\remon scen'
 #     bs_desktop()
 #
 timeit.default_timer()
+clear_mylog()
 set_delays(set_of_delays)
 CreateSCN_Cruise(True, 280, 1)
 # CreateSCNM2(len(set_of_delays), 1, 'Trajectories-batch3')

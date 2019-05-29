@@ -251,9 +251,7 @@ class Afms(TrafficArrays):
         for index, traf_id in enumerate(traf.id):
             # print('looping index: {}, traf: {}'.format(index, traf_id))
             if holder[index] == traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-1:
-                # stack.stack('WRITER2 {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index]))
-
-                stack.stack('WRITER')
+                stack.stack('WRITER') # {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index]))
                 stack.stack('EXIT')
                 # del self.interval_counter[index], self.currentwp[index],\
                 #     self.lat[index], self.lon[index], self.index[index]
