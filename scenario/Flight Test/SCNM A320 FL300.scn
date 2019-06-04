@@ -1,0 +1,110 @@
+# This is the scenario manager to find the speed corresponding to the lowest fuel consumption
+00:00:00.00> SWRAD VOR
+00:00:00.00> SAVEIC trajectories_saveic
+00:00:00.00> CRELOG MYLOG 0.1 "MYLOG"
+00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.lat, traf.lon, traf.perf.fuelflow
+00:00:00.00> MYLOG ON
+00:00:00.00> FF
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_00
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 00, 6800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_01
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 01, 6900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_02
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 02, 7000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_03
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 03, 7100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_04
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 04, 7200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_05
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 05, 7300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_06
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 06, 7400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_07
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 07, 7500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_08
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 08, 7600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_09
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 09, 7700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_10
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 10, 7800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_11
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 11, 7900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_12
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 12, 8000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_13
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 13, 8100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_14
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 14, 8200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_15
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 15, 8300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_16
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 16, 8400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_17
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 17, 8500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_18
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 18, 8600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_19
+00:00:00.00> PCALL "Flight Test/A320 FL300.scn" 19, 8700
+23:59:00.00> HOLD
+# Distance between Waypoint 0 and 1 is 70.66.
+# Distance between Waypoint 1 and 2 is 70.22.
+# Distance between Waypoint 2 and 3 is 69.78.

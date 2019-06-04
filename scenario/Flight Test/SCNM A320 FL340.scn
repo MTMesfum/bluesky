@@ -1,0 +1,515 @@
+# This is the scenario manager to find the speed corresponding to the lowest fuel consumption
+00:00:00.00> SWRAD VOR
+00:00:00.00> SAVEIC trajectories_saveic
+00:00:00.00> CRELOG MYLOG 0.1 "MYLOG"
+00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.lat, traf.lon, traf.perf.fuelflow
+00:00:00.00> MYLOG ON
+00:00:00.00> FF
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_00
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 00, 7300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_01
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 01, 7310
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_02
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 02, 7320
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_03
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 03, 7330
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_04
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 04, 7340
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_05
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 05, 7350
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_06
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 06, 7360
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_07
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 07, 7370
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_08
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 08, 7380
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_09
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 09, 7390
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_10
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 10, 7400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_11
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 11, 7410
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_12
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 12, 7420
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_13
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 13, 7430
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_14
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 14, 7440
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_15
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 15, 7450
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_16
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 16, 7460
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_17
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 17, 7470
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_18
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 18, 7480
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_19
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 19, 7490
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_20
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 20, 7500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_21
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 21, 7510
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_22
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 22, 7520
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_23
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 23, 7530
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_24
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 24, 7540
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_25
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 25, 7550
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_26
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 26, 7560
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_27
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 27, 7570
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_28
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 28, 7580
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_29
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 29, 7590
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_30
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 30, 7600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_31
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 31, 7610
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_32
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 32, 7620
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_33
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 33, 7630
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_34
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 34, 7640
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_35
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 35, 7650
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_36
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 36, 7660
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_37
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 37, 7670
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_38
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 38, 7680
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_39
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 39, 7690
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_40
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 40, 7700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_41
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 41, 7710
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_42
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 42, 7720
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_43
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 43, 7730
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_44
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 44, 7740
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_45
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 45, 7750
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_46
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 46, 7760
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_47
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 47, 7770
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_48
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 48, 7780
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_49
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 49, 7790
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_50
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 50, 7800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_51
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 51, 7810
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_52
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 52, 7820
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_53
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 53, 7830
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_54
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 54, 7840
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_55
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 55, 7850
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_56
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 56, 7860
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_57
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 57, 7870
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_58
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 58, 7880
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_59
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 59, 7890
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_60
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 60, 7900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_61
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 61, 7910
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_62
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 62, 7920
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_63
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 63, 7930
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_64
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 64, 7940
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_65
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 65, 7950
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_66
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 66, 7960
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_67
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 67, 7970
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_68
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 68, 7980
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_69
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 69, 7990
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_70
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 70, 8000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_71
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 71, 8010
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_72
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 72, 8020
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_73
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 73, 8030
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_74
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 74, 8040
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_75
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 75, 8050
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_76
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 76, 8060
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_77
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 77, 8070
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_78
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 78, 8080
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_79
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 79, 8090
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_80
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 80, 8100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_81
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 81, 8110
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_82
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 82, 8120
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_83
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 83, 8130
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_84
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 84, 8140
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_85
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 85, 8150
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_86
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 86, 8160
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_87
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 87, 8170
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_88
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 88, 8180
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_89
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 89, 8190
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_90
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 90, 8200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_91
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 91, 8210
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_92
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 92, 8220
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_93
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 93, 8230
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_94
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 94, 8240
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_95
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 95, 8250
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_96
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 96, 8260
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_97
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 97, 8270
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_98
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 98, 8280
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_99
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 99, 8290
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_100
+00:00:00.00> PCALL "Flight Test/A320 FL340.scn" 100, 8300
+23:59:00.00> HOLD
+# Distance between Waypoint 0 and 1 is 70.66.
+# Distance between Waypoint 1 and 2 is 70.22.
+# Distance between Waypoint 2 and 3 is 69.78.
