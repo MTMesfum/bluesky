@@ -1,12 +1,11 @@
 # Load wind data
-00:00:00.00> LOAD_WIND 01, Tigge_2014-09-08_00_243036.nc
-00:00:00.00> DATE 9,9,2014
 00:00:00.00> SAVEIC trajectories_saveic
 00:00:00.00> CRELOG MYLOG 0.1 "MYLOG"
-00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.perf.mass, traf.perf.ff
+00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.lat, traf.lon, traf.perf.fuelflow
 00:00:00.00> MYLOG ON
 00:00:00.00> ASAS OFF
-00:00:00.00> FF
+00:00:00.00> DATE 9,9,2014
+00:00:00.00> LOAD_WIND202, Tigge_2014-09-08_00_243036.nc
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_01
@@ -15,8 +14,68 @@
 23:59:00.00> HOLD
 
 # Load trajectories for a run
-00:00:00.00> SWRAD VOR
 00:00:00.00> SCEN Test_02
 00:00:00.00> PCALL "Trajectories.scn" 02
 00:00:00.00> FF
-23:58:59.00> QUIT
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_03
+00:00:00.00> PCALL "Trajectories.scn" 03
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_04
+00:00:00.00> PCALL "Trajectories.scn" 04
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_05
+00:00:00.00> PCALL "Trajectories.scn" 05
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_06
+00:00:00.00> PCALL "Trajectories.scn" 06
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_07
+00:00:00.00> PCALL "Trajectories.scn" 07
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_08
+00:00:00.00> PCALL "Trajectories.scn" 08
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_09
+00:00:00.00> PCALL "Trajectories.scn" 09
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_10
+00:00:00.00> PCALL "Trajectories.scn" 10
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_11
+00:00:00.00> PCALL "Trajectories.scn" 11
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SWRAD VOR
+00:00:00.00> SCEN Test_12
+00:00:00.00> PCALL "Trajectories.scn" 12
+00:00:00.00> FF
+23:58:59.00> EXIT

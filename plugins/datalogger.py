@@ -22,8 +22,8 @@ def init_plugin():
 
     # Addtional initilisation code
     global datalogger, ensemble
-    scenario_manager = "scenario\Trajectories-batch.scn"
-    # scenario_manager = "scenario\Trajectories-batch4.scn"
+    # scenario_manager = "scenario\Trajectories-batch.scn"
+    scenario_manager = "scenario\Trajectories-batch4.scn"
     with open(scenario_manager, 'r') as f:
         filedata = f.read()
 
@@ -56,7 +56,7 @@ def init_plugin():
         ],
         'WRITER2': [
             'WRITER <FILENAME>',
-            '[txt, txt]',
+            '[txt, txt, int]',
             datalogger.write2,
             'Save the fuel consumption into traf.resultstosave.'
             'If one AC remains, write the results of traf.resultstosave into a file.'
@@ -66,6 +66,18 @@ def init_plugin():
             '[string]',
             datalogger.printer,
             'Print some text in BlueSky and the console of python.'
+        ],
+        'LOAD_WIND2': [
+            'LOAD_WIND2',
+            '[int, string]',
+            datalogger.load,
+            'Load wind and print some text.'
+        ],
+        'SPD2': [
+            'SPD2 acid, spd',
+            'acid, spd',
+            datalogger.speed,
+            'Speed command (autopilot) with a Vmax cap.'
         ],
     }
 
@@ -96,6 +108,12 @@ class DataLogger(TrafficArrays):
         # print(traf.perf.mass)
         print("Fuel used up till now: ", self.initmass-traf.perf.mass)
 
+    def load(self, ensemble, file):
+        print("\nFile '{}' with ensemble [{}] will be loaded!".format(file, ensemble))
+        stack.stack('LOAD_WIND {}, {}'.format(ensemble, file))
+        print("\nEnsemble {} has been loaded!".format(ensemble))
+
+
     def create(self, n=1):
         super(DataLogger, self).create(n)
         if len(traf.id) > 1:
@@ -108,6 +126,41 @@ class DataLogger(TrafficArrays):
             self.counter[0] = 0
         print("\nAC {0} [{1}] has been created at {2}.".format(traf.id[-1], traf.type[-1],
                                                              sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
+
+
+    def speed(self, ac_id, ac_target_speed):
+        # Check whether Vmax is exceeded, if so replace it with Vmax
+        # print(ac_id)
+        # print(traf.id[ac_id])
+        # index = self.idx2id(ac_id)
+        # print(index)
+        # This is the target altitude of the next waypoint
+        # print(traf.ap.route[ac_id].wpalt[traf.ap.route[ac_id].iactwp])
+        # This is the ac type
+        # print(traf.type[ac_id])
+        # Now find the maximum velocity of the ac type corresponding at that altitude
+        # print(traf.perf.vmo)
+        # print('The maximum operating mach number is: ', traf.perf.mmo)
+        # print(traf.tas)
+        # print('Vmax is: ', traf.perf.asas.vmax)
+        # Either pick the speed which is put in or the max operating speed
+        ac_speed = min(traf.perf.mmo[ac_id], ac_target_speed)
+        # print('\nThe target speed is: ', ac_target_speed)
+        # print('The max speed is: ', traf.perf.mmo[ac_id])
+        # print('The selected speed is: ', ac_speed)
+        stack.stack(f'SPD {traf.id[ac_id]} {ac_speed}')
+
+        # "SPD": [
+        #         #     "SPD acid,spd (CAS-kts/Mach)",
+        #         #     "acid,spd",
+        #         #     bs.traf.ap.selspdcmd,
+        #         #     "Speed command (autopilot)"
+
+    def idx2id(self, ac_id):
+        # Fast way of finding indices of all ACID's in a given list
+        tmp = dict((v, i) for i, v in enumerate(traf.id))
+        return [tmp.get(acidi, -1) for acidi in ac_id]
+
 
     def talko(self, delcounter):
         # if len(delcounter) == 1:
@@ -185,62 +238,38 @@ class DataLogger(TrafficArrays):
         if curtime:
             traf.resultstosave = pd.DataFrame(columns=self.dataframe_holder)
 
-    def write2(self, acid, traf_id, *args):
+    def write2(self, acid, traf_id, index, *args):
         curtime = []
-        # print(args)
-        print("I'm in WRITER2 !!!! ", acid)
         i = int(acid)
-        curtime = str(sim.utc.strftime("%H:%M:%S"))
+        # print('acid {} is saved on {}'.format(traf_id, acid))
+        # print('What is saved in i?? : ', i)
+        # print('i is supposed to be: ', traf.id[index])
+        # print('i as index is: ', traf.id[i])
 
-        # print('i is: ', i)
-        # print('delay is: ', self.delay)
-        # print('ensemble is: ', ensemble)
-        # print('traf id is: ', traf.id)
-        # pd.DataFrame(columns=self.dataframe_holder)
-        # print('before: \n', traf.resultstosave3)
-        print('self.initmass is: ', self.initmass)
-        print('traf.perfmass is: ', traf.perf.mass)
-        print('aircraft {} is #{}'.format(traf_id, i))
-        traf.resultstosave = pd.DataFrame([[ensemble, str(self.delay[int(i)]), str(traf.id[int(i)]),
+        curtime = str(sim.utc.strftime("%H:%M:%S"))
+        traf.resultstosave = pd.DataFrame([[ensemble, str(self.delay[int(i)]), str(traf_id),
                    str(sim.utc.strftime("%d-%b-%Y")), str(self.inittime[int(i)]),
                    str(curtime), np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=3)]],
                               columns=self.dataframe_holder)
         traf.resultstosave3 = traf.resultstosave3.append(traf.resultstosave, ignore_index=True)
-        # df = pd.DataFrame(holder, columns=self.dataframe_holder)
-        # print(df)
-        # df.set_index([pd.Index([int(ind)]), 'Ensemble'])
-        # df['Numbering'] = int(ind)
-        # df.set_index('Numbering', inplace=True, drop=True)
-        # df.set_index(str(ind), inplace=True, drop=True)
-        # print(df)
-        # df.set_index([str(ind)])
-        # traf.resultstosave = traf.resultstosave.append(df)
-        # print('after: \n', traf.resultstosave3)
         stack.stack('DEL {}'.format(traf_id))
-        print('before: ', traf.id)
-        print('Deleted aircraft: ', traf_id)
         print("\nAircraft {0} has been deleted at {1}.".format(traf.id[i], sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
-        print("Fuel used by {0} is {1} [kg].\n".format(traf.id[i],
+        print("Fuel used by {0} is {1} [kg].".format(traf.id[i],
                                  np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
-        print('after :', traf.id)
-        if traf.resultstosave2.iloc[-1,-1] is not None and len(traf.id) == 1:
+        # print('traf.id length is: ', len(traf.id))
+        if traf.resultstosave2.iloc[-1, -1] is not None and len(traf.id) == 1:
             traf.resultstosave = pd.concat([traf.resultstosave3,
                                             traf.resultstosave2], axis=1)
-            # traf.resultstosave = pd.merge(traf.resultstosave, traf.resultstosave2,
-            #                               left_on='Departure', right_on='[ 0 ]')
-            # df_merge_difkey = pd.merge(df_row, df3, left_on='id', right_on='id')
-
-        # if not args:
             print('\033[94m' + '\033[4m' + '\nSaving the results in a standard file!!!\n\n' + '\033[0m')
             # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
             # check whether the file exist, if it does append it, otherwise create it
-            exists = os.path.isfile('output\WRITER Standard File.csv')
+            exists = os.path.isfile('output\WRITER Standard File.xlsx')
             if exists:
-                with open('output\WRITER Standard File.csv', 'a') as f:
-                    traf.resultstosave.to_csv(f, header=False)
+                with open('output\WRITER Standard File.xlsx', 'wb') as f:
+                    traf.resultstosave.to_excel(f, header=False)
             else:
-                traf.resultstosave.to_csv('output\WRITER Standard File.csv')
-            # os.startfile('output\WRITER Standard File.csv')
+                traf.resultstosave.to_excel('output\WRITER Standard File.xlsx')
+            # os.startfile('output\WRITER Standard File.xlsx')
         elif args:
             filename = str(args[0])
             print('\033[94m' + '\033[4m' + '\nSaving the results in {0}!!!\n\n'.format(filename) + '\033[0m')
@@ -252,18 +281,20 @@ class DataLogger(TrafficArrays):
                     df.to_csv(f, header=False)
             else:
                 traf.resultstosave.to_csv('output\WRITER {0}.csv'.format(filename))
-            # os.startfile('output\WRITER {0}.csv'.format(filename))
+            os.startfile('output\WRITER {0}.csv'.format(filename))
 
         if curtime:
             traf.resultstosave = pd.DataFrame(columns=self.dataframe_holder)
+        pass
 
+    # This method prints something to the cmd window (useful for feedback)
     def printer(self, delay):
         # if len(traf.id) > 1:
         self.delay[-1] = delay.split()[3]
         # else:
         #     self.delay[0] = delay.split()[3]
         # print('Echo starting now!')
-        print('\n' + delay + '\n')
+        print(delay)
         # print(self.delay)
         # scr.echo(delay)
         pass
@@ -274,6 +305,7 @@ class DataLogger(TrafficArrays):
         # datalogger.update()
 
         if apple > 0:
+            # print('Fuelflows are: {} at {}'.format(traf.perf.fuelflow, str(sim.utc.strftime("%H:%M:%S"))))
             self.counter += np.ones(apple) * np.logical_and(traf.alt<1, True)  # _and , traf.M<0.007
 
             # datalogger.save2()

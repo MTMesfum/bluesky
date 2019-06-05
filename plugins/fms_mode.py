@@ -250,11 +250,28 @@ class Afms(TrafficArrays):
         #     stack.stack('EXIT')
         for index, traf_id in enumerate(traf.id):
             # print('looping index: {}, traf: {}'.format(index, traf_id))
-            if holder[index] == traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-1:
-                # stack.stack('WRITER2 {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index]))
+            # traf_lat = traf.ap.route[bs.traf.id2idx(traf.id[index])].wplat[traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-3]
+            # traf_lon = traf.ap.route[bs.traf.id2idx(traf.id[index])].wplon[traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-3]
+            # delta = 0.002
+            # if traf.lat[index] <= (traf_lat + delta) and \
+            #         traf.lat[index] >= (traf_lat - delta):
+            #     print('Aircraft {} passed lat!'.format(traf_id))
+            #     if traf.lon[index] <= (traf_lon + delta) and \
+            #             traf.lon[index] >= (traf_lon - delta):
+            #         print('Aircraft {} passed lat and lon!'.format(traf_id))
+            #         print('traf_lat is {} and traf_lon is {}'.format(traf_lat, traf_lon))
+                    # stack.stack('WRITER2 {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index]))
+                    # holder[index] = traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-2
+            if holder[index] == traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-2:
+                # stack.stack('HOLD')
+                column_name = '[ {0} ]'.format(holder[index] - 1)
+                if column_name not in traf.resultstosave2:
+                    traf.resultstosave2[column_name] = None
+                traf.resultstosave2[column_name][int(self.index[index])] = str(sim.utc.strftime("%H:%M:%S"))
+                stack.stack('WRITER2 {} {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index], index))
 
-                stack.stack('WRITER')
-                stack.stack('EXIT')
+                # stack.stack('WRITER')
+                # stack.stack('EXIT')
                 # del self.interval_counter[index], self.currentwp[index],\
                 #     self.lat[index], self.lon[index], self.index[index]
                 continue
@@ -312,13 +329,13 @@ class Afms(TrafficArrays):
                         pass  # Don't do anything
                     elif own_spd < 1:
                         if abs(traf.M[idx] - own_spd) > 0.0003:
-                            stack.stack(f'SPD {traf.id[idx]}, {own_spd}')
+                            stack.stack(f'SPD2 {traf.id[idx]}, {own_spd}')
                             stack.stack(f'VNAV {traf.id[idx]} ON')
                         else:
                             pass
                     else:
                         if abs(traf.cas[idx] - own_spd) > 0.1:
-                            stack.stack(f'SPD {traf.id[idx]}, {own_spd * 3600 / 1852}')
+                            stack.stack(f'SPD2 {traf.id[idx]}, {own_spd * 3600 / 1852}')
                             stack.stack(f'VNAV {traf.id[idx]} ON')
                         else:
                             pass
@@ -344,11 +361,11 @@ class Afms(TrafficArrays):
                         if abs(traf.cas[idx] - rta_cas_m_s) > 0.5:  # Don't give very small speed changes
                             if abs(traf.vs[idx]) < 2.5:  # Don't give a speed change when changing altitude
                                 if tools.aero.vcas2mach(rta_cas_m_s, flightlevels_m[0]) > 0.95:
-                                    stack.stack(f'SPD {traf.id[idx]}, {0.95}')
+                                    stack.stack(f'SPD2 {traf.id[idx]}, {0.95}')
                                 elif flightlevels_m[0] > 7620:
-                                    stack.stack(f'SPD {traf.id[idx]}, {tools.aero.vcas2mach(rta_cas_m_s, flightlevels_m[0])}')
+                                    stack.stack(f'SPD2 {traf.id[idx]}, {tools.aero.vcas2mach(rta_cas_m_s, flightlevels_m[0])}')
                                 else:
-                                    stack.stack(f'SPD {traf.id[idx]}, {rta_cas_m_s * 3600 / 1852}')
+                                    stack.stack(f'SPD2 {traf.id[idx]}, {rta_cas_m_s * 3600 / 1852}')
                                 stack.stack(f'VNAV {traf.id[idx]} ON')
                         else:
                             pass
@@ -400,18 +417,15 @@ class Afms(TrafficArrays):
                     earliest_time_s2rta = max(time_s2rta - tw_size/2, 0)
                     latest_time_s2rta = max(time_s2rta + tw_size/2, 0)
 
-                    if earliest_time_s2rta == 0 and latest_time_s2rta == 0:  # Fly at Vmax if TW can't be reached
-                        time_window_cas_m_s = 1000
+                    if latest_time_s2rta == 0:  # Fly maximum speed as you are behind TW
+                        time_window_cas_m_s = 300.0  # Large speed
                     elif eta_s_preferred < earliest_time_s2rta:  # Prefer earlier then TW
-                        # print('Speed Increased!')
                         time_window_cas_m_s = self._cas2rta(distances_nm, flightlevels_m, earliest_time_s2rta,
                                                             traf.cas[idx])
                     elif eta_s_preferred > latest_time_s2rta:  # Prefer later then TW
-                        # print('Speed Decreased!')
                         time_window_cas_m_s = self._cas2rta(distances_nm, flightlevels_m, latest_time_s2rta,
                                                             traf.cas[idx])
                     else:
-                        # print('Speed unchanged!')
                         time_window_cas_m_s = preferred_cas_m_s
 
                     # if time_window_cas_m_s < 90:
@@ -434,13 +448,13 @@ class Afms(TrafficArrays):
                         if abs(traf.vs[idx]) < 2.5:  # Don't give a speed change when changing altitude
                             if tools.aero.vcas2mach(time_window_cas_m_s, flightlevels_m[0]) > 0.95:
                                 abcd = '0.95'
-                                stack.stack(f'SPD {traf.id[idx]}, {0.95}')
+                                stack.stack(f'SPD2 {traf.id[idx]}, {abcd}')
                             elif flightlevels_m[0] > 7620:
                                 abcd = '{0:.3f}'.format(tools.aero.vcas2mach(time_window_cas_m_s, flightlevels_m[0]))
-                                stack.stack(f'SPD {traf.id[idx]}, {abcd}')
+                                stack.stack(f'SPD2 {traf.id[idx]}, {abcd}')
                             else:
                                 abcd = '{0:.3f}'.format(time_window_cas_m_s * 3600 / 1852)
-                                stack.stack(f'SPD {traf.id[idx]}, {abcd}')
+                                stack.stack(f'SPD2 {traf.id[idx]}, {abcd}')
                             stack.stack(f'VNAV {traf.id[idx]} ON')
                             # print('Speed changed to: {}'.format(abcd))
                     else:
@@ -632,6 +646,9 @@ class Afms(TrafficArrays):
         :param current_cas_m_s: current CAS in m/s
         :return: CAS in m/s
         """
+
+        # print('\ndistances are: ', distances_nm)
+        # print('rta after {} seconds.'.format(time2rta_s))
         iterations = 4
         estimated_cas_m_s = current_cas_m_s
         # print('\n')
@@ -639,15 +656,15 @@ class Afms(TrafficArrays):
             estimated_time2rta_s = self._eta2tw_new_cas_wfl(distances_nm, flightlevels_m, current_cas_m_s,
                                                             estimated_cas_m_s)
             previous_estimate_m_s = estimated_cas_m_s
-            # print('Previous cas m/s: ', previous_estimate_m_s)
-            # print('RTA: ', time2rta_s)
-            # print('Estimated cas m/s 1: ', estimated_cas_m_s)
-            # print('Estimated RTA: ', estimated_time2rta_s)
-            estimated_cas_m_s = estimated_cas_m_s * estimated_time2rta_s / (time2rta_s + 0.00001)
-            # print('Estimated cas m/s 2: ', estimated_cas_m_s)
+            if estimated_time2rta_s < 0:
+                estimated_cas_m_s = 300.0
+                break
+            estimated_cas_m_s = max(estimated_cas_m_s * estimated_time2rta_s / (time2rta_s + 0.00001), 10.0)
+            k = 0.5  # Part that is taken from estimate_cas_m_s (between 0 and 1)
+            estimated_cas_m_s = (k*estimated_cas_m_s + (1-k)*previous_estimate_m_s)  # Stability of iteration
             if abs(previous_estimate_m_s - estimated_cas_m_s) < 0.1:
                 break
-        # print('\n')
+        # print('estimated cas is: ', estimated_cas_m_s * 3600 / bs.tools.aero.nm)
         return estimated_cas_m_s
 
     def _eta2tw_cas_wfl(self, distances_nm, flightlevels_m, cas_m_s):
@@ -662,6 +679,7 @@ class Afms(TrafficArrays):
         distances_m = distances_nm * 1852
         times_s = np.empty_like(distances_m)
         previous_fl_m = flightlevels_m[0]
+        # print('cas_m_s is: ', cas_m_s)
 
         # Assumption is instantanuous climb to next flight level, and instantanuous speed change at new flight level
         for i, distance_m in enumerate(distances_m):

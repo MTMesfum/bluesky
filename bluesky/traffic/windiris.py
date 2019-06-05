@@ -2,9 +2,11 @@
 Implementation of the weather module in BlueSky with support for netCDF files.
 The module assumes only the difference of the wind in comparison to the
 average wind of the complete ensemble set.
+
 NOTE:
 This WindIris module will only work correctly if the DATE is set before loading
 the wind data.
+
 Original Author: Remon van den Brandt
 Update Author: René Verbeek
 Date: 17-5-2019
@@ -22,9 +24,11 @@ import bluesky as bs
 class WindIris:
     """
     Create interpolation and statistical routines that apply to the wind forecast.
+
     Notes
     -----
     Schematic of the coordinate system:
+
       +-------------- 90 lat ------------+
       |                |                 |
       |                |                 |
@@ -34,6 +38,7 @@ class WindIris:
       |                |                 |
       |                |                 |
       +-------------- -90 ---------------+
+
     """
 
     def __init__(self):
@@ -63,6 +68,7 @@ class WindIris:
     def _get_wind(self, lat, lon, pressure, time, ens=None):
         """
         Retrieve the north and south component of the windfield, interpolated at a given positions.
+
         Parameters
         ----------
         lat: array_like
@@ -75,6 +81,7 @@ class WindIris:
             timestamp.
         ens: int, optional
             Ensemble member.
+
         Returns
         -------
         north: array_like
@@ -92,6 +99,7 @@ class WindIris:
 
     def load_file(self, ensemble, filename):
         """ Load netCDF file into memory.
+
         Parameters
         ----------
         ensemble : int
@@ -142,12 +150,12 @@ class WindIris:
         wspd = np.sqrt(vn * vn + ve * ve)
 
         txt = "WIND AT %.5f, %.5f: %03d/%d" % (lat, lon, np.round(wdir), np.round(wspd / kts))
-        print(txt)
-        print("Heading of the AC is ", bs.traf.hdg[-1])
+
         return True, txt
 
     def getdata(self, userlat, userlon, useralt=0.0):
         """ Retrieve the north and south component of the windfield, interpolated at a given positions.
+
         Parameters
         ----------
         userlat : float
@@ -156,6 +164,7 @@ class WindIris:
             Longitude [deg]
         userlat : float
             Altitude [m]
+
         Returns
         -------
         north: array_like

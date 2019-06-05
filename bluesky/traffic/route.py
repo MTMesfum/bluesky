@@ -852,7 +852,6 @@ class Route:
         # del self.wpalt[idx]
         # del self.wpspd[idx]
         # del self.wptype[idx]
-        self._del_wpt_data(idx)
         if self.iactwp > idx:
             self.iactwp = max(0, self.iactwp - 1)
 

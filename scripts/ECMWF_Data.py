@@ -4,8 +4,11 @@ import winsound
 
 duration = 1000  # millisecond
 freq = 800  # Hz
+server = ECMWFDataServer(
+    url="https://api.ecmwf.int/v1",
+    key="72d89272e431a09ce330f3497c7af8b6",
+    email="m.t.mesfum@student.tudelft.nl")
 
-server = ECMWFDataServer()
 server.retrieve({
     "class": "ti",
     "dataset": "tigge",

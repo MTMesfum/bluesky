@@ -40,8 +40,7 @@ def main():
     """
     # When importerror gives different name than (pip) install needs,
     # also advise latest version
-    missingmodules = {"OpenGL": "pyopengl and pyopengl-accelerate",
-                      "PyQt4": "pyqt5"}
+    missingmodules = {"OpenGL": "pyopengl and pyopengl-accelerate"}
 
     ### Parse command-line arguments ###
     # BlueSky.py modes:
@@ -52,9 +51,9 @@ def main():
     #   ==> useful for calling bluesky from within another python script/program
     sys.argv.append('--headless')
     sys.argv.append('--scenfile')
-    # sys.argv.append('Trajectories-batch4.scn')
-    sys.argv.append('Trajectories-batch.scn')
-    print('\n', sys.argv)
+    # sys.argv.append('Flight Test\\SCNM A320 FL360.scn')
+    sys.argv.append('Trajectories-batch4.scn')
+    # sys.argv.append('Trajectories-batch.scn')
     if '--detached' in sys.argv:
         mode = 'sim-detached'
     elif '--sim' in sys.argv:
@@ -85,7 +84,9 @@ def main():
 
         # Only start a simulation node if called with --sim or --detached
         if mode[:3] == 'sim':
-            bs.sim.start()
+            if mode[-8:] != 'detached':
+                bs.sim.connect()
+            bs.sim.run()
         else:
             # Only print start message in the non-sim cases to avoid printing
             # this for every started node
@@ -110,6 +111,7 @@ def main():
         if modulename is None:
             raise error
         print("Bluesky needs", modulename)
+        print("Run setup-python.bat (Windows) or check requirements.txt (other systems)")
         print("Install using e.g. pip install", modulename)
 
     print('BlueSky normal end.')

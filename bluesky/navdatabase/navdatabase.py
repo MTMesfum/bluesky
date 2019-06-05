@@ -115,7 +115,7 @@ class Navdatabase:
 
             # Waypoint name is free
             else:
-                return True ,"Waypoint "+name.upper()+" does not yet exist."
+                return True,"Waypoint "+name.upper()+" does not yet exist."
 
         # Still here? So there is data, then we add this waypoint
         self.wpid.append(name.upper())
@@ -135,7 +135,7 @@ class Navdatabase:
          # Update screen info
         bs.scr.addnavwpt(name.upper(),lat,lon)
 
-        return True#, name.upper()+" added to navdb."
+        return True,name.upper()+" added to navdb."
 
     def getwpidx(self, txt, reflat=999999., reflon=999999):
         """Get waypoint index to access data"""
@@ -175,10 +175,8 @@ class Navdatabase:
     def getwpindices(self, txt, reflat=999999., reflon=999999,crit=1852.0):
         """Get waypoint index to access data"""
         name = txt.upper()
-        print(self.wpid.index)
         try:
             i = self.wpid.index(name)
-            print('getwpindices tried and found: ', i)
         except:
             return [-1]
 
@@ -189,7 +187,7 @@ class Navdatabase:
         # If pos is specified check for more and return closest
         else:
             idx = findall(self.wpid,name) # find indices of al occurences
-            print('getwpindixes found the following indices: ', idx)
+
             if len(idx) == 1:
                 return [idx[0]]
             else:

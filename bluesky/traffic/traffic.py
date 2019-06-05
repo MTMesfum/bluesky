@@ -16,8 +16,8 @@ from bluesky.tools.aero import fpm, kts, ft, g0, Rearth, nm, \
 
 from bluesky.tools.trafficarrays import TrafficArrays, RegisterElementParameters
 
-from .windiris import WindIris
-from .windsim import WindSim
+# from .windsim import WindSim
+from .windiris import WindIris  # Changed option to use weather in NetCDF format
 from .conditional import Condition
 from .trails import Trails
 from .adsbmodel import ADSB
@@ -76,7 +76,8 @@ class Traffic(TrafficArrays):
         self.ntraf = 0
 
         self.cond = Condition()  # Conditional commands list
-        self.wind = WindIris()
+        # self.wind = WindSim()
+        self.wind = WindIris()  # Changed option to use weather in NetCDF format
         self.turbulence = Turbulence()
         self.translvl = 5000.*ft # [m] Default transition level
 
@@ -137,10 +138,6 @@ class Traffic(TrafficArrays):
             self.ax       = np.array([])  # [m/s2] absolute value of longitudinal accelleration
             self.bank     = np.array([])  # nominal bank angle, [radian]
             self.swhdgsel = np.array([], dtype=np.bool)  # determines whether aircraft is turning
-
-            # Crossover altitude
-            self.abco   = np.array([])
-            self.belco  = np.array([])
 
             # limit settings
             self.limspd      = np.array([])  # limit speed
@@ -290,10 +287,6 @@ class Traffic(TrafficArrays):
         self.ax[-n:]      = kts           # absolute value of longitudinal accelleration
         self.bank[-n:]    = np.radians(25.)
 
-        # Crossover altitude
-        self.abco[-n:]   = 0  # not necessary to overwrite 0 to 0, but leave for clarity
-        self.belco[-n:]  = 1
-
         # Traffic autopilot settings
         self.selspd[-n:] = self.cas[-n:]
         self.aptas[-n:]  = self.tas[-n:]
@@ -418,14 +411,9 @@ class Traffic(TrafficArrays):
     def UpdateAirSpeed(self, simdt, simt):
         # Compute horizontal acceleration
         delta_spd = self.pilot.tas - self.tas
-        # need_small_ax = np.abs(delta_spd) > kts * 0.1     # small threshold)
         need_ax = np.abs(delta_spd) > kts     # small threshold
-        # print(self.perf.acceleration())
-        # self.ax = (need_ax * need_small_ax + 0.1 * need_small_ax * np.logical_not(need_ax)) * np.sign(delta_spd) * self.perf.acceleration()
-        # need_ax = np.abs(delta_spd) > kts     # small threshold
         self.ax = need_ax * np.sign(delta_spd) * self.perf.acceleration()
-
-
+        
         # Update velocities
         self.tas = self.tas + self.ax * simdt
         self.cas = vtas2cas(self.tas, self.alt)
@@ -434,10 +422,11 @@ class Traffic(TrafficArrays):
         # Turning
         turnrate = np.degrees(g0 * np.tan(self.bank) / np.maximum(self.tas, self.eps))
         delhdg = (self.pilot.hdg - self.hdg + 180) % 360 - 180  # [deg]
-        self.swhdgsel = np.abs(delhdg) > np.abs(2 * simdt * turnrate)
+        self.swhdgsel = np.abs(delhdg) > np.abs(1.5 * simdt * turnrate)
 
         # Update heading
-        self.hdg = (self.hdg + simdt * turnrate * self.swhdgsel * np.sign(delhdg)) % 360.
+        self.hdg = (self.hdg + np.where(self.swhdgsel,
+            simdt * turnrate * np.sign(delhdg), delhdg)) % 360.0
 
         # Update vertical speed
         delta_alt = self.pilot.alt - self.alt
@@ -628,7 +617,6 @@ class Traffic(TrafficArrays):
             # Not found as airport, try waypoints & navaids
             else:
                 iwps = bs.navdb.getwpindices(wp,reflat,reflon)
-                print('iwps is: ', iwps)
                 if iwps[0]>=0:
                     typetxt = ""
                     desctxt = ""
