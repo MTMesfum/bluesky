@@ -93,7 +93,7 @@ class WindIris:
         if self.__loaded:
             if ens:
                 self.__load_ensemble(ens)
-            return self.__interpolate(self.north, self. east, lat, lon, pressure, time)
+            return self.__interpolate(self.north, self.east, lat, lon, pressure, time)
         else:
             return 0, 0
 
@@ -139,6 +139,9 @@ class WindIris:
         self.__load_ensemble(ensemble)
 
         self.__loaded = True
+        print('\033[4m' + '\033[92m' +
+              "\nFile '{0}' with ensemble [{1}] has been loaded!\n".format(filename, ensemble) + '\033[0m')
+        # print("\nEnsemble {} has been loaded!".format(ensemble))
 
     # -----  mimic windsim class API -------------------
     def get(self, lat, lon, alt=0):

@@ -1,0 +1,1010 @@
+# This is the scenario manager to find the speed corresponding to the lowest fuel consumption
+00:00:00.00> SWRAD VOR
+00:00:00.00> SAVEIC trajectories_saveic
+00:00:00.00> CRELOG MYLOG 0.1 "MYLOG"
+00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.lat, traf.lon, traf.perf.fuelflow
+00:00:00.00> MYLOG ON
+00:00:00.00> FF
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_00
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 00, 5000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_01
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 01, 5010
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_02
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 02, 5020
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_03
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 03, 5030
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_04
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 04, 5040
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_05
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 05, 5050
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_06
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 06, 5060
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_07
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 07, 5070
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_08
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 08, 5080
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_09
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 09, 5090
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_10
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 10, 5100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_11
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 11, 5110
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_12
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 12, 5120
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_13
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 13, 5130
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_14
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 14, 5140
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_15
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 15, 5150
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_16
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 16, 5160
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_17
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 17, 5170
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_18
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 18, 5180
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_19
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 19, 5190
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_20
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 20, 5200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_21
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 21, 5210
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_22
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 22, 5220
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_23
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 23, 5230
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_24
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 24, 5240
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_25
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 25, 5250
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_26
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 26, 5260
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_27
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 27, 5270
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_28
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 28, 5280
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_29
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 29, 5290
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_30
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 30, 5300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_31
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 31, 5310
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_32
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 32, 5320
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_33
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 33, 5330
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_34
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 34, 5340
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_35
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 35, 5350
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_36
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 36, 5360
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_37
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 37, 5370
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_38
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 38, 5380
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_39
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 39, 5390
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_40
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 40, 5400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_41
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 41, 5410
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_42
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 42, 5420
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_43
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 43, 5430
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_44
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 44, 5440
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_45
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 45, 5450
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_46
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 46, 5460
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_47
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 47, 5470
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_48
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 48, 5480
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_49
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 49, 5490
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_50
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 50, 5500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_51
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 51, 5510
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_52
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 52, 5520
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_53
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 53, 5530
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_54
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 54, 5540
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_55
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 55, 5550
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_56
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 56, 5560
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_57
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 57, 5570
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_58
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 58, 5580
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_59
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 59, 5590
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_60
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 60, 5600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_61
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 61, 5610
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_62
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 62, 5620
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_63
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 63, 5630
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_64
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 64, 5640
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_65
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 65, 5650
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_66
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 66, 5660
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_67
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 67, 5670
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_68
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 68, 5680
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_69
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 69, 5690
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_70
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 70, 5700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_71
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 71, 5710
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_72
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 72, 5720
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_73
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 73, 5730
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_74
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 74, 5740
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_75
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 75, 5750
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_76
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 76, 5760
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_77
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 77, 5770
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_78
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 78, 5780
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_79
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 79, 5790
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_80
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 80, 5800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_81
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 81, 5810
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_82
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 82, 5820
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_83
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 83, 5830
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_84
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 84, 5840
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_85
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 85, 5850
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_86
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 86, 5860
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_87
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 87, 5870
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_88
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 88, 5880
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_89
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 89, 5890
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_90
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 90, 5900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_91
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 91, 5910
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_92
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 92, 5920
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_93
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 93, 5930
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_94
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 94, 5940
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_95
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 95, 5950
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_96
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 96, 5960
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_97
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 97, 5970
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_98
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 98, 5980
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_99
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 99, 5990
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_100
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 100, 6000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_101
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 101, 6010
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_102
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 102, 6020
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_103
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 103, 6030
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_104
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 104, 6040
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_105
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 105, 6050
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_106
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 106, 6060
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_107
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 107, 6070
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_108
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 108, 6080
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_109
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 109, 6090
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_110
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 110, 6100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_111
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 111, 6110
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_112
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 112, 6120
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_113
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 113, 6130
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_114
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 114, 6140
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_115
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 115, 6150
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_116
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 116, 6160
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_117
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 117, 6170
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_118
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 118, 6180
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_119
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 119, 6190
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_120
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 120, 6200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_121
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 121, 6210
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_122
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 122, 6220
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_123
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 123, 6230
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_124
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 124, 6240
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_125
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 125, 6250
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_126
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 126, 6260
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_127
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 127, 6270
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_128
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 128, 6280
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_129
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 129, 6290
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_130
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 130, 6300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_131
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 131, 6310
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_132
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 132, 6320
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_133
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 133, 6330
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_134
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 134, 6340
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_135
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 135, 6350
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_136
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 136, 6360
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_137
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 137, 6370
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_138
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 138, 6380
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_139
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 139, 6390
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_140
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 140, 6400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_141
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 141, 6410
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_142
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 142, 6420
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_143
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 143, 6430
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_144
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 144, 6440
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_145
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 145, 6450
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_146
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 146, 6460
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_147
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 147, 6470
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_148
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 148, 6480
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_149
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 149, 6490
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_150
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 150, 6500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_151
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 151, 6510
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_152
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 152, 6520
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_153
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 153, 6530
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_154
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 154, 6540
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_155
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 155, 6550
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_156
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 156, 6560
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_157
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 157, 6570
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_158
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 158, 6580
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_159
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 159, 6590
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_160
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 160, 6600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_161
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 161, 6610
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_162
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 162, 6620
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_163
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 163, 6630
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_164
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 164, 6640
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_165
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 165, 6650
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_166
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 166, 6660
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_167
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 167, 6670
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_168
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 168, 6680
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_169
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 169, 6690
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_170
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 170, 6700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_171
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 171, 6710
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_172
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 172, 6720
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_173
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 173, 6730
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_174
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 174, 6740
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_175
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 175, 6750
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_176
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 176, 6760
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_177
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 177, 6770
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_178
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 178, 6780
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_179
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 179, 6790
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_180
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 180, 6800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_181
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 181, 6810
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_182
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 182, 6820
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_183
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 183, 6830
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_184
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 184, 6840
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_185
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 185, 6850
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_186
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 186, 6860
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_187
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 187, 6870
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_188
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 188, 6880
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_189
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 189, 6890
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_190
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 190, 6900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_191
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 191, 6910
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_192
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 192, 6920
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_193
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 193, 6930
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_194
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 194, 6940
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_195
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 195, 6950
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_196
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 196, 6960
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_197
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 197, 6970
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_198
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 198, 6980
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_199
+00:00:00.00> PCALL "Flight Test/DH8D FL230.scn" 199, 6990
+23:59:00.00> HOLD
+# Distance between Waypoint 0 and 1 is 70.66.
+# Distance between Waypoint 1 and 2 is 70.22.
+# Distance between Waypoint 2 and 3 is 69.78.

@@ -99,9 +99,23 @@ class DataLogger(TrafficArrays):
             self.deltime  = ([])
             self.wpcounter = -2
             self.delay = np.array([])
+            with open(os.getcwd() + '\\scenario\\number_of_ac.txt', "r") as fin:
+                self.aclimit = int(fin.read())
+                self.aclimit2 = 0
 
     def preupdate(self):
-        print(self.initmass-traf.perf.mass)
+        # print(sim.utc.strftime("%S"))
+        if len(traf.id) > 0 and sim.utc.strftime("%S") == '00':
+            stack.stack('GETWIND {}, {}, {}'.format(traf.lat[0], traf.lon[0], traf.alt[0]))
+            print('\nFuelflow is: ', traf.perf.fuelflow)
+            print('Fuel used is: ', self.initmass-traf.perf.mass)
+            print('Thrust is: ', traf.perf.Thr)
+            print('pilot tas is {} \n tas is {} \n delspd becomes {}'.format(
+                  traf.pilot.tas, traf.tas, traf.pilot.tas-traf.tas))
+            print('The groundspeed is: ', traf.gs)
+        # print('eta is {} \n Thrust is {} \n '
+        #       'cf_cruise jet is {} \n jt is {}'.format(
+        #         eta, self.Thr, self.cf_cruise, jt))
 
     def update(self):
         # print(self.initmass)
@@ -109,9 +123,10 @@ class DataLogger(TrafficArrays):
         print("Fuel used up till now: ", self.initmass-traf.perf.mass)
 
     def load(self, ensemble, file):
-        print("\nFile '{}' with ensemble [{}] will be loaded!".format(file, ensemble))
+        print('\033[91m' +
+              "\nFile '{}' with ensemble [{}] will be loaded!\n".format(file, ensemble)
+              + '\033[0m')
         stack.stack('LOAD_WIND {}, {}'.format(ensemble, file))
-        print("\nEnsemble {} has been loaded!".format(ensemble))
 
 
     def create(self, n=1):
@@ -245,7 +260,7 @@ class DataLogger(TrafficArrays):
         # print('What is saved in i?? : ', i)
         # print('i is supposed to be: ', traf.id[index])
         # print('i as index is: ', traf.id[i])
-
+        self.aclimit2 += 1
         curtime = str(sim.utc.strftime("%H:%M:%S"))
         traf.resultstosave = pd.DataFrame([[ensemble, str(self.delay[int(i)]), str(traf_id),
                    str(sim.utc.strftime("%d-%b-%Y")), str(self.inittime[int(i)]),
@@ -260,7 +275,9 @@ class DataLogger(TrafficArrays):
         if traf.resultstosave2.iloc[-1, -1] is not None and len(traf.id) == 1:
             traf.resultstosave = pd.concat([traf.resultstosave3,
                                             traf.resultstosave2], axis=1)
-            print('\033[94m' + '\033[4m' + '\nSaving the results in a standard file!!!\n\n' + '\033[0m')
+            print('\033[94m' + '\033[4m' +
+                  '\nSaving the results in a standard file with N = {}!!!\n\n'.format(self.aclimit2) +
+                  '\033[0m')
             # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
             # check whether the file exist, if it does append it, otherwise create it
             exists = os.path.isfile('output\WRITER Standard File.xlsx')
@@ -285,6 +302,10 @@ class DataLogger(TrafficArrays):
 
         if curtime:
             traf.resultstosave = pd.DataFrame(columns=self.dataframe_holder)
+        # print(self.aclimit2)
+        if self.aclimit2 == self.aclimit:
+            print('Final aircraft has landed!')
+            stack.stack('EXIT')
         pass
 
     # This method prints something to the cmd window (useful for feedback)

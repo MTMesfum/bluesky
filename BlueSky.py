@@ -51,7 +51,7 @@ def main():
     #   ==> useful for calling bluesky from within another python script/program
     sys.argv.append('--headless')
     sys.argv.append('--scenfile')
-    # sys.argv.append('Flight Test\\SCNM A320 FL360.scn')
+    # sys.argv.append('Flight Test\\SCNM B738 FL310.scn')
     sys.argv.append('Trajectories-batch4.scn')
     # sys.argv.append('Trajectories-batch.scn')
     if '--detached' in sys.argv:
