@@ -38,7 +38,7 @@ class bcolors:
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(1, 51))
+list_ensemble = list(range(34, 51))
 skip_entire_dir = ['1 min', '2 det', '3 prob'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
@@ -129,7 +129,7 @@ for dir in os.listdir(traj_folder):
 # Open the folder with all the results
 talk_time(runs)
 os.startfile('output\\runs')
-# os.system("shutdown /s /t 60")
+os.system("shutdown /s /t 60")
 
 # import pickle
 # df = pickle.load( open(
