@@ -276,7 +276,7 @@ class DataLogger(TrafficArrays):
             traf.resultstosave = pd.concat([traf.resultstosave3,
                                             traf.resultstosave2], axis=1)
             print('\033[94m' + '\033[4m' +
-                  '\nSaving the results in a standard file with N = {}!!!\n\n'.format(self.aclimit2) +
+                  '\nSaving the results in a standard file with N = {}!!!\n'.format(self.aclimit2) +
                   '\033[0m')
             # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
             # check whether the file exist, if it does append it, otherwise create it

@@ -14,6 +14,8 @@ from bluesky.tools import aero
 import numpy as np
 import timeit
 import shutil
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 from xml.etree import ElementTree
 #from BlueSky import main
 # print(sys.argv)
@@ -35,6 +37,14 @@ dt = 0.5
 TW_inf = 3600  # [s]
 TW_min = 60  # [s]
 set_of_delays = [0, 90, 720, 1050]  # [s]
+
+# drive_folder = '/BlueSky Simulation/Run [ X ]/'
+# # drive_folder_inf = '0'
+# # drive_folder_prob = '0'
+# # drive_folder_det = '0'
+# # drive_folder_min = '0'
+# # drive_folder_output = '0'
+# # drive_folder_input = '0'
 
 class bcolors:
     HEADER = '\033[95m'
@@ -183,11 +193,29 @@ def replace_speed(speed):
 
 # Run a simulation of BlueSky using the desktop path
 def bs_desktop():
+    global drive_folder, drive_folder_inf, drive_folder_prob, \
+        drive_folder_det, drive_folder_min, drive_folder_output, drive_folder_input
+    drive_folder = '/BlueSky Simulation/Run Desktop Home/'
+    drive_folder_inf = '12LqgB2NtdHGU2EspFY5tgmO88fc53XEj'
+    drive_folder_prob = '1N-V2AQzv2SnaUt_sGb6sxns3PZ3sEwmz'
+    drive_folder_det = '1GzpfVUNmcCiM69mfvf0c-2eqCKIDqlYB'
+    drive_folder_min = '1mE8bK9LmptxXHQbzKkSwSaNZsFw-HGGE'
+    drive_folder_output = '1W_v0EuNL6WxpT18aHsf_PO6oHYXDDSNi'
+    drive_folder_input = '1N7p25hQTLqmRUR_YAOPsdHvLHBeiRWF3'
     os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
                     cd C:\Documents\Git 2 && conda activate py36 && python BlueSky.py")
 
 # Run a simulation of BlueSky using the laptop path
 def bs_laptop():
+    global drive_folder, drive_folder_inf, drive_folder_prob, \
+        drive_folder_det, drive_folder_min, drive_folder_output, drive_folder_input
+    drive_folder = '/BlueSky Simulation/Run Laptop/'
+    drive_folder_inf = '12LqgB2NtdHGU2EspFY5tgmO88fc53XEj'
+    drive_folder_prob = '1N-V2AQzv2SnaUt_sGb6sxns3PZ3sEwmz'
+    drive_folder_det = '1GzpfVUNmcCiM69mfvf0c-2eqCKIDqlYB'
+    drive_folder_min = '1mE8bK9LmptxXHQbzKkSwSaNZsFw-HGGE'
+    drive_folder_output = '1W_v0EuNL6WxpT18aHsf_PO6oHYXDDSNi'
+    drive_folder_input = '1N7p25hQTLqmRUR_YAOPsdHvLHBeiRWF3'
     os.system("call I:\Programs\Anaconda\Program\Scripts\\activate.bat && \
                     cd I:\Documents\Google Drive\Thesis 2018\BlueSky Git4 && python BlueSky.py")
 
@@ -951,9 +979,8 @@ def writerfix(traj, dir, counter):
     # os.startfile('output\\runs\WRITER {0}.xlsx'.format(traj))
 
 # Clean up,  and open the output file
-def writerfix2(traj, dir, counter):
+def writerfix2(dir, counter, upload):
     dest_dir = 'output\\runs\{0}'.format(dir)
-    name, _ = os.path.splitext(traj)
     with open(scenario_manager2, 'r') as f:
         filedata = f.read()
     apple = filedata.find('LOAD_WIND2')
@@ -963,17 +990,20 @@ def writerfix2(traj, dir, counter):
     ensemble = str(filedata[apple+11:banana]).zfill(2)
 
     # df.to_excel(dest_dir + '\{0} TW={1}.xlsx'.format(name, TW_size))
-    new_name = dest_dir + '\\{} Ensemble={}.xlsx'.format(name[:-3], ensemble)
+    new_name0 = '{} Ensemble={}.xlsx'.format(dir, ensemble)
+    new_name = dest_dir + '\\{} Ensemble={}.xlsx'.format(dir, ensemble)
     # print('new name is: ', new_name)
     if not os.path.isdir(dest_dir):
         os.mkdir(dest_dir)
     os.rename(writer_file, new_name)
+    if upload:
+        drive_folder2 = drive_folder + dir + '/'
+        upload_file(new_name, new_name0, drive_folder2)
 
     print(bcolors.UBLUE     + '\n\nSaved'   +
-          bcolors.FAIL      + ' [{1}] {0} '.format(traj, counter)   +
+          bcolors.FAIL      + ' [{1}] {0} '.format(dir, counter)   +
           bcolors.UBLUE     + 'in'      +
-          bcolors.FAIL      + ' {0}'.format(
-                              dest_dir + '\{0}.xlsx'.format(name)) +
+          bcolors.FAIL      + ' {0}'.format(new_name) +
           bcolors.ENDC)
     # os.startfile('output\\runs\WRITER {0}.xlsx'.format(traj))
 
@@ -1011,7 +1041,7 @@ def movelog(ensemble, traj, dir):
         # compare_ff(dest_dir_output_logs2 + new_name)
     pass
 
-def movelog2(ensemble_int, traj, dir):
+def movelog2(ensemble_int, dir, upload):
     #Move the input log file into the input log folder
     dest_dir_input_logs2 = dest_dir_input_logs + "\\" + dir[0:7]
     if not os.path.isdir(dest_dir_input_logs2):
@@ -1028,8 +1058,12 @@ def movelog2(ensemble_int, traj, dir):
         print("The ensembles don't match!")
         print("Ensemble should be {} but {} has been read in!".format(ensemble_int, ensemble))
 
-    new_name = '\\{} IEnsemble={}.scn'.format(dir, ensemble)
-    os.rename(save_ic, dest_dir_input_logs2 + new_name)
+    new_name = '{} IEnsemble={}.scn'.format(dir, ensemble)
+    new_name2 = dest_dir_input_logs2 + "\\" + new_name
+    os.rename(save_ic, new_name2)
+    if upload:
+        drive_folder2 = drive_folder + dest_dir_input_logs[-11:] + '/'
+        upload_file(new_name2, new_name, drive_folder2)
 
     #Move the output log file into the output log folder if the file exists
     dest_dir_output_logs2 = dest_dir_output_logs + "\\" + dir[0:7]
@@ -1040,8 +1074,12 @@ def movelog2(ensemble_int, traj, dir):
     if files == []:
         pass
     else:
-        new_name = '\\{} OEnsemble={}.log'.format(dir, ensemble)
-        os.rename("output\\" + str(files[-1]), dest_dir_output_logs2 + new_name)
+        new_name = '{} OEnsemble={}.log'.format(dir, ensemble)
+        new_name2 = dest_dir_output_logs2 + '\\' + new_name
+        os.rename("output\\" + str(files[-1]), new_name2)
+        if upload:
+            drive_folder2 = drive_folder + dest_dir_output_logs[-12:] + '/'
+            upload_file(new_name2, new_name, drive_folder2)
         # Analyse the data and open the file
         # compare_ff(dest_dir_output_logs2 + new_name)
     pass
@@ -1067,7 +1105,7 @@ def talk_traj(scen_next, traj_counter):
           bcolors.ENDC)
 
 def talk_traj2(scen_next, traj_counter):
-    print(bcolors.UWARNING + '\nReplaced Trajectory to' +
+    print(bcolors.UWARNING + '\nReplaced Trajectories to' +
           bcolors.FAIL + ' [{1}] {0}'.format(scen_next[:-7], traj_counter + 1) +
           bcolors.ENDC)
 
@@ -1189,6 +1227,57 @@ def time_required2(distances_nm, FL, speed):
     # total_time_s = np.sum(times_s)
     return step_time_s
 
+def upload_file(file_upload, name, dir):
+    gauth = GoogleAuth()
+    # Try to load saved client credentials
+    gauth.LoadCredentialsFile("mycreds.txt")
+    if gauth.credentials is None:
+        # Authenticate if they're not there
+        gauth.LocalWebserverAuth()
+        gauth.SaveCredentialsFile("mycreds.txt")
+    elif gauth.access_token_expired:
+        # Refresh them if expired
+        gauth.Refresh()
+    else:
+        # Initialize the saved creds
+        gauth.Authorize()
+
+    drive = GoogleDrive(gauth)
+    if 'min' in dir:        fid = drive_folder_min
+    elif 'det' in dir:      fid = drive_folder_det
+    elif 'prob' in dir:     fid = drive_folder_prob
+    elif 'inf' in dir:      fid = drive_folder_inf
+    elif 'input' in dir:    fid = drive_folder_input
+    elif 'output' in dir:   fid = drive_folder_output
+    else:
+        print('Upload directory not found!')
+        return
+
+    with open(file_upload, "r") as file:
+        file_drive = drive.CreateFile({'parents': [{"kind": "drive#fileLink",
+                                                     "id": fid}],
+                                        'title': name})
+        # os.path.basename(file.name)
+        # file_drive.SetContentString(file.read())
+        file_drive.SetContentFile(file_upload)
+        file_drive.Upload()
+        # f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": fid}]})
+        # f.SetContentFile(some_path)
+        # f.Upload()
+
+        # file1 = drive.CreateFile({'parent': '/home/pi'})
+        # file1.SetContentFile('test.txt')
+        # file1.Upload()
+
+        #Get content from Google Drive
+        # file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+        # for file1 in file_list:
+        #     print('title: %s, id: %s' % (file1['title'], file1['id']))
+
+    print("File '{}' has been uploaded!".format(file_upload))
+
+def overall_aggregate():
+    pass
 
 # df = pd.read_excel('queries\\remon raw scenarios\\AC type 2.xlsx')
 # unique_types = set(df['AC type'])

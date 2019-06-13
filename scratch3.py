@@ -39,7 +39,7 @@ class bcolors:
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = list(range(1, 51))
-skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = ['1 min', '2 det', '3 prob'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -100,34 +100,31 @@ for dir in os.listdir(traj_folder):
     # traj = [traj[traj.index(i)] for i in traj if ('D'+str(set_of_delays[0])) in i]
     traj.append('dummy')
     # print('traj holds: ', traj)
-    for sgl_traj in traj:
-        if sgl_traj == 'dummy':
-            continue
-        if traj_counter < len(traj):
-            scen_next = traj_folder[9:] + '\\' + dir + '\\' + sgl_traj
-            # print(scen_next)
-            replace_batch_set2(dir, "Trajectories-batch3", "Trajectories-batch4")
-            # replace_batch(scen_next)
-            # exit()
-            talk_traj2(scen_next, traj_counter)
-        # if dir == '2 det':
-        #     if sgl_traj in ['det ADH931 D0.scn',
-        #                     'det ADH931 D720.scn', 'det ADH931 D1050.scn']:
-        #         continue
-        for ensemble in list_ensemble:
-            replace_ensemble(ensemble, "Trajectories-batch4.scn")
-            runs += 1
-            talk_time(runs)
-            talk_run3(ensemble, dir, runs)
-            bs_desktop()
-            # Move the input and output log files into their log folders
-            movelog2(ensemble, sgl_traj, dir)
-            # exit()
+
+    # scen_next = traj_folder[9:] + '\\' + dir + '\\' + sgl_traj
+    # print(scen_next)
+    replace_batch_set2(dir, "Trajectories-batch3", "Trajectories-batch4")
+    # replace_batch(scen_next)
+    # exit()
+    talk_traj2(dir, traj_counter)
+    # if dir == '2 det':
+    #     if sgl_traj in ['det ADH931 D0.scn',
+    #                     'det ADH931 D720.scn', 'det ADH931 D1050.scn']:
+    #         continue
+    for ensemble in list_ensemble:
+        replace_ensemble(ensemble, "Trajectories-batch4.scn")
+        runs += 1
+        talk_time(runs)
+        talk_run3(ensemble, dir, runs)
+        bs_desktop()
+        # Move the input and output log files into their log folders
+        movelog2(ensemble, dir, True)
         # exit()
-            writerfix2(sgl_traj, dir, traj_counter)
-        # if traj_counter == 3:
-        #     exit()
-        traj_counter += 1
+    # exit()
+        writerfix2(dir, traj_counter, True)
+    # if traj_counter == 3:
+    #     exit()
+    traj_counter += 1
 
 # Open the folder with all the results
 talk_time(runs)
