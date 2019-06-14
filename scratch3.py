@@ -40,7 +40,7 @@ class bcolors:
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = list(range(13, 14))
 list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = ['1 min', '2 det', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -128,7 +128,7 @@ for dir in os.listdir(traj_folder):
     traj_counter += 1
 
 # Open the folder with all the results
-overall_aggregate()
+overall_aggregate('C:\Documents\Git 2\\upload')
 talk_time(runs)
 os.startfile('output\\runs')
 # os.system("shutdown /s /t 60")

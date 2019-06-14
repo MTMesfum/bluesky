@@ -1280,7 +1280,7 @@ def upload_file(file_upload, name, dir=None):
     print("File '{}' has been uploaded!".format(file_upload))
 
 
-def overall_aggregate(path=None):
+def overall_aggregate(path=None, upload=False):
     if path is None:
         path = os.getcwd() + '\\' + dest_output
     # path = "C:\Documents\Git 2\output\\runs ----"
@@ -1288,18 +1288,18 @@ def overall_aggregate(path=None):
     to_save = pd.DataFrame()
 
     for i, dir in enumerate(Dir):
-        # if 'min' in dir:
-        #     print('skipped ', dir)
-        #     continue
+        if 'py' in dir:
+            print('skipped ', dir)
+            continue
         if 'skip' in dir:
             print('skipped ', dir)
             continue
         if 'put' in dir:
             print('skipped ', dir)
             continue
-        # if 'det' in dir:
-        #     print('skipped ', dir)
-        #     continue
+        if 'xls' in dir:
+            print('skipped ', dir)
+            continue
 
         Files = os.listdir(path + '\\' + dir)
         l = 1
@@ -1333,7 +1333,8 @@ def overall_aggregate(path=None):
         to_save = pd.concat([to_save, apple], axis=1)
         del apple, apple2
 
-    filename = path + '\\' + 'analysis{}.xlsx'.format(19)
+    filename0 = 'analysis{}.xlsx'.format(22)
+    filename = path + '\\' + 'analysis{}.xlsx'.format(22)
     with open(filename, 'wb') as f:
         # df.set_index(['Name', 'Std'])
         to_save.columns = (['Delay', 'Min', 'Arrival 1', 'Fuel Con 1',
@@ -1347,7 +1348,8 @@ def overall_aggregate(path=None):
         l = k + j + 1
         append_df_to_excel(filename, to_save[j:j + 8], 'Sheet1', l)
 
-    upload_file(filename, )
+    if upload:
+        upload_file(filename, filename0)
     pass
 
 # df = pd.read_excel('queries\\remon raw scenarios\\AC type 2.xlsx')
