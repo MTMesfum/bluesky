@@ -256,7 +256,7 @@ class DataLogger(TrafficArrays):
     def write2(self, acid, traf_id, index, *args):
         curtime = []
         i = int(acid)
-        # print('acid {} is saved on {}'.format(traf_id, acid))
+        print('\nacid {} is saved on {}'.format(traf_id, acid))
         # print('What is saved in i?? : ', i)
         # print('i is supposed to be: ', traf.id[index])
         # print('i as index is: ', traf.id[i])
@@ -272,12 +272,10 @@ class DataLogger(TrafficArrays):
         print("Fuel used by {0} is {1} [kg].".format(traf.id[i],
                                  np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
         # print('traf.id length is: ', len(traf.id))
-        if traf.resultstosave2.iloc[-1, -1] is not None and len(traf.id) == 1:
+        if traf.resultstosave2.iloc[-1, -1] is not None and \
+                (len(traf.id) == 1 or self.aclimit2 == self.aclimit):
             traf.resultstosave = pd.concat([traf.resultstosave3,
                                             traf.resultstosave2], axis=1)
-            print('\033[94m' + '\033[4m' +
-                  '\nSaving the results in a standard file with N = {}!!!\n'.format(self.aclimit2) +
-                  '\033[0m')
             # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
             # check whether the file exist, if it does append it, otherwise create it
             exists = os.path.isfile('output\WRITER Standard File.xlsx')
@@ -286,6 +284,9 @@ class DataLogger(TrafficArrays):
                     traf.resultstosave.to_excel(f, header=False)
             else:
                 traf.resultstosave.to_excel('output\WRITER Standard File.xlsx')
+            print('\033[94m' + '\033[4m' +
+                  '\nSaving the results in a standard file with N = {}!!!\n'.format(self.aclimit2) +
+                  '\033[0m')
             # os.startfile('output\WRITER Standard File.xlsx')
         elif args:
             filename = str(args[0])

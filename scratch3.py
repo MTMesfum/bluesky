@@ -38,8 +38,9 @@ class bcolors:
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(34, 51))
-skip_entire_dir = ['1 min', '2 det', '3 prob'] # ['1 min', '2 det', '3 prob', '4 inf']
+list_ensemble = list(range(13, 14))
+list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
+skip_entire_dir = ['1 min', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -64,7 +65,7 @@ set_dt(0.1)
 
 timeit.default_timer()
 set_delays(set_of_delays)
-CreateSCN_Cruise2(True, )
+CreateSCN_Cruise2(True)
 # exit()
 CreateSCNM3('Trajectories-batch3')
 
@@ -118,18 +119,19 @@ for dir in os.listdir(traj_folder):
         talk_run3(ensemble, dir, runs)
         bs_desktop()
         # Move the input and output log files into their log folders
-        movelog2(ensemble, dir, True)
+        movelog2(ensemble, dir, False)
         # exit()
     # exit()
-        writerfix2(dir, traj_counter, True)
+        writerfix2(dir, traj_counter, False)
     # if traj_counter == 3:
     #     exit()
     traj_counter += 1
 
 # Open the folder with all the results
+overall_aggregate()
 talk_time(runs)
 os.startfile('output\\runs')
-os.system("shutdown /s /t 60")
+# os.system("shutdown /s /t 60")
 
 # import pickle
 # df = pickle.load( open(

@@ -30,6 +30,7 @@ exp = "scenario\Trajectories-batch2.scn"
 save_ic = "scenario\\trajectories_saveic.scn"
 dest_dir_input_logs = "output\\runs\\xlogs input"
 dest_dir_output_logs = "output\\runs\\xlogs output"
+dest_output = "output\\runs"
 writer_file = 'output\WRITER Standard File.xlsx'
 wind_ensemble = "Tigge_2014-09-08_00_243036.nc"
 flight_date = "9,9,2014"
@@ -193,8 +194,8 @@ def replace_speed(speed):
 
 # Run a simulation of BlueSky using the desktop path
 def bs_desktop():
-    global drive_folder, drive_folder_inf, drive_folder_prob, \
-        drive_folder_det, drive_folder_min, drive_folder_output, drive_folder_input
+    global drive_folder, drive_folder_inf, drive_folder_prob, drive_folder_det, \
+        drive_folder_min, drive_folder_output, drive_folder_input, drive_folder_gen
     drive_folder = '/BlueSky Simulation/Run Desktop Home/'
     drive_folder_inf = '12LqgB2NtdHGU2EspFY5tgmO88fc53XEj'
     drive_folder_prob = '1N-V2AQzv2SnaUt_sGb6sxns3PZ3sEwmz'
@@ -202,6 +203,7 @@ def bs_desktop():
     drive_folder_min = '1mE8bK9LmptxXHQbzKkSwSaNZsFw-HGGE'
     drive_folder_output = '1W_v0EuNL6WxpT18aHsf_PO6oHYXDDSNi'
     drive_folder_input = '1N7p25hQTLqmRUR_YAOPsdHvLHBeiRWF3'
+    drive_folder_gen = '1p_OztE3UG3Oxed2UjEtmcV5FnMqwRPMf'
     os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
                     cd C:\Documents\Git 2 && conda activate py36 && python BlueSky.py")
 
@@ -1227,7 +1229,7 @@ def time_required2(distances_nm, FL, speed):
     # total_time_s = np.sum(times_s)
     return step_time_s
 
-def upload_file(file_upload, name, dir):
+def upload_file(file_upload, name, dir=None):
     gauth = GoogleAuth()
     # Try to load saved client credentials
     gauth.LoadCredentialsFile("mycreds.txt")
@@ -1249,9 +1251,9 @@ def upload_file(file_upload, name, dir):
     elif 'inf' in dir:      fid = drive_folder_inf
     elif 'input' in dir:    fid = drive_folder_input
     elif 'output' in dir:   fid = drive_folder_output
-    else:
-        print('Upload directory not found!')
-        return
+    else:                   fid = drive_folder_gen
+        # print('Upload directory not found!')
+        # return
 
     with open(file_upload, "r") as file:
         file_drive = drive.CreateFile({'parents': [{"kind": "drive#fileLink",
@@ -1270,6 +1272,7 @@ def upload_file(file_upload, name, dir):
         # file1.Upload()
 
         #Get content from Google Drive
+        # file_list = drive.ListFile({'q': "'< folder >' in parents and trashed=false"}).GetList()
         # file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
         # for file1 in file_list:
         #     print('title: %s, id: %s' % (file1['title'], file1['id']))
@@ -1277,8 +1280,10 @@ def upload_file(file_upload, name, dir):
     print("File '{}' has been uploaded!".format(file_upload))
 
 
-def overall_aggregate():
-    path = "C:\Documents\Git 2\output\\runs ----"
+def overall_aggregate(path=None):
+    if path is None:
+        path = os.getcwd() + '\\' + dest_output
+    # path = "C:\Documents\Git 2\output\\runs ----"
     Dir = os.listdir(path)
     to_save = pd.DataFrame()
 
@@ -1341,6 +1346,8 @@ def overall_aggregate():
         j = i * 8
         l = k + j + 1
         append_df_to_excel(filename, to_save[j:j + 8], 'Sheet1', l)
+
+    upload_file(filename, )
     pass
 
 # df = pd.read_excel('queries\\remon raw scenarios\\AC type 2.xlsx')
