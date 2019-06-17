@@ -39,6 +39,10 @@ TW_inf = 3600  # [s]
 TW_min = 60  # [s]
 set_of_delays = [0, 90, 720, 1050]  # [s]
 
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+
 # drive_folder = '/BlueSky Simulation/Run [ X ]/'
 # # drive_folder_inf = '0'
 # # drive_folder_prob = '0'
@@ -758,6 +762,7 @@ def CreateSCN_FE(actype, FlightLevel, v_bada, delta, steps=0.001):
     to_run = 'Flight Test/' + to_save
     actype_doc = actype + '.xml'
     path = os.path.join(dir, actype_doc)
+    number = 0
     # start 50 3.5, [1] 51 3.5, [2] 52 3.5, [3] 53 3.5, [4] 54 3.5, [5] 55 3.5
     lat_start = 50
     lon_start = 3.5
@@ -795,6 +800,7 @@ def CreateSCN_FE(actype, FlightLevel, v_bada, delta, steps=0.001):
     # to_save = actype + ' SPD=' + str(j) + ' ' + FlightLevel + '.scn'
     for i, j in enumerate(np.arange(v_bada - delta, v_bada + delta, steps)):
         # print("%.2f" % a)
+        number += 1
         gamma.append('')
         gamma.append('# Load trajectories for a run')
         gamma.append('00:00:00.00> SCEN Test_' + str(i).zfill(2))
@@ -843,8 +849,13 @@ def CreateSCN_FE(actype, FlightLevel, v_bada, delta, steps=0.001):
     for k in range(1, 4):
         _, distance = dist(lat_start+k, lon_start+k, lat_start+k+1, lon_start+k+1)
         gamma.append('# Distance between Waypoint {} and {} is {}.'.format(k-1, k, round(distance, 2)))
-    with open(dest_dir + 'SCNM {} {}.scn'.format(actype, FlightLevel), "w") as fin:
+
+    with open(dest_dir + 'SCNM_FE.scn', "w") as fin:
+        print('SCNM_FE has been changed to type {} and {}!'.format(actype, FlightLevel))
         fin.write('\n'.join(gamma))
+
+    with open(os.getcwd() + '/scenario/number_of_ac.txt', "w+") as fin:
+        fin.write(str(number))
     # print(V_bada)
     # print(FlightLevel)
     pass

@@ -20,6 +20,10 @@ from bluesky.tools import aero
 from scratch_methods import *
 import shutil
 
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -38,8 +42,8 @@ class bcolors:
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(range(13, 14))
-list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
+list_ensemble = list(range(1, 51))
+# list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
 skip_entire_dir = ['1 min', '2 det', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
@@ -56,12 +60,35 @@ traj_folder2 = 'scenario\\remon scen'
 #     print('\nThe AC is flying at {0} [kts].\n'.format(i))
 clear_mylog()
 # 0.782
-# CreateSCN_FE('B738', 'FL310', 0.75, 0.1, 0.001)
+# CreateSCN_FE('A321', 'FL350', 0.78, 0.05, 0.001)
+# mid = 0.76
+# delta1 = 0.1
+# delta2 =
+zeta = [0.80, 0.1, 0.001]
+CreateSCN_FE('B77L', 'FL370', zeta[0], zeta[1], zeta[2])
+# exit()
 set_dt(0.1)
-# bs_desktop()
-# compare_ff()
+try:
+    os.remove("output\\WRITER Standard File.xlsx")
+    os.remove("output\\WRITER Standard File2.xlsx")
+except:     pass
+bs_desktop()
+apple = pd.read_excel("output\\WRITER Standard File.xlsx")
+# print(apple.columns)
+# print(apple)
 # exit()
 
+# apple['Date'] = apple['index'] *
+apple['index2'] = pd.Series(np.flip(np.arange(zeta[0]-zeta[1], zeta[0]+zeta[1], zeta[2])), index=apple.index)
+apple.to_excel("output\\WRITER Standard File2.xlsx")
+
+banana = min(apple['Fuel Consumed'])
+apple = apple[apple['Fuel Consumed'] <= banana]
+print('\nmach speed is: ', apple['index2'].values[0])
+# os.startfile("C:\Documents\Git 2\\output\WRITER Standard File2.xlsx")
+# compare_ff()
+exit()
+# np.arang
 
 timeit.default_timer()
 set_delays(set_of_delays)
@@ -128,7 +155,7 @@ for dir in os.listdir(traj_folder):
     traj_counter += 1
 
 # Open the folder with all the results
-overall_aggregate('C:\Documents\Git 2\\upload')
+overall_aggregate()
 talk_time(runs)
 os.startfile('output\\runs')
 # os.system("shutdown /s /t 60")

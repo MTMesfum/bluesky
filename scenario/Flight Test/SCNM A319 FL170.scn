@@ -1,0 +1,315 @@
+# This is the scenario manager to find the speed corresponding to the lowest fuel consumption
+00:00:00.00> SWRAD VOR
+00:00:00.00> SAVEIC trajectories_saveic
+00:00:00.00> CRELOG MYLOG 0.1 "MYLOG"
+00:00:00.00> MYLOG ADD traf.id, traf.ax, traf.gs, pilot.tas, traf.lat, traf.lon, traf.perf.fuelflow
+00:00:00.00> MYLOG ON
+00:00:00.00> FF
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_00
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 00, 4500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_01
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 01, 4600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_02
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 02, 4700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_03
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 03, 4800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_04
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 04, 4900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_05
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 05, 5000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_06
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 06, 5100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_07
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 07, 5200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_08
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 08, 5300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_09
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 09, 5400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_10
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 10, 5500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_11
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 11, 5600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_12
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 12, 5700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_13
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 13, 5800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_14
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 14, 5900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_15
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 15, 6000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_16
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 16, 6100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_17
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 17, 6200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_18
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 18, 6300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_19
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 19, 6400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_20
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 20, 6500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_21
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 21, 6600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_22
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 22, 6700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_23
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 23, 6800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_24
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 24, 6900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_25
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 25, 7000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_26
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 26, 7100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_27
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 27, 7200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_28
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 28, 7300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_29
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 29, 7400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_30
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 30, 7500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_31
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 31, 7600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_32
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 32, 7700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_33
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 33, 7800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_34
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 34, 7900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_35
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 35, 8000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_36
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 36, 8100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_37
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 37, 8200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_38
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 38, 8300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_39
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 39, 8400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_40
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 40, 8500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_41
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 41, 8600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_42
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 42, 8700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_43
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 43, 8800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_44
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 44, 8900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_45
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 45, 9000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_46
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 46, 9100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_47
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 47, 9200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_48
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 48, 9300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_49
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 49, 9400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_50
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 50, 9500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_51
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 51, 9600
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_52
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 52, 9700
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_53
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 53, 9800
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_54
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 54, 9900
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_55
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 55, 0000
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_56
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 56, 0100
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_57
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 57, 0200
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_58
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 58, 0300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_59
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 59, 0400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_60
+00:00:00.00> PCALL "Flight Test/A319 FL170.scn" 60, 0500
+23:59:00.00> HOLD
+# Distance between Waypoint 0 and 1 is 70.66.
+# Distance between Waypoint 1 and 2 is 70.22.
+# Distance between Waypoint 2 and 3 is 69.78.
