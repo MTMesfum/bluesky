@@ -43,3 +43,243 @@
 00:00:00.00> PCALL "Trajectories.scn" 06
 00:00:00.00> FF
 23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_07
+00:00:00.00> PCALL "Trajectories.scn" 07
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_08
+00:00:00.00> PCALL "Trajectories.scn" 08
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_09
+00:00:00.00> PCALL "Trajectories.scn" 09
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_10
+00:00:00.00> PCALL "Trajectories.scn" 10
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_11
+00:00:00.00> PCALL "Trajectories.scn" 11
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_12
+00:00:00.00> PCALL "Trajectories.scn" 12
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_13
+00:00:00.00> PCALL "Trajectories.scn" 13
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_14
+00:00:00.00> PCALL "Trajectories.scn" 14
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_15
+00:00:00.00> PCALL "Trajectories.scn" 15
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_16
+00:00:00.00> PCALL "Trajectories.scn" 16
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_17
+00:00:00.00> PCALL "Trajectories.scn" 17
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_18
+00:00:00.00> PCALL "Trajectories.scn" 18
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_19
+00:00:00.00> PCALL "Trajectories.scn" 19
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_20
+00:00:00.00> PCALL "Trajectories.scn" 20
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_21
+00:00:00.00> PCALL "Trajectories.scn" 21
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_22
+00:00:00.00> PCALL "Trajectories.scn" 22
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_23
+00:00:00.00> PCALL "Trajectories.scn" 23
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_24
+00:00:00.00> PCALL "Trajectories.scn" 24
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_25
+00:00:00.00> PCALL "Trajectories.scn" 25
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_26
+00:00:00.00> PCALL "Trajectories.scn" 26
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_27
+00:00:00.00> PCALL "Trajectories.scn" 27
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_28
+00:00:00.00> PCALL "Trajectories.scn" 28
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_29
+00:00:00.00> PCALL "Trajectories.scn" 29
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_30
+00:00:00.00> PCALL "Trajectories.scn" 30
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_31
+00:00:00.00> PCALL "Trajectories.scn" 31
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_32
+00:00:00.00> PCALL "Trajectories.scn" 32
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_33
+00:00:00.00> PCALL "Trajectories.scn" 33
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_34
+00:00:00.00> PCALL "Trajectories.scn" 34
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_35
+00:00:00.00> PCALL "Trajectories.scn" 35
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_36
+00:00:00.00> PCALL "Trajectories.scn" 36
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_37
+00:00:00.00> PCALL "Trajectories.scn" 37
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_38
+00:00:00.00> PCALL "Trajectories.scn" 38
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_39
+00:00:00.00> PCALL "Trajectories.scn" 39
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_40
+00:00:00.00> PCALL "Trajectories.scn" 40
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_41
+00:00:00.00> PCALL "Trajectories.scn" 41
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_42
+00:00:00.00> PCALL "Trajectories.scn" 42
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_43
+00:00:00.00> PCALL "Trajectories.scn" 43
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_44
+00:00:00.00> PCALL "Trajectories.scn" 44
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_45
+00:00:00.00> PCALL "Trajectories.scn" 45
+00:00:00.00> FF
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_46
+00:00:00.00> PCALL "Trajectories.scn" 46
+00:00:00.00> FF
+23:59:00.00> HOLD

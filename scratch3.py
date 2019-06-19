@@ -44,7 +44,7 @@ class bcolors:
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = list(range(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '2 det', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -53,42 +53,30 @@ set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_dt(0.1)
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
+FE = False
 
-
-# for i in range(257, 264, 1):
-#     replace_speed(i)
-#     print('\nThe AC is flying at {0} [kts].\n'.format(i))
 clear_mylog()
-# 0.782
-# CreateSCN_FE('A321', 'FL350', 0.78, 0.05, 0.001)
-# mid = 0.76
-# delta1 = 0.1
-# delta2 =
-zeta = [0.80, 0.1, 0.001]
-CreateSCN_FE('B77L', 'FL370', zeta[0], zeta[1], zeta[2])
-# exit()
-set_dt(0.1)
-try:
-    os.remove("output\\WRITER Standard File.xlsx")
-    os.remove("output\\WRITER Standard File2.xlsx")
-except:     pass
-bs_desktop()
-apple = pd.read_excel("output\\WRITER Standard File.xlsx")
-# print(apple.columns)
-# print(apple)
-# exit()
 
-# apple['Date'] = apple['index'] *
-apple['index2'] = pd.Series(np.flip(np.arange(zeta[0]-zeta[1], zeta[0]+zeta[1], zeta[2])), index=apple.index)
-apple.to_excel("output\\WRITER Standard File2.xlsx")
-
-banana = min(apple['Fuel Consumed'])
-apple = apple[apple['Fuel Consumed'] <= banana]
-print('\nmach speed is: ', apple['index2'].values[0])
-# os.startfile("C:\Documents\Git 2\\output\WRITER Standard File2.xlsx")
-# compare_ff()
-exit()
-# np.arang
+# This section is used to find the most FE speed
+if FE:
+    zeta = [0.65, 0.1, 0.001]
+    # CreateSCN_FE('B737', 'FL360', zeta[0], zeta[1], zeta[2])
+    CreateSCN_FE('E145', 'FL290', zeta[0], zeta[1], zeta[2])
+    set_dt(0.1)
+    try:
+        os.remove("output\\WRITER Standard File.xlsx")
+        os.remove("output\\WRITER Standard File2.xlsx")
+    except:     pass
+    bs_desktop()
+    apple = pd.read_excel("output\\WRITER Standard File.xlsx")
+    apple['index2'] = pd.Series(np.flip(np.arange(zeta[0]-zeta[1], zeta[0]+zeta[1], zeta[2])), index=apple.index)
+    apple.to_excel("output\\WRITER Standard File2.xlsx")
+    banana = min(apple['Fuel Consumed'])
+    apple = apple[apple['Fuel Consumed'] <= banana]
+    print('\nmach speed is: ', apple['index2'].values[0])
+    os.startfile("C:\Documents\Git 2\\output\WRITER Standard File2.xlsx")
+    # compare_ff()
+    exit()
 
 timeit.default_timer()
 set_delays(set_of_delays)

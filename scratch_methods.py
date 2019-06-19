@@ -573,7 +573,7 @@ def CreateSCN_Cruise2(alpha, cap=999):
     # 		-> run through set of delays
     # 		-> add to file
     # 	-> save respective min etc
-
+    print('')
     for index, k in enumerate(FileName):
         # if cap == index:
         #     fl_ref = fl_ref - 20
@@ -583,15 +583,23 @@ def CreateSCN_Cruise2(alpha, cap=999):
         if cap == index-1:
             return
         acid, ext = os.path.splitext(k)
-        if ext != '.csv':
+        if ext != '.csv' or acid in list(cruise_speed['skip']):
             continue
+        print('Creating scenario for Flight {}!'.format(k))
         scenario = pd.read_csv(folder + k)
         actype_file = pd.read_excel(folder + type_file)
-        actype = actype_file[actype_file['id'].str.contains(k[0:7])]['AC type'].reset_index(drop=True)[0] + ', '
-        TW_det = actype_file[actype_file['id'].str.contains(k[0:7])]['TW Det'].reset_index(drop=True)[0]
-        TW_stoch = actype_file[actype_file['id'].str.contains(k[0:7])]['TW Stoch'].reset_index(drop=True)[0]
+        actype = actype_file[actype_file['id'].str.contains(k[0:-4])]['AC type'].reset_index(drop=True)[0] + ', '
+        TW_det = actype_file[actype_file['id'].str.contains(k[0:-4])]['TW Det'].reset_index(drop=True)[0]
+        TW_stoch = actype_file[actype_file['id'].str.contains(k[0:-4])]['TW Stoch'].reset_index(drop=True)[0]
 
-        fl_ref = max(scenario['fl']) - 1
+        if not acid in cruise_speed[['switch_10', 'switch_20', 'switch_30', 'switch_60']]:
+            fl_cor = 0
+        elif acid in cruise_speed['switch_10']:     fl_cor = 10
+        elif acid in cruise_speed['switch_20']:     fl_cor = 20
+        elif acid in cruise_speed['switch_30']:     fl_cor = 30
+        elif acid in cruise_speed['switch_60']:     fl_cor = 60
+
+        fl_ref = max(scenario['fl']) - 2 - fl_cor
         scenario = scenario[scenario['fl'] > fl_ref].reset_index(drop=True)
         apple = scenario.time_over[0]
         [heading, _] = dist(scenario['st_x(gpt.coords)'][0], scenario['st_y(gpt.coords)'][0],
@@ -599,7 +607,6 @@ def CreateSCN_Cruise2(alpha, cap=999):
         if heading < 0:
             heading += 360
 
-        target_speed = cruise_speed[cruise_speed['AC Type'] == actype[:-2]].Speed.item()
         apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
         basket_of_apples, set_of_delays2 = addSecs(apple, set_of_delays*alpha)
         m = 0
@@ -608,8 +615,11 @@ def CreateSCN_Cruise2(alpha, cap=999):
             banana = list()
             banana.append('00:00:00.00> FF')
             m += 1
-            replacement = zip(basket_of_apples, set_of_delays2)
-            for apple, delay in replacement:
+            # print(cruise_speed[cruise_speed['AC Type'] == actype[:-2]])
+            # print('actype is: ', actype[:-2])
+            # print(str(scenario['fl'][0].item()))
+            target_speed = cruise_speed[cruise_speed['AC Type'] == actype[:-2]]['FL' + str(scenario['fl'][0])].item()
+            for apple, delay in zip(basket_of_apples, set_of_delays2):
                 # print(l)
                 # print(apple, delay)
                 apple = str(apple.time())
@@ -644,13 +654,14 @@ def CreateSCN_Cruise2(alpha, cap=999):
                                           + ', FLYOVER')
                             banana.append(apple + '.00> ' + aircraftid + ' after ' + follow + ' ADDWPT '
                                           + follow2 + ', ' + FlightLevel)
-                            banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow +
-                                                ' ' + FL_OLD)
+                            banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow
+                                          + ' ' + FL_OLD)
                             banana.append(apple + '.00> ' + aircraftid + ' after ' + follow2 + ' ADDWPT '
                                           + aircraftid + "-DEST, " + FlightLevel)
-                            banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow2 +
-                                                ' ' + FL_OLD)
-                            o = list(range(0, scenario.shape[0], 5))
+                            banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow2
+                                          + ' ' + FL_OLD)
+                            o = list(range(1, scenario.shape[0], 1))
+                            # test = list(range(0, scenario.shape[0], 5))
                             o.append(scenario.shape[0])
                             o.pop(0)
                             citrus1, citrus2, citrus3 = ([], [], [])
@@ -658,22 +669,46 @@ def CreateSCN_Cruise2(alpha, cap=999):
                             time_to_add = 0
                             time = scenario.time_over[0]
                             time = datetime.datetime(1, 1, 1, int(time[-8:-6]), int(time[-5:-3]), int(time[-2:]))
-
+                            # print(time)
+                            # print(o)
+                            # print(test)
+                            # print(scenario)
                             for n in o:
                                 if n == o[0]:
                                     wp_0 = aircraftid + '-ORIG ' #+ str(1) + ' '
 
                                 wp_1 = aircraftid + '-' + str(n-1) + ' '
+                                citrus2.append(apple + '.00> ' + aircraftid + ' OWN_SPD_FROM '
+                                               + wp_0 + ' ' + str(target_speed))
 
-                                for p in range(q-1, n-1):
-                                    [_, distance_local] = dist(scenario['st_x(gpt.coords)'][q-1],
-                                                                scenario['st_y(gpt.coords)'][q-1],
-                                                                scenario['st_x(gpt.coords)'][q],
-                                                                scenario['st_y(gpt.coords)'][q])
-                                    time_to_add += time_required2(distance_local, scenario['fl'][q]-sub_FL, target_speed)
-                                    # time_to_add += time_required(distance_local, scenario['fl'][q]-sub_FL, target_speed)
-                                    # print('Q is {} and time_to_add is {}'.format(q-1, time_to_add))
-                                    q += 1
+                                # for p in range(q-1, n-1):
+                                # p = q-1
+                                # print(str(scenario['fl'][q].item()))
+                                target_speed0 = target_speed
+                                target_speed = cruise_speed[cruise_speed['AC Type'] == actype[:-2]][
+                                    'FL' + str(scenario['fl'][q])].item()
+                                if np.isnan(target_speed):
+                                    print('{} has no speed at FL{}!!'.format(actype, str(scenario['fl'][q].item())))
+                                    exit()
+                                [_, distance_local] = dist(scenario['st_x(gpt.coords)'][q-1],
+                                                            scenario['st_y(gpt.coords)'][q-1],
+                                                            scenario['st_x(gpt.coords)'][q],
+                                                            scenario['st_y(gpt.coords)'][q])
+                                # print(scenario['fl'][q])
+                                # print(target_speed)
+                                # print(distance_local)
+                                # print(n)
+                                # print(target_speed)
+                                # print(distance_local)
+                                # print(scenario['fl'][q]-sub_FL)
+                                time_to_add += time_required2(distance_local, scenario['fl'][q]-sub_FL, target_speed)
+                                if target_speed0 != target_speed:
+                                    citrus2.append(apple + '.00> ' + aircraftid + ' OWN_SPD_FROM '
+                                                   + wp_0 + ' ' + str(target_speed))
+
+                                # time_to_add += time_required(distance_local, scenario['fl'][q]-sub_FL, target_speed)
+                                # print('Q is {} and time_to_add is {}'.format(q-1, time_to_add))
+                                q += 1
 
                                 if l == 'min':      secs = TW_min/2
                                 elif l == 'det':    secs = TW_det/2 * 60
@@ -681,7 +716,10 @@ def CreateSCN_Cruise2(alpha, cap=999):
                                 elif l == 'inf':    secs = TW_inf/2
 
                                 # now = dt.datetime.now()
+                                # print(secs)
+                                # print(time_to_add)
                                 delta = datetime.timedelta(seconds=(secs+round(time_to_add)))
+                                # print(delta)
                                 # time_to_add = 0
                                 t = time.time()
                                 # print(t)
@@ -695,7 +733,6 @@ def CreateSCN_Cruise2(alpha, cap=999):
                                 # print(time2)
                                 banana.append(apple + '.00> ' + aircraftid + ' RTA_AT ' + wp_1 + str(time2))
                                 citrus1.append(apple + '.00> ' + aircraftid + ' TW_SIZE_AT ' + wp_1 + str(int(secs*2)))
-                                citrus2.append(apple + '.00> ' + aircraftid + ' OWN_SPD_FROM ' + wp_0 + ' ' + str(target_speed))
                                 citrus3.append(apple + '.00> ' + aircraftid + ' AFMS_FROM ' + wp_0 + 'tw')
                                 wp_0 = wp_1
                                 del secs
@@ -1220,7 +1257,8 @@ def time_required2(distances_nm, FL, speed):
     :param cas_m_s: CAS in m/s
     :return: ETA in seconds
     """
-    cas_m_s = speed * aero.nm / 3600
+    # cas_m_s = speed * aero.nm / 3600
+    # print(cas_m_s)
     distances_m = distances_nm * aero.nm
     # times_s = np.empty_like(distances_m)
     # previous_fl_m = flightlevels_m
@@ -1233,7 +1271,9 @@ def time_required2(distances_nm, FL, speed):
     #         next_fl_m = flightlevels_m[i]
     #         previous_fl_m = next_fl_m
     # print('FL is: ', FL)
-    next_tas_m_s = aero.vcas2tas(cas_m_s, FL * aero.ft * 100)
+    next_tas_m_s = aero.vmach2tas(speed, FL * aero.ft * 100)
+    # print(next_tas_m_s)
+    # next_tas_m_s = aero.vcas2tas(cas_m_s, FL * aero.ft * 100)
     step_time_s = distances_m / (next_tas_m_s + 0.00001)
     # times_s[i] = step_time_s
     # print('step time is: ', step_time_s)
@@ -1344,8 +1384,8 @@ def overall_aggregate(path=None, upload=False):
         to_save = pd.concat([to_save, apple], axis=1)
         del apple, apple2
 
-    filename0 = 'analysis{}.xlsx'.format(22)
-    filename = path + '\\' + 'analysis{}.xlsx'.format(22)
+    filename0 = 'meta-analysis.xlsx'#.format(22)
+    filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
     with open(filename, 'wb') as f:
         # df.set_index(['Name', 'Std'])
         to_save.columns = (['Delay', 'Min', 'Arrival 1', 'Fuel Con 1',
