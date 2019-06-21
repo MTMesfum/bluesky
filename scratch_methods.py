@@ -787,7 +787,7 @@ def CreateSCN_Cruise2(alpha, cap=999):
 
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
     with open(os.getcwd() + '/scenario/number_of_ac.txt', "w+") as fin:
-        number = (len(FileName)-1) * len(set_of_delays)
+        number = (len(FileName)-3) * len(set_of_delays)
         fin.write(str(number))
 
     return
@@ -1337,7 +1337,7 @@ def overall_aggregate(path=None, upload=False):
     # path = "C:\Documents\Git 2\output\\runs ----"
     Dir = os.listdir(path)
     to_save = pd.DataFrame()
-
+    # skip_list = ['py', 'skip', 'put', 'xls']
     for i, dir in enumerate(Dir):
         if 'py' in dir:
             print('skipped ', dir)
@@ -1370,7 +1370,8 @@ def overall_aggregate(path=None, upload=False):
                 if i == 0:
                     to_save = apple.drop(columns=list([0, 1, 5, 6, 7]))
                 else:
-                    to_save = pd.concat([to_save, apple[3]], axis=1)
+                    # print(apple.columns)
+                    to_save = pd.concat([to_save, apple[[2, 3]]], axis=1)
                 apple = apple.drop(columns=list([0, 1, 2, 3, 5]))
                 continue
 
@@ -1382,22 +1383,52 @@ def overall_aggregate(path=None, upload=False):
         apple[6] = (apple[6] / l).dt.round('1s')
         apple[7] = round(apple[7] / l, 2)
         to_save = pd.concat([to_save, apple], axis=1)
+        # print(to_save.columns)
+
         del apple, apple2
 
     filename0 = 'meta-analysis.xlsx'#.format(22)
     filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
+    to_save.columns = (['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1',
+                        'Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2',
+                        'Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3',
+                        'Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4'])
+    print(to_save.columns)
+    for dir in Dir:
+        if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
+        elif 'det' in dir:  apple = ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
+        elif 'prob' in dir: apple = ['Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3']
+        elif 'inf' in dir:  apple = ['Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4']
+        else: continue
+        # type(dir)
+        # dir2 = dir[2:].capitalize()
+        dir2 = apple[1]
+        # print(dir2)
+        to_save[apple[0]] = pd.to_numeric(to_save[apple[0]], errors='coerce')
+        to_save[dir2] = [r.pop(0) + '-' + r.pop(0) for r in to_save[dir2].astype(str).str.split('-')]
+        # print(to_save[apple].sort_values(by=dir2, ascending=True))
+        to_save2 = to_save[apple]
+        # print(to_save2.columns)
+        to_save2 = to_save2.sort_values(by=[dir2, apple[0]], ascending=True)
+        # print(to_save2)
+        # to_save[apple] =
+        to_save[apple] = to_save2.values
+        # to_save[apple].replace(to_save2)
+        # print(to_save[apple])
+    # to_save = to_save.sort_values(by=['Min', 'Delay 1'], ascending=True)
+
+    with open(os.getcwd() + '/scenario/number_of_ac.txt', "r") as fin:
+        number_ac = int(fin.read())
+
     with open(filename, 'wb') as f:
         # df.set_index(['Name', 'Std'])
-        to_save.columns = (['Delay', 'Min', 'Arrival 1', 'Fuel Con 1',
-                            'Det', 'Arrival 2', 'Fuel Con 2',
-                            'Prob', 'Arrival 3', 'Fuel Con 3',
-                            'Inf', 'Arrival Time', 'Fuel Consumed'])
         to_save[0:8].to_excel(f)
 
-    for k, i in enumerate(range(1, 6)):
-        j = i * 8
+    # print(len(Files))
+    for k, i in enumerate(range(1, number_ac)):
+        j = i * len(set_of_delays)
         l = k + j + 1
-        append_df_to_excel(filename, to_save[j:j + 8], 'Sheet1', l)
+        append_df_to_excel(filename, to_save[j:j + len(set_of_delays)], 'Sheet1', l)
 
     if upload:
         upload_file(filename, filename0)
@@ -1471,3 +1502,87 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
 
     # save the workbook
     writer.save()
+
+def result_analysis(path=None, upload=False):
+    if path is None:
+        path = os.getcwd() + '\\' + dest_output
+
+    Dir = os.listdir(path)
+    to_save = pd.DataFrame()
+
+    for i, dir in enumerate(Dir):
+        if 'py' in dir:
+            print('skipped ', dir)
+            continue
+        if 'skip' in dir:
+            print('skipped ', dir)
+            continue
+        if 'put' in dir:
+            print('skipped ', dir)
+            continue
+        if 'xls' in dir:
+            print('skipped ', dir)
+            continue
+
+        Files = os.listdir(path + '\\' + dir)
+        pd_files = pd.read_excel(path + '\\' + dir + '\\' + file, index_col=None, header=None)
+        pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
+        l = 1
+
+        for k in pd_files_names:
+            with open(k, 'wb') as f:
+                # df.set_index(['Name', 'Std'])
+                to_save.columns = (['Name', 'Vstart'])
+                legend = (['colour blue if RTA', 'colour blue if RTA', 'colour blue if RTA',
+                           'colour dark red if too late for TW',
+                           'colour light red if too early for TW',
+                           'colour green if within TW'])
+                for j, file in enumerate(Files):
+                    if '~$' in file:
+                        continue
+
+                    if j == 0:
+                        apple = pd.read_excel(path + '\\' + dir + '\\' + file, index_col=None, header=None)
+                        banana = list(range(0, len(apple.columns)))
+                        to_pop = list([0, 1, 2, 3, 5, 6, 7])
+                        to_pop.reverse()
+                        for k in to_pop:
+                            banana.pop(k)
+                        apple = apple.drop(columns=banana, axis=1)
+                        if i == 0:
+                            to_save = apple.drop(columns=list([0, 1, 5, 6, 7]))
+                        else:
+                            to_save = pd.concat([to_save, apple[3]], axis=1)
+                        apple = apple.drop(columns=list([0, 1, 2, 3, 5]))
+                        continue
+
+                    apple2 = pd.read_excel(path + '\\' + dir + '\\' + file, index_col=None, header=None)
+                    apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
+                    apple[7] = apple[7] + apple2[7]
+                    l += 1
+
+                    to_save[0:8].to_excel(f, sheet_name='Sheet_name_1')
+
+        apple[6] = (apple[6] / l).dt.round('1s')
+        apple[7] = round(apple[7] / l, 2)
+        to_save = pd.concat([to_save, apple], axis=1)
+        del apple, apple2
+
+    filename0 = 'meta-analysis.xlsx'#.format(22)
+    filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
+    with open(filename, 'wb') as f:
+        # df.set_index(['Name', 'Std'])
+        to_save.columns = (['Delay', 'Min', 'Arrival 1', 'Fuel Con 1',
+                            'Det', 'Arrival 2', 'Fuel Con 2',
+                            'Prob', 'Arrival 3', 'Fuel Con 3',
+                            'Inf', 'Arrival Time', 'Fuel Consumed'])
+        to_save[0:8].to_excel(f)
+
+    for k, i in enumerate(range(1, 6)):
+        j = i * 8
+        l = k + j + 1
+        append_df_to_excel(filename, to_save[j:j + 8], 'Sheet1', l)
+
+    if upload:
+        upload_file(filename, filename0)
+    pass

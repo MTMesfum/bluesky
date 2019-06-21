@@ -277,9 +277,3 @@
 00:00:00.00> PCALL "Trajectories.scn" 45
 00:00:00.00> FF
 23:59:00.00> HOLD
-
-# Load trajectories for a run
-00:00:00.00> SCEN Test_46
-00:00:00.00> PCALL "Trajectories.scn" 46
-00:00:00.00> FF
-23:59:00.00> HOLD

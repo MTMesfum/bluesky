@@ -8,1002 +8,1007 @@
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_00
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 00, 5500
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 00, 8500
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_01
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 01, 5510
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 01, 8510
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_02
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 02, 5520
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 02, 8520
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_03
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 03, 5530
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 03, 8530
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_04
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 04, 5540
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 04, 8540
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_05
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 05, 5550
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 05, 8550
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_06
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 06, 5560
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 06, 8560
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_07
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 07, 5570
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 07, 8570
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_08
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 08, 5580
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 08, 8580
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_09
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 09, 5590
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 09, 8590
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_10
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 10, 5600
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 10, 8600
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_11
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 11, 5610
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 11, 8610
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_12
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 12, 5620
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 12, 8620
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_13
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 13, 5630
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 13, 8630
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_14
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 14, 5640
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 14, 8640
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_15
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 15, 5650
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 15, 8650
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_16
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 16, 5660
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 16, 8660
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_17
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 17, 5670
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 17, 8670
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_18
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 18, 5680
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 18, 8680
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_19
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 19, 5690
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 19, 8690
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_20
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 20, 5700
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 20, 8700
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_21
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 21, 5710
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 21, 8710
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_22
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 22, 5720
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 22, 8720
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_23
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 23, 5730
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 23, 8730
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_24
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 24, 5740
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 24, 8740
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_25
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 25, 5750
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 25, 8750
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_26
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 26, 5760
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 26, 8760
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_27
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 27, 5770
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 27, 8770
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_28
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 28, 5780
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 28, 8780
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_29
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 29, 5790
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 29, 8790
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_30
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 30, 5800
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 30, 8800
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_31
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 31, 5810
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 31, 8810
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_32
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 32, 5820
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 32, 8820
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_33
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 33, 5830
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 33, 8830
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_34
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 34, 5840
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 34, 8840
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_35
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 35, 5850
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 35, 8850
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_36
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 36, 5860
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 36, 8860
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_37
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 37, 5870
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 37, 8870
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_38
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 38, 5880
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 38, 8880
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_39
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 39, 5890
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 39, 8890
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_40
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 40, 5900
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 40, 8900
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_41
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 41, 5910
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 41, 8910
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_42
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 42, 5920
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 42, 8920
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_43
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 43, 5930
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 43, 8930
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_44
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 44, 5940
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 44, 8940
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_45
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 45, 5950
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 45, 8950
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_46
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 46, 5960
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 46, 8960
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_47
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 47, 5970
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 47, 8970
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_48
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 48, 5980
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 48, 8980
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_49
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 49, 5990
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 49, 8990
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_50
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 50, 6000
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 50, 9000
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_51
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 51, 6010
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 51, 9010
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_52
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 52, 6020
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 52, 9020
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_53
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 53, 6030
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 53, 9030
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_54
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 54, 6040
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 54, 9040
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_55
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 55, 6050
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 55, 9050
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_56
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 56, 6060
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 56, 9060
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_57
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 57, 6070
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 57, 9070
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_58
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 58, 6080
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 58, 9080
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_59
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 59, 6090
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 59, 9090
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_60
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 60, 6100
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 60, 9100
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_61
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 61, 6110
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 61, 9110
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_62
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 62, 6120
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 62, 9120
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_63
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 63, 6130
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 63, 9130
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_64
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 64, 6140
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 64, 9140
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_65
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 65, 6150
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 65, 9150
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_66
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 66, 6160
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 66, 9160
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_67
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 67, 6170
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 67, 9170
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_68
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 68, 6180
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 68, 9180
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_69
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 69, 6190
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 69, 9190
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_70
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 70, 6200
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 70, 9200
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_71
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 71, 6210
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 71, 9210
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_72
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 72, 6220
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 72, 9220
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_73
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 73, 6230
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 73, 9230
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_74
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 74, 6240
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 74, 9240
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_75
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 75, 6250
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 75, 9250
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_76
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 76, 6260
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 76, 9260
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_77
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 77, 6270
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 77, 9270
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_78
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 78, 6280
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 78, 9280
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_79
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 79, 6290
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 79, 9290
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_80
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 80, 6300
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 80, 9300
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_81
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 81, 6310
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 81, 9310
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_82
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 82, 6320
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 82, 9320
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_83
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 83, 6330
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 83, 9330
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_84
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 84, 6340
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 84, 9340
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_85
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 85, 6350
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 85, 9350
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_86
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 86, 6360
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 86, 9360
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_87
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 87, 6370
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 87, 9370
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_88
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 88, 6380
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 88, 9380
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_89
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 89, 6390
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 89, 9390
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_90
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 90, 6400
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 90, 9400
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_91
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 91, 6410
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 91, 9410
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_92
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 92, 6420
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 92, 9420
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_93
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 93, 6430
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 93, 9430
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_94
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 94, 6440
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 94, 9440
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_95
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 95, 6450
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 95, 9450
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_96
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 96, 6460
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 96, 9460
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_97
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 97, 6470
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 97, 9470
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_98
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 98, 6480
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 98, 9480
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_99
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 99, 6490
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 99, 9490
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_100
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 100, 6500
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 100, 9500
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_101
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 101, 6510
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 101, 9510
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_102
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 102, 6520
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 102, 9520
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_103
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 103, 6530
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 103, 9530
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_104
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 104, 6540
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 104, 9540
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_105
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 105, 6550
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 105, 9550
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_106
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 106, 6560
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 106, 9560
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_107
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 107, 6570
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 107, 9570
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_108
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 108, 6580
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 108, 9580
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_109
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 109, 6590
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 109, 9590
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_110
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 110, 6600
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 110, 9600
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_111
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 111, 6610
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 111, 9610
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_112
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 112, 6620
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 112, 9620
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_113
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 113, 6630
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 113, 9630
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_114
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 114, 6640
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 114, 9640
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_115
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 115, 6650
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 115, 9650
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_116
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 116, 6660
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 116, 9660
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_117
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 117, 6670
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 117, 9670
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_118
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 118, 6680
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 118, 9680
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_119
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 119, 6690
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 119, 9690
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_120
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 120, 6700
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 120, 9700
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_121
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 121, 6710
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 121, 9710
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_122
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 122, 6720
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 122, 9720
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_123
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 123, 6730
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 123, 9730
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_124
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 124, 6740
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 124, 9740
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_125
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 125, 6750
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 125, 9750
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_126
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 126, 6760
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 126, 9760
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_127
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 127, 6770
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 127, 9770
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_128
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 128, 6780
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 128, 9780
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_129
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 129, 6790
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 129, 9790
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_130
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 130, 6800
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 130, 9800
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_131
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 131, 6810
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 131, 9810
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_132
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 132, 6820
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 132, 9820
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_133
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 133, 6830
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 133, 9830
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_134
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 134, 6840
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 134, 9840
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_135
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 135, 6850
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 135, 9850
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_136
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 136, 6860
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 136, 9860
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_137
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 137, 6870
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 137, 9870
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_138
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 138, 6880
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 138, 9880
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_139
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 139, 6890
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 139, 9890
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_140
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 140, 6900
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 140, 9900
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_141
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 141, 6910
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 141, 9910
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_142
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 142, 6920
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 142, 9920
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_143
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 143, 6930
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 143, 9930
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_144
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 144, 6940
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 144, 9940
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_145
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 145, 6950
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 145, 9950
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_146
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 146, 6960
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 146, 9960
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_147
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 147, 6970
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 147, 9970
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_148
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 148, 6980
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 148, 9980
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_149
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 149, 6990
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 149, 9990
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_150
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 150, 7000
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 150, 0000
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_151
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 151, 7010
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 151, 0010
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_152
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 152, 7020
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 152, 0020
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_153
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 153, 7030
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 153, 0030
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_154
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 154, 7040
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 154, 0040
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_155
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 155, 7050
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 155, 0050
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_156
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 156, 7060
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 156, 0060
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_157
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 157, 7070
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 157, 0070
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_158
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 158, 7080
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 158, 0080
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_159
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 159, 7090
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 159, 0090
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_160
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 160, 7100
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 160, 0100
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_161
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 161, 7110
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 161, 0110
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_162
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 162, 7120
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 162, 0120
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_163
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 163, 7130
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 163, 0130
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_164
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 164, 7140
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 164, 0140
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_165
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 165, 7150
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 165, 0150
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_166
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 166, 7160
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 166, 0160
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_167
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 167, 7170
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 167, 0170
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_168
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 168, 7180
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 168, 0180
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_169
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 169, 7190
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 169, 0190
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_170
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 170, 7200
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 170, 0200
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_171
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 171, 7210
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 171, 0210
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_172
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 172, 7220
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 172, 0220
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_173
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 173, 7230
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 173, 0230
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_174
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 174, 7240
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 174, 0240
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_175
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 175, 7250
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 175, 0250
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_176
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 176, 7260
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 176, 0260
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_177
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 177, 7270
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 177, 0270
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_178
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 178, 7280
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 178, 0280
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_179
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 179, 7290
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 179, 0290
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_180
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 180, 7300
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 180, 0300
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_181
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 181, 7310
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 181, 0310
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_182
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 182, 7320
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 182, 0320
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_183
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 183, 7330
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 183, 0330
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_184
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 184, 7340
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 184, 0340
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_185
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 185, 7350
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 185, 0350
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_186
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 186, 7360
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 186, 0360
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_187
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 187, 7370
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 187, 0370
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_188
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 188, 7380
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 188, 0380
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_189
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 189, 7390
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 189, 0390
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_190
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 190, 7400
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 190, 0400
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_191
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 191, 7410
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 191, 0410
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_192
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 192, 7420
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 192, 0420
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_193
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 193, 7430
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 193, 0430
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_194
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 194, 7440
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 194, 0440
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_195
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 195, 7450
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 195, 0450
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_196
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 196, 7460
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 196, 0460
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_197
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 197, 7470
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 197, 0470
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_198
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 198, 7480
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 198, 0480
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_199
-00:00:00.00> PCALL "Flight Test/E145 FL290.scn" 199, 7490
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 199, 0490
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_200
+00:00:00.00> PCALL "Flight Test/A332 FL410.scn" 200, 0500
 23:59:00.00> HOLD
 # Distance between Waypoint 0 and 1 is 70.66.
 # Distance between Waypoint 1 and 2 is 70.22.
