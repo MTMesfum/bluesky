@@ -53,8 +53,9 @@ set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_dt(0.1)
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-FE = True
+FE = False
 create_scenarios = False
+del_runs = False
 
 clear_mylog()
 timeit.default_timer()
@@ -95,17 +96,19 @@ if create_scenarios:
     # compare_ff()
 
     # exit()
+
 # exit()
 set_dt(1.0)
 traj_folder = traj_folder2
 runs = 0
 
-if os.path.isdir("output\\runs"):
-    shutil.rmtree("output\\runs")
-try:
-    os.remove("output\\WRITER Standard File.xlsx")
-except:
-    pass
+if del_runs:
+    if os.path.isdir("output\\runs"):
+        shutil.rmtree("output\\runs")
+    try:
+        os.remove("output\\WRITER Standard File.xlsx")
+    except:
+        pass
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -146,6 +149,8 @@ for dir in os.listdir(traj_folder):
     traj_counter += 1
 
 # Open the folder with all the results
+result_analysis()
+exit()
 overall_aggregate(os.getcwd() + '\\output\\runs_save')
 talk_time(runs)
 os.startfile('output\\runs')
