@@ -1532,7 +1532,6 @@ def result_analysis(path=None, upload=False):
                     cols = Flights.columns.tolist()
                     cols.insert(2, cols.pop(-1))
                     Flights = Flights[cols]
-                    # print(cols)
 
                     # Rename Columns
                     FL = list()
