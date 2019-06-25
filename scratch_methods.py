@@ -1490,18 +1490,6 @@ def result_analysis(path=None, upload=False):
             if skip in dir:
                 print('skipped: ', dir)
                 continue
-        # if 'py' in dir:
-        #     print('skipped ', dir)
-        #     continue
-        # if 'skip' in dir:
-        #     print('skipped ', dir)
-        #     continue
-        # if 'put' in dir:
-        #     print('skipped ', dir)
-        #     continue
-        # if 'xls' in dir:
-        #     print('skipped ', dir)
-        #     continue
 
         Files = os.listdir(os.path.join(path, dir))
         for m, n in enumerate(Files):
@@ -1510,27 +1498,21 @@ def result_analysis(path=None, upload=False):
         Files_input_log = os.listdir(os.path.join(os.getcwd(), dest_dir_input_logs, dir))
         for m, n in enumerate(Files_input_log):
             Files_input_log[m] = os.path.join(os.getcwd(), dest_dir_input_logs, dir, n)
-        # Files_input_log = Files_input_log[dir in Files_input_log]
         pd_files = pd.read_excel(Files[0], index_col=None, header=None)
         pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
         pd_files_names.sort()
         l = 1
-        # print(Files_input_log)
-        # print(pd_files_names)
-        # exit()
         for k in pd_files_names:
             filename = os.path.join(path_analysis, '{}{}.xlsx'.format(k, dir[1:]))
             with open(k, 'wb') as f:
-                # df.set_index(['Name', 'Std'])
-                # to_save.columns = (['Name', 'Vstart'])
                 to_save = to_save.reindex(to_save.columns.tolist() + ['Name', 'Vstart'])
-                # mydf = mydf.reindex(mydf.columns.tolist() + ['newcol1', 'newcol2'])
                 legend = ([ '', '',
                             'colour blue if RTA',
                             'colour dark red if too late for TW',
                             'colour light red if too early for TW',
                             'colour green if within TW', '', ''])
 
+                # Read in both files
                 for m, n in zip(Files, Files_input_log):
                     ExcelDoc = pd.read_excel(m, index_col=None, header=None)
                     Ensemble = ExcelDoc[1][0]
@@ -1538,7 +1520,7 @@ def result_analysis(path=None, upload=False):
                         .dropna(axis='columns').drop(columns=list([0, 1, 4]))
                     Flights = Flights.rename(index=str, columns={
                         2: "Delay", 3: "Name", 5: "Start Time", 6: "End Time", 7: "Fuel Used [kg]"})
-                    print(Flights.columns)
+                    # print(Flights.columns)
                     log2 = ''.join(list([line for line in open(n, 'r') if k in line]))
 
                     # Add Columns
@@ -1546,16 +1528,11 @@ def result_analysis(path=None, upload=False):
                     for o, p in enumerate(Flights['Name']):
                         apple = log2.find('CRE ' + p)
                         holder.append(log2[apple:apple + 70].split()[5])
-
-                        # print(holder)
-                        # exit()
-
                     Flights['Vstart [kts]'] = holder
                     cols = Flights.columns.tolist()
-
                     cols.insert(2, cols.pop(-1))
                     Flights = Flights[cols]
-                    print(cols)
+                    # print(cols)
 
                     # Rename Columns
                     FL = list()
@@ -1608,37 +1585,88 @@ def result_analysis(path=None, upload=False):
                         apple = datetime.datetime(100, 1, 1, int(o[-8:-6]), int(o[-5:-3]), int(o[-2:]))
                         banana = datetime.datetime(100, 1, 1, int(p[-8:-6]), int(p[-5:-3]), int(p[-2:]))
                         citrus = banana - apple
-                        # days = divmod(, 86400)  # Get days (without [0]!)
                         hours = divmod(int(citrus.total_seconds()), 3600)  # Use remainder of days to calc hours
                         minutes = divmod(hours[1], 60)  # Use remainder of hours to calc minutes
                         seconds = divmod(minutes[1], 1)
                         holder.append('{}:{}:{}'.format(hours[0], minutes[0], seconds[0]))
                     holder[0] = actype
-                    print(Flights.shape[1])
-                    # exit()
                     Flights['nWP = {}'.format(Flights.shape[1]-6)] = holder
                     Flights['Legend'] = legend
-                    # print(Flights)
-                    # exit()
-                    # print(cols)
-                    # print(FL)
-                    cols = Flights.columns.tolist()
 
+                    # Apply color mapping
+                    print("Why doesn't this work???")
+                    Flights = Flights.style.apply(color, axis=0)
+                    Flights.to_excel(os.getcwd() + '\\output\\Test_analysis.xlsx')
+                    # print(color(Flights['WP1 [FL360]']))
+                    # Create second Waypoint Analysis with Normalised Time
+                    Flights2 = Flights.copy()
+                    for q, r in enumerate(Flights2):
+                        if 'FL' not in r:
+                            continue
+                        print(r)
+                        holder = list()
+                        print(Flights2[r])
+                        for s, (o, p) in enumerate(zip(Flights2['Start Time'], Flights2[r])):
+                            print(o)
+                            print(p)
+                            apple = datetime.datetime(100, 1, 1, int(o[-8:-6]), int(o[-5:-3]), int(o[-2:]))
+                            banana = datetime.datetime(100, 1, 1, int(p[-8:-6]), int(p[-5:-3]), int(p[-2:]))
+                            citrus = banana - apple
+                            # days = divmod(, 86400)  # Get days (without [0]!)
+                            hours = divmod(int(citrus.total_seconds()), 3600)  # Use remainder of days to calc hours
+                            minutes = divmod(hours[1], 60)  # Use remainder of hours to calc minutes
+                            seconds = divmod(minutes[1], 1)
+                            holder.append('{}:{}:{}'.format(hours[0], str(minutes[0]).zfill(2),
+                                                            str(seconds[0]).zfill(2)))
+                        Flights2[r] = holder
 
-                    # Flights = Flights.append(pd.Series(['Raju', 21, 'Bangalore', 'India'], index=dfObj.columns),
-                    #                         ignore_index=True)
-                    # Flights = Flights[cols]
+                    # Create Speed Input Analysis
+                    Speed_input2 = pd.DataFrame()
+                    # cols = Flights.columns.tolist()
+                    for q in Flights['Name'][2:]:
+                        obj = [[] for i in range(3)]
+                        Speed_input = pd.DataFrame()
+                        X = 'SPD2 {}'.format(q)
+                        Y = 'SPD {}'.format(q)
+                        indices1 = indices(log2, X)
+                        indices2 = indices(log2, Y)
+                        obj[0].append('# {}s Delay'.format(q.split('-')[2]))
+                        obj[0].append('Time')
+                        obj[1].append('# {} inputs'.format(len(indices1)))
+                        obj[1].append('SPD2')
+                        obj[2].append('- - -')
+                        obj[2].append('SPD')
 
-                    # exit()
-                    # print(Flights)
-                    # print(filename)
+                        for o, (p, r) in enumerate(zip(indices1, indices2)):
+                            obj[0].append(log2[p-12:p+30].split()[0][:8])
+                            obj[1].append(log2[p - 12:p + 30].split()[2])
+                            obj[2].append(log2[r - 12:r + 30].split()[2])
+
+                        Speed_input[0] = obj[0]
+                        Speed_input[1] = obj[1]
+                        Speed_input[2] = obj[2]
+                        Speed_input2 = pd.concat([Speed_input2, Speed_input], ignore_index=True, axis=1)
+                    Speed_input = Speed_input2.replace(np.nan, '', regex=True)
+
+                    # Write away the Analysis Tables
                     sheet = 'Ensemble=' + str(Ensemble).zfill(2)
+
+                    # Waypoint Analysis
+                    append_df_to_excel(filename, pd.DataFrame(['Waypoint Analysis']), sheet,
+                                       None, False, header=False, index=False)
                     append_df_to_excel(filename, Flights, sheet)
+
+                    # Waypoint Analysis with Normalised Time
+                    append_df_to_excel(filename, pd.DataFrame(['Waypoint Analysis with Normalised Time']), sheet,
+                                       None, False, header=False, index=False)
+                    append_df_to_excel(filename, Flights2, sheet)
+
+                    # Speed Input Analysis
+                    append_df_to_excel(filename, pd.DataFrame(['Speed Input']), sheet,
+                                       None, False, header=False, index=False)
+                    append_df_to_excel(filename, Speed_input, sheet, None, False, header=False)
                     os.startfile(filename)
                     exit()
-                    # Flights.to_excel(filename, sheet_name=sheet)
-                    # print(''.join(log2))
-                    # print(''.join(log2))
                 exit()
 
     #
@@ -1693,3 +1721,49 @@ def result_analysis(path=None, upload=False):
     if upload:
         upload_file(filename, filename0)
     pass
+
+def indices(lst, element):
+    result = []
+    offset = -1
+    while True:
+        try:
+            offset = lst.index(element, offset + 1)
+        except ValueError:
+            return result
+        result.append(offset)
+
+
+def color(current):
+    # print(current)
+    early = current[0]
+    late = current[1]
+    apple = datetime.datetime(100, 1, 1, int(early[-8:-6]), int(early[-5:-3]), int(early[-2:]))
+    banana = datetime.datetime(100, 1, 1, int(late[-8:-6]), int(late[-5:-3]), int(late[-2:]))
+    colours = pd.Series(current)
+    for j, i in enumerate(current):
+        if j == 0 or j == 1:
+            colours[j] = ''
+            continue
+
+        citrus = datetime.datetime(100, 1, 1, int(i[-8:-6]), int(i[-5:-3]), int(i[-2:]))
+        if citrus >= banana:
+            colours[j] = 'background-color: red'
+        elif citrus <= apple:
+            colours[j] = 'background-color: yellow'
+        else:
+            colours[j] = 'background-color: green'
+    # print(colours)
+    return colours
+
+def color_min(s):
+    apple = datetime.datetime(100, 1, 1, int(s[0][-8:-6]), int(s[0][-5:-3]), int(s[0][-2:])) + datetime.timedelta(seconds=1)
+    below_min = s
+    for i, j in enumerate(s):
+        if i == 0 or i == 1:
+            below_min[i] = False
+            continue
+        banana = datetime.datetime(100, 1, 1, int(s[i][-8:-6]), int(s[i][-5:-3]), int(s[i][-2:])) \
+                 + datetime.timedelta(seconds=1)
+        if banana.total_seconds() < apple.total_seconds():
+            below_min[i] = True
+    return ['background-color: yellow' if v else '' for v in below_min]
