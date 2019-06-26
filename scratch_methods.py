@@ -1699,7 +1699,7 @@ def result_analysis(path=None, upload=False):
                     os.startfile(filename)
 
             if upload:
-                upload_file(filename, filename0, analysis)
+                upload_file(filename, filename0) #, analysis)
 
     # for k, i in enumerate(range(1, 6)):
     #     j = i * 8
