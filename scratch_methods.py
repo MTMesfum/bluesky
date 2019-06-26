@@ -214,17 +214,50 @@ def bs_desktop():
 
 # Run a simulation of BlueSky using the laptop path
 def bs_laptop():
-    global drive_folder, drive_folder_inf, drive_folder_prob, \
-        drive_folder_det, drive_folder_min, drive_folder_output, drive_folder_input
+    global drive_folder, drive_folder_inf, drive_folder_prob, drive_folder_det, \
+        drive_folder_min, drive_folder_output, drive_folder_input, drive_folder_gen
     drive_folder = '/BlueSky Simulation/Run Laptop/'
-    drive_folder_inf = '12LqgB2NtdHGU2EspFY5tgmO88fc53XEj'
-    drive_folder_prob = '1N-V2AQzv2SnaUt_sGb6sxns3PZ3sEwmz'
-    drive_folder_det = '1GzpfVUNmcCiM69mfvf0c-2eqCKIDqlYB'
-    drive_folder_min = '1mE8bK9LmptxXHQbzKkSwSaNZsFw-HGGE'
-    drive_folder_output = '1W_v0EuNL6WxpT18aHsf_PO6oHYXDDSNi'
-    drive_folder_input = '1N7p25hQTLqmRUR_YAOPsdHvLHBeiRWF3'
+    drive_folder_inf = '1TKtpcnxWSrDTKG-7abW1joSuOCyXIaWi'
+    drive_folder_prob = '1Cnum34BNGu3zsgoBMzugPPAhGUPV0R2i'
+    drive_folder_det = '1G_v7JfZCyI3rs3X4bd2DH56bLK-QIIYM'
+    drive_folder_min = '1FupY3LhocwprYZoz_bVs_rCy9xHZ4ljM'
+    drive_folder_output = '1lN_lRg80jnKPzprTVE8BoKzSyeCIEaFk'
+    drive_folder_input = '1pF06R0PXILh5DPQB0Rhd7sZ6CpS45-Ik'
+    drive_folder_gen = '13PqsPnCCmMY_kruN95C38Fyn6uI2tCyY'
     os.system("call I:\Programs\Anaconda\Program\Scripts\\activate.bat && \
                     cd I:\Documents\Google Drive\Thesis 2018\BlueSky Git4 && python BlueSky.py")
+
+# Run a simulation of BlueSky using the desktop TU 1 path
+def bs_desktop_TU_1():
+    global drive_folder, drive_folder_inf, drive_folder_prob, drive_folder_det, \
+        drive_folder_min, drive_folder_output, drive_folder_input, drive_folder_gen
+    drive_folder = '/BlueSky Simulation/Run Desktop TU 1/'
+    drive_folder_inf = '1bqWP5kFObkz5_18e7Yu-qYdYWrGGRPn1'
+    drive_folder_prob = '1LF4K_kaqsM77T5DRBLVWLgRiSR3LtR-W'
+    drive_folder_det = '1d3hZ_IN_yxeeVGnfh3yrp75v1lJtWOXG'
+    drive_folder_min = '1Tiho0ReAPGGMFwxYbEOhItLQSXfzGzHt'
+    drive_folder_output = '1QFHeuLJ8APgsZru2PFpA6SXC2BShfZvl'
+    drive_folder_input = '1b5fi3qI1fv0KuPJdyB3CFcKz_dQFHIYv'
+    drive_folder_gen = '1f3WN6BuDU__JF_C6nQ2GE0C8ECxZyy2X'
+    # use json1 + find path of anaconda!
+    os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
+                    cd C:\Documents\Git 2 && conda activate py36 && python BlueSky.py")
+
+# Run a simulation of BlueSky using the desktop TU 2 path
+def bs_desktop_TU_2():
+    global drive_folder, drive_folder_inf, drive_folder_prob, drive_folder_det, \
+        drive_folder_min, drive_folder_output, drive_folder_input, drive_folder_gen
+    drive_folder = '/BlueSky Simulation/Run Desktop TU 2/'
+    drive_folder_inf = '1lqno4SXLh7o6BJ55xUYCyILiHViH9i5V'
+    drive_folder_prob = '1QoSWj_d79El61sKn5lDNQ0MrsXMW4buP'
+    drive_folder_det = '1kWcAOhbQpE1m-Ay-rdHnV2geIO6ynae2'
+    drive_folder_min = '1rIpTDfhVIyKIuxpDLq4SMFXP3JvIaxNl'
+    drive_folder_output = '1VWd6o5hTISw0ir5HKPLAXIZDu8vDzLO5'
+    drive_folder_input = '1K_GjK_McE1KMg7YenogiPg4bAIOmKb-H'
+    drive_folder_gen = '1RzqBSLCInHhzgkkkZ0bXOTrCjYih1rfe'
+    # use json2 + find path of anaconda!
+    os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
+                    cd C:\Documents\Git 2 && conda activate py36 && python BlueSky.py")
 
 # Cut the number to 3 digits
 def cut3(one):
@@ -1503,13 +1536,14 @@ def result_analysis(path=None, upload=False):
         pd_files_names.sort()
         l = 1
         for k in pd_files_names:
-            filename = os.path.join(path_analysis, '{}{}.xlsx'.format(k, dir[1:]))
+            filename0 = '{}{}.xlsx'.format(k, dir[1:])
+            filename = os.path.join(path_analysis, filename0)
             with open(k, 'wb') as f:
                 to_save = to_save.reindex(to_save.columns.tolist() + ['Name', 'Vstart'])
                 legend = ([ '', '',
                             'colour blue if RTA',
-                            'colour dark red if too late for TW',
-                            'colour light red if too early for TW',
+                            'colour red if too late for TW',
+                            'colour yellow if too early for TW',
                             'colour green if within TW', '', ''])
 
                 # Read in both files
@@ -1593,10 +1627,8 @@ def result_analysis(path=None, upload=False):
                     Flights['Legend'] = legend
 
                     # Apply color mapping
-                    print("Why doesn't this work???")
-                    Flights = Flights.style.apply(color, axis=0)
-                    Flights.to_excel(os.getcwd() + '\\output\\Test_analysis.xlsx')
-                    # print(color(Flights['WP1 [FL360]']))
+                    Flights = Flights.style.apply(color, subset=list(Flights.columns[6:-2]))
+
                     # Create second Waypoint Analysis with Normalised Time
                     Flights2 = Flights.copy()
                     for q, r in enumerate(Flights2):
@@ -1665,60 +1697,16 @@ def result_analysis(path=None, upload=False):
                                        None, False, header=False, index=False)
                     append_df_to_excel(filename, Speed_input, sheet, None, False, header=False)
                     os.startfile(filename)
-                    exit()
-                exit()
 
-    #
-    #
-    #             for j, file in enumerate(Files):
-    #                 if '~$' in file:
-    #                     continue
-    #
-    #                 if j == 0:
-    #                     apple = pd.read_excel(path + '\\' + dir + '\\' + file, index_col=None, header=None)
-    #                     banana = list(range(0, len(apple.columns)))
-    #                     to_pop = list([0, 1, 2, 3, 5, 6, 7])
-    #                     to_pop.reverse()
-    #                     for k in to_pop:
-    #                         banana.pop(k)
-    #                     apple = apple.drop(columns=banana, axis=1)
-    #                     if i == 0:
-    #                         to_save = apple.drop(columns=list([0, 1, 5, 6, 7]))
-    #                     else:
-    #                         to_save = pd.concat([to_save, apple[3]], axis=1)
-    #                     apple = apple.drop(columns=list([0, 1, 2, 3, 5]))
-    #                     continue
-    #
-    #                 apple2 = pd.read_excel(path + '\\' + dir + '\\' + file, index_col=None, header=None)
-    #                 apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
-    #                 apple[7] = apple[7] + apple2[7]
-    #                 l += 1
-    #
-    #                 to_save[0:8].to_excel(f, sheet_name='Sheet_name_1')
-    #
-    #     apple[6] = (apple[6] / l).dt.round('1s')
-    #     apple[7] = round(apple[7] / l, 2)
-    #     to_save = pd.concat([to_save, apple], axis=1)
-    #     del apple, apple2
-    #
-    # filename0 = 'meta-analysis.xlsx'#.format(22)
-    # filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
-    # with open(filename, 'wb') as f:
-    #     # df.set_index(['Name', 'Std'])
-    #     to_save.columns = (['Delay', 'Min', 'Arrival 1', 'Fuel Con 1',
-    #                         'Det', 'Arrival 2', 'Fuel Con 2',
-    #                         'Prob', 'Arrival 3', 'Fuel Con 3',
-    #                         'Inf', 'Arrival Time', 'Fuel Consumed'])
-    #     to_save[0:8].to_excel(f)
+            if upload:
+                upload_file(filename, filename0, analysis)
 
-    for k, i in enumerate(range(1, 6)):
-        j = i * 8
-        l = k + j + 1
-        append_df_to_excel(filename, to_save[j:j + 8], 'Sheet1', l)
-        exit()
+    # for k, i in enumerate(range(1, 6)):
+    #     j = i * 8
+    #     l = k + j + 1
+    #     append_df_to_excel(filename, to_save[j:j + 8], 'Sheet1', l)
+    #     exit()
 
-    if upload:
-        upload_file(filename, filename0)
     pass
 
 def indices(lst, element):
@@ -1731,27 +1719,46 @@ def indices(lst, element):
             return result
         result.append(offset)
 
-
 def color(current):
-    # print(current)
     early = current[0]
     late = current[1]
     apple = datetime.datetime(100, 1, 1, int(early[-8:-6]), int(early[-5:-3]), int(early[-2:]))
     banana = datetime.datetime(100, 1, 1, int(late[-8:-6]), int(late[-5:-3]), int(late[-2:]))
-    colours = pd.Series(current)
+    colours = list()
     for j, i in enumerate(current):
         if j == 0 or j == 1:
-            colours[j] = ''
+            colours.append('')
             continue
-
         citrus = datetime.datetime(100, 1, 1, int(i[-8:-6]), int(i[-5:-3]), int(i[-2:]))
         if citrus >= banana:
-            colours[j] = 'background-color: red'
+            colours.append('background-color: brown')
         elif citrus <= apple:
-            colours[j] = 'background-color: yellow'
+            colours.append('background-color: yellow')
         else:
-            colours[j] = 'background-color: green'
+            colours.append('background-color: green')
     # print(colours)
+    # NAMED_COLORS = {
+    #     'maroon': '800000',
+    #     'brown': 'A52A2A',
+    #     'red': 'FF0000',
+    #     'pink': 'FFC0CB',
+    #     'orange': 'FFA500',
+    #     'yellow': 'FFFF00',
+    #     'olive': '808000',
+    #     'green': '008000',
+    #     'purple': '800080',
+    #     'fuchsia': 'FF00FF',
+    #     'lime': '00FF00',
+    #     'teal': '008080',
+    #     'aqua': '00FFFF',
+    #     'blue': '0000FF',
+    #     'navy': '000080',
+    #     'black': '000000',
+    #     'gray': '808080',
+    #     'grey': '808080',
+    #     'silver': 'C0C0C0',
+    #     'white': 'FFFFFF',
+    # }
     return colours
 
 def color_min(s):
