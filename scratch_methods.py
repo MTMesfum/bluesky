@@ -1361,19 +1361,24 @@ def overall_aggregate(path=None, upload=False):
     # path = "C:\Documents\Git 2\output\\runs ----"
     Dir = os.listdir(path)
     to_save = pd.DataFrame()
-    skip_list = ['py', 'skip', 'put', 'xls']
+    skip_list = ['py', 'skip', 'xlogs', 'xls', 'anal']
+    to_skip = False
     for i, dir in enumerate(Dir):
         for skip in skip_list:
             if skip in dir:
                 print('skipped: ', dir)
+                to_skip = True
                 continue
+        if to_skip:
+            to_skip = False
+            continue
 
         Files = os.listdir(path + '\\' + dir)
         l = 1
 
         for j, file in enumerate(Files):
             if '~$' in file:
-                continue
+                 continue
 
             if j == 0:
                 apple = pd.read_excel(os.path.join(path, dir, file), index_col=None, header=None)
@@ -1407,7 +1412,7 @@ def overall_aggregate(path=None, upload=False):
                         'Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2',
                         'Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3',
                         'Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4'])
-    print(to_save.columns)
+    # print(to_save.columns)
     for dir in Dir:
         if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
         elif 'det' in dir:  apple = ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
@@ -1506,7 +1511,7 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
     # save the workbook
     writer.save()
 
-def result_analysis(path=None, upload=False):
+def result_analysis(path=None, upload=False, skip_flights=None):
     if path is None:
         path = os.path.join(os.getcwd(), dest_output)
 
@@ -1534,169 +1539,184 @@ def result_analysis(path=None, upload=False):
         pd_files = pd.read_excel(Files[0], index_col=None, header=None)
         pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
         pd_files_names.sort()
+        legend = (['', '',
+                   'colour blue if RTA',
+                   'colour red if too late for TW',
+                   'colour yellow if too early for TW',
+                   'colour green if within TW', '', ''])
         l = 1
         for k in pd_files_names:
+            if k in skip_flights:
+                continue
+            print('\nStarting trajectory {}!'.format(k))
             filename0 = '{}{}.xlsx'.format(k, dir[1:])
             filename = os.path.join(path_analysis, filename0)
-            with open(k, 'wb') as f:
-                to_save = to_save.reindex(to_save.columns.tolist() + ['Name', 'Vstart'])
-                legend = ([ '', '',
-                            'colour blue if RTA',
-                            'colour red if too late for TW',
-                            'colour yellow if too early for TW',
-                            'colour green if within TW', '', ''])
+            # with open(k, 'wb') as f:
+            to_save = to_save.reindex(to_save.columns.tolist() + ['Name', 'Vstart'])
 
-                # Read in both files
-                for m, n in zip(Files, Files_input_log):
-                    ExcelDoc = pd.read_excel(m, index_col=None, header=None)
-                    Ensemble = ExcelDoc[1][0]
-                    Flights = ExcelDoc[ExcelDoc[3].str.contains(k)].reset_index(drop=True).sort_values(2)\
-                        .dropna(axis='columns').drop(columns=list([0, 1, 4]))
-                    Flights = Flights.rename(index=str, columns={
-                        2: "Delay", 3: "Name", 5: "Start Time", 6: "End Time", 7: "Fuel Used [kg]"})
-                    # print(Flights.columns)
-                    log2 = ''.join(list([line for line in open(n, 'r') if k in line]))
+            # Read in both files
+            for m, n in zip(Files, Files_input_log):
+                ExcelDoc = pd.read_excel(m, index_col=None, header=None)
+                Ensemble = ExcelDoc[1][0]
+                Flights = ExcelDoc[ExcelDoc[3].str.contains(k)].reset_index(drop=True).sort_values(2)\
+                    .dropna(axis='columns').drop(columns=list([0, 1, 4]))
+                Flights = Flights.rename(index=str, columns={
+                    2: "Delay", 3: "Name", 5: "Start Time", 6: "End Time", 7: "Fuel Used [kg]"})
+                # print(Flights.columns)
+                log2 = ''.join(list([line for line in open(n, 'r') if k in line]))
 
-                    # Add Columns
+                # Add Columns
+                holder = list()
+                for o, p in enumerate(Flights['Name']):
+                    apple = log2.find('CRE ' + p)
+                    holder.append(log2[apple:apple + 70].split()[5])
+                Flights['Vstart [kts]'] = holder
+                cols = Flights.columns.tolist()
+                cols.insert(2, cols.pop(-1))
+                Flights = Flights[cols]
+
+                # Rename Columns
+                FL = list()
+                pd_min = list()
+                pd_max = list()
+                for o, p in enumerate(range(len(cols)-6)):
+                    if o == 0:
+                        apple = log2.find('CRE {}-{}-0'.format(k, dir[2:].upper()))
+                        actype = log2[apple:apple + 100].split()[2]
+                        FL.append('FL' + log2[apple:apple + 100].split()[6][:3])
+                        apple = log2.find('RTA_AT {}-{}-0'.format(k, dir[2:]))
+                        apple = log2[apple:apple+50].split()[3][:8]
+                        apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
+                        banana = log2.find('TW_SIZE_AT {}-{}-0'.format(k, dir[2:]))
+                        banana = int(log2[banana:banana+50].split()[2])
+                        apple1 = apple - datetime.timedelta(seconds=banana/2)
+                        apple2 = apple + datetime.timedelta(seconds=banana/2)
+                        pd_min.append(apple1.strftime('%H:%M:%S'))
+                        pd_max.append(apple2.strftime('%H:%M:%S'))
+                    else:
+                        apple = log2.find('ADDWPT {}-{}-0-{}'.format(k, dir[2:], o))
+                        # print(log2[apple:apple + 100].split())
+                        FL.append(log2[apple:apple + 100].split()[2])
+                        apple = log2.find('RTA_AT {}-{}-0-{}'.format(k, dir[2:], o))
+                        apple = log2[apple:apple+50].split()[2]
+                        banana = log2.find('TW_SIZE_AT {}-{}-0-{}'.format(k, dir[2:], o))
+                        banana = int(log2[banana:banana + 50].split()[2])
+                        apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
+                        apple1 = apple - datetime.timedelta(seconds=banana/2)
+                        apple2 = apple + datetime.timedelta(seconds=banana/2)
+                        pd_min.append(apple1.strftime('%H:%M:%S'))
+                        pd_max.append(apple2.strftime('%H:%M:%S'))
+
+                for o, p in enumerate(range(len(FL))):
+                    q = f'WP{o} [{FL[o]}]' #.format(str(o), FL[o])
+                    Flights = Flights.rename(index=str, columns={(o+8): q})
+
+                # Add Rows
+                holder1 = list(['-', 'Goal Early', '-', pd_min[0], pd_min[-1], '-'])
+                holder1.extend(pd_min)
+                holder2 = ['-', 'Goal Late', '-', pd_max[0], pd_max[-1], '-']
+                holder2.extend(pd_max)
+                Flights.ix[len(Flights):len(Flights)+2] = np.nan
+                Flights = Flights.shift(2)
+                Flights.ix[0] = pd.Series(holder1, index=Flights.columns)
+                Flights.ix[1] = pd.Series(holder2, index=Flights.columns)
+
+                # Add Column with FT
+                holder = list()
+                for o, p in zip(Flights['Start Time'], Flights['End Time']):
+                    apple = datetime.datetime(100, 1, 1, int(o[-8:-6]), int(o[-5:-3]), int(o[-2:]))
+                    banana = datetime.datetime(100, 1, 1, int(p[-8:-6]), int(p[-5:-3]), int(p[-2:]))
+                    citrus = banana - apple
+                    hours = divmod(int(citrus.total_seconds()), 3600)  # Use remainder of days to calc hours
+                    minutes = divmod(hours[1], 60)  # Use remainder of hours to calc minutes
+                    seconds = divmod(minutes[1], 1)
+                    holder.append('{}:{}:{}'.format(hours[0], minutes[0], seconds[0]))
+                holder[0] = actype
+                Flights['nWP = {}'.format(Flights.shape[1]-6)] = holder
+                Flights['Legend'] = legend
+
+                # # Apply color mapping
+                # Flights = Flights.style.apply(color, subset=list(Flights.columns[6:-2]))
+
+                # Create second Waypoint Analysis with Normalised Time
+                Flights2 = Flights.copy()
+                for q, r in enumerate(Flights2):
+                    if 'FL' not in r:
+                        continue
+                    # print(r)
                     holder = list()
-                    for o, p in enumerate(Flights['Name']):
-                        apple = log2.find('CRE ' + p)
-                        holder.append(log2[apple:apple + 70].split()[5])
-                    Flights['Vstart [kts]'] = holder
-                    cols = Flights.columns.tolist()
-                    cols.insert(2, cols.pop(-1))
-                    Flights = Flights[cols]
-
-                    # Rename Columns
-                    FL = list()
-                    pd_min = list()
-                    pd_max = list()
-                    for o, p in enumerate(range(len(cols)-6)):
-                        if o == 0:
-                            apple = log2.find('CRE {}-{}-0'.format(k, dir[2:].upper()))
-                            actype = log2[apple:apple + 100].split()[2]
-                            FL.append('FL' + log2[apple:apple + 100].split()[6][:3])
-                            apple = log2.find('RTA_AT {}-{}-0'.format(k, dir[2:]))
-                            apple = log2[apple:apple+50].split()[3][:8]
-                            apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
-                            banana = log2.find('TW_SIZE_AT {}-{}-0'.format(k, dir[2:]))
-                            banana = int(log2[banana:banana+50].split()[2])
-                            apple1 = apple - datetime.timedelta(seconds=banana/2)
-                            apple2 = apple + datetime.timedelta(seconds=banana/2)
-                            pd_min.append(apple1.strftime('%H:%M:%S'))
-                            pd_max.append(apple2.strftime('%H:%M:%S'))
-                        else:
-                            apple = log2.find('ADDWPT {}-{}-0-{}'.format(k, dir[2:], o))
-                            FL.append(log2[apple:apple + 100].split()[2])
-                            apple = log2.find('RTA_AT {}-{}-0-{}'.format(k, dir[2:], o))
-                            apple = log2[apple:apple+50].split()[2]
-                            banana = log2.find('TW_SIZE_AT {}-{}-0-{}'.format(k, dir[2:], o))
-                            banana = int(log2[banana:banana + 50].split()[2])
-                            apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
-                            apple1 = apple - datetime.timedelta(seconds=banana/2)
-                            apple2 = apple + datetime.timedelta(seconds=banana/2)
-                            pd_min.append(apple1.strftime('%H:%M:%S'))
-                            pd_max.append(apple2.strftime('%H:%M:%S'))
-
-                    for o, p in enumerate(range(len(FL))):
-                        q = f'WP{o} [{FL[o]}]' #.format(str(o), FL[o])
-                        Flights = Flights.rename(index=str, columns={(o+8): q})
-
-                    # Add Rows
-                    holder1 = list(['-', 'Goal Early', '-', pd_min[0], pd_min[-1], '-'])
-                    holder1.extend(pd_min)
-                    holder2 = ['-', 'Goal Late', '-', pd_max[0], pd_max[-1], '-']
-                    holder2.extend(pd_max)
-                    Flights.ix[len(Flights):len(Flights)+2] = np.nan
-                    Flights = Flights.shift(2)
-                    Flights.ix[0] = pd.Series(holder1, index=Flights.columns)
-                    Flights.ix[1] = pd.Series(holder2, index=Flights.columns)
-
-                    # Add Column with FT
-                    holder = list()
-                    for o, p in zip(Flights['Start Time'], Flights['End Time']):
+                    # print(Flights2[r])
+                    for o, p in zip(Flights2['Start Time'], Flights2[r]):
+                        # print(o)
+                        # print(r)
+                        # if r == 'WP5 [FL380]':
+                        #     print('Eureka!')
+                        # print(p)
                         apple = datetime.datetime(100, 1, 1, int(o[-8:-6]), int(o[-5:-3]), int(o[-2:]))
                         banana = datetime.datetime(100, 1, 1, int(p[-8:-6]), int(p[-5:-3]), int(p[-2:]))
                         citrus = banana - apple
+                        # print(banana, apple, citrus)
+                        # days = divmod(, 86400)  # Get days (without [0]!)
                         hours = divmod(int(citrus.total_seconds()), 3600)  # Use remainder of days to calc hours
                         minutes = divmod(hours[1], 60)  # Use remainder of hours to calc minutes
                         seconds = divmod(minutes[1], 1)
-                        holder.append('{}:{}:{}'.format(hours[0], minutes[0], seconds[0]))
-                    holder[0] = actype
-                    Flights['nWP = {}'.format(Flights.shape[1]-6)] = holder
-                    Flights['Legend'] = legend
+                        holder.append('{}:{}:{}'.format(hours[0], str(minutes[0]).zfill(2),
+                                                        str(seconds[0]).zfill(2)))
+                    Flights2[r] = holder
 
-                    # Apply color mapping
-                    Flights = Flights.style.apply(color, subset=list(Flights.columns[6:-2]))
+                # Create Speed Input Analysis
+                Speed_input2 = pd.DataFrame()
+                # cols = Flights.columns.tolist()
+                for q in Flights['Name'][2:]:
+                    obj = [[] for i in range(3)]
+                    Speed_input = pd.DataFrame()
+                    X = 'SPD2 {}'.format(q)
+                    Y = 'SPD {}'.format(q)
+                    indices1 = indices(log2, X)
+                    indices2 = indices(log2, Y)
+                    obj[0].append('# {}s Delay'.format(q.split('-')[2]))
+                    obj[0].append('Time')
+                    obj[1].append('# {} inputs'.format(len(indices1)))
+                    obj[1].append('SPD2')
+                    obj[2].append('- - -')
+                    obj[2].append('SPD')
 
-                    # Create second Waypoint Analysis with Normalised Time
-                    Flights2 = Flights.copy()
-                    for q, r in enumerate(Flights2):
-                        if 'FL' not in r:
-                            continue
-                        print(r)
-                        holder = list()
-                        print(Flights2[r])
-                        for s, (o, p) in enumerate(zip(Flights2['Start Time'], Flights2[r])):
-                            print(o)
-                            print(p)
-                            apple = datetime.datetime(100, 1, 1, int(o[-8:-6]), int(o[-5:-3]), int(o[-2:]))
-                            banana = datetime.datetime(100, 1, 1, int(p[-8:-6]), int(p[-5:-3]), int(p[-2:]))
-                            citrus = banana - apple
-                            # days = divmod(, 86400)  # Get days (without [0]!)
-                            hours = divmod(int(citrus.total_seconds()), 3600)  # Use remainder of days to calc hours
-                            minutes = divmod(hours[1], 60)  # Use remainder of hours to calc minutes
-                            seconds = divmod(minutes[1], 1)
-                            holder.append('{}:{}:{}'.format(hours[0], str(minutes[0]).zfill(2),
-                                                            str(seconds[0]).zfill(2)))
-                        Flights2[r] = holder
+                    for o, (p, r) in enumerate(zip(indices1, indices2)):
+                        obj[0].append(log2[p-12:p+30].split()[0][:8])
+                        obj[1].append(log2[p - 12:p + 30].split()[2])
+                        obj[2].append(log2[r - 12:r + 30].split()[2])
 
-                    # Create Speed Input Analysis
-                    Speed_input2 = pd.DataFrame()
-                    # cols = Flights.columns.tolist()
-                    for q in Flights['Name'][2:]:
-                        obj = [[] for i in range(3)]
-                        Speed_input = pd.DataFrame()
-                        X = 'SPD2 {}'.format(q)
-                        Y = 'SPD {}'.format(q)
-                        indices1 = indices(log2, X)
-                        indices2 = indices(log2, Y)
-                        obj[0].append('# {}s Delay'.format(q.split('-')[2]))
-                        obj[0].append('Time')
-                        obj[1].append('# {} inputs'.format(len(indices1)))
-                        obj[1].append('SPD2')
-                        obj[2].append('- - -')
-                        obj[2].append('SPD')
+                    Speed_input[0] = obj[0]
+                    Speed_input[1] = obj[1]
+                    Speed_input[2] = obj[2]
+                    Speed_input2 = pd.concat([Speed_input2, Speed_input], ignore_index=True, axis=1)
+                Speed_input = Speed_input2.replace(np.nan, '', regex=True)
 
-                        for o, (p, r) in enumerate(zip(indices1, indices2)):
-                            obj[0].append(log2[p-12:p+30].split()[0][:8])
-                            obj[1].append(log2[p - 12:p + 30].split()[2])
-                            obj[2].append(log2[r - 12:r + 30].split()[2])
+                # Apply color mapping
+                Flights = Flights.style.apply(color, subset=list(Flights.columns[6:-2]))
+                Flights2 = Flights2.style.apply(color, subset=list(Flights.columns[6:-2]))
 
-                        Speed_input[0] = obj[0]
-                        Speed_input[1] = obj[1]
-                        Speed_input[2] = obj[2]
-                        Speed_input2 = pd.concat([Speed_input2, Speed_input], ignore_index=True, axis=1)
-                    Speed_input = Speed_input2.replace(np.nan, '', regex=True)
+                # Write away the Analysis Tables
+                sheet = 'Ensemble=' + str(Ensemble).zfill(2)
 
-                    # Write away the Analysis Tables
-                    sheet = 'Ensemble=' + str(Ensemble).zfill(2)
+                # Waypoint Analysis
+                append_df_to_excel(filename, pd.DataFrame(['Waypoint Analysis']), sheet,
+                                   None, False, header=False, index=False)
+                append_df_to_excel(filename, Flights, sheet)
 
-                    # Waypoint Analysis
-                    append_df_to_excel(filename, pd.DataFrame(['Waypoint Analysis']), sheet,
-                                       None, False, header=False, index=False)
-                    append_df_to_excel(filename, Flights, sheet)
+                # Waypoint Analysis with Normalised Time
+                append_df_to_excel(filename, pd.DataFrame(['Waypoint Analysis with Normalised Time']), sheet,
+                                   None, False, header=False, index=False)
+                append_df_to_excel(filename, Flights2, sheet)
 
-                    # Waypoint Analysis with Normalised Time
-                    append_df_to_excel(filename, pd.DataFrame(['Waypoint Analysis with Normalised Time']), sheet,
-                                       None, False, header=False, index=False)
-                    append_df_to_excel(filename, Flights2, sheet)
+                # Speed Input Analysis
+                append_df_to_excel(filename, pd.DataFrame(['Speed Input']), sheet,
+                                   None, False, header=False, index=False)
+                append_df_to_excel(filename, Speed_input, sheet, None, False, header=False)
 
-                    # Speed Input Analysis
-                    append_df_to_excel(filename, pd.DataFrame(['Speed Input']), sheet,
-                                       None, False, header=False, index=False)
-                    append_df_to_excel(filename, Speed_input, sheet, None, False, header=False)
-                    os.startfile(filename)
+                print('Finished Ensemble {}!'.format(Ensemble))
+            print('Finished Trajectory {}!'.format(k))
+            # os.startfile(filename)
 
             if upload:
                 upload_file(filename, filename0) #, analysis)
@@ -1725,14 +1745,15 @@ def color(current):
     apple = datetime.datetime(100, 1, 1, int(early[-8:-6]), int(early[-5:-3]), int(early[-2:]))
     banana = datetime.datetime(100, 1, 1, int(late[-8:-6]), int(late[-5:-3]), int(late[-2:]))
     colours = list()
+    # print(current)
     for j, i in enumerate(current):
         if j == 0 or j == 1:
             colours.append('')
             continue
         citrus = datetime.datetime(100, 1, 1, int(i[-8:-6]), int(i[-5:-3]), int(i[-2:]))
-        if citrus >= banana:
+        if citrus > banana:
             colours.append('background-color: brown')
-        elif citrus <= apple:
+        elif citrus < apple:
             colours.append('background-color: yellow')
         else:
             colours.append('background-color: green')
