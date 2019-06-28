@@ -42,9 +42,9 @@ class bcolors:
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(np.arange(1, 25))
+list_ensemble = list(np.arange(1, 3))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '2 det'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -53,12 +53,12 @@ set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_dt(0.1)
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(0.1)
+set_dt(1.0)
 traj_folder = traj_folder2
 runs = 0
 FE = False
 create_scenarios = False
-del_runs = False
+del_runs = True
 
 clear_mylog()
 timeit.default_timer()
@@ -111,25 +111,7 @@ if del_runs:
 
 import warnings
 warnings.filterwarnings("ignore")
-# overall_aggregate() #os.getcwd() + '\\output\\runs_save')
-skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
-        'SWR779', 'AZA1572', 'DLH156', 'FPO551',
-        'PRI5403', 'EZY471', 'RYR5008',
-        'DLH1HU', 'SHT2J', 'BAW4TM', 'AFR234H',
-        'PGT4629',
-        'SAS1842', 'DLH08W', 'SAS1042',
-        'TAP803L', 'NJE2FD', 'LBT7362',
-        'KLM1395', 'BLX328', 'BER717E',
-        'TAP1015', 'PGT424', 'EZY92FN',
-        'AFL2352', 'QTR022',
-        'BEL7PC', 'DTH3057', 'EXS79G',
-        'CCA931', 'ROT608D', 'VLG2473',
-        'BAW66Q', 'EIN111', 'DLH8PK',
-        'SAS618', 'DLH8PK', 'BEL724',
-        'TAY011', 'EZY471', 'OHY2160',
-        'WZZ114', 'MON752A'
-        ]
-result_analysis(None, None, skip)
+
 
 # run a trajectory for every ensemble
 for dir in os.listdir(traj_folder):
@@ -167,8 +149,28 @@ for dir in os.listdir(traj_folder):
     traj_counter += 1
 
 # Open the folder with all the results
-# exit()
 talk_time(runs)
+exit()
+
+# overall_aggregate() #os.getcwd() + '\\output\\runs_save')
+skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
+        'SWR779', 'AZA1572', 'DLH156', 'FPO551',
+        'PRI5403', 'EZY471', 'RYR5008',
+        'DLH1HU', 'SHT2J', 'BAW4TM', 'AFR234H',
+        'PGT4629',
+        'SAS1842', 'DLH08W', 'SAS1042',
+        'TAP803L', 'NJE2FD', 'LBT7362',
+        'KLM1395', 'BLX328', 'BER717E',
+        'TAP1015', 'PGT424', 'EZY92FN',
+        'AFL2352', 'QTR022',
+        'BEL7PC', 'DTH3057', 'EXS79G',
+        'CCA931', 'ROT608D', 'VLG2473',
+        'BAW66Q', 'EIN111', 'DLH8PK',
+        'SAS618', 'DLH8PK', 'BEL724',
+        'TAY011', 'EZY471', 'OHY2160',
+        'WZZ114', 'MON752A'
+        ]
+result_analysis(None, None, skip)
 
 os.startfile('output\\runs')
 os.system("shutdown /s /t 300")

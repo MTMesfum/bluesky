@@ -271,7 +271,7 @@ class DataLogger(TrafficArrays):
         print("\nAircraft {0} has been deleted at {1}.".format(traf.id[i], sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
         print("Fuel used by {0} is {1} [kg].".format(traf.id[i],
                                  np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
-        print('traf.id length is: ', len(traf.id))
+        # print('traf.id length is: ', len(traf.id))
         print('ac_limit is1: ', self.aclimit)
         print('ac_limit is2: ', self.aclimit2)
         if traf.resultstosave2.iloc[-1, -1] is not None and \

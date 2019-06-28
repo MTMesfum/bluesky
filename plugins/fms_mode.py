@@ -222,8 +222,10 @@ class Afms(TrafficArrays):
             self.index[0] = traf.index
             # traf.resultstosave2['Numbering'] = self.index[0]
             # traf.resultstosave2.set_index('Numbering', inplace=True, drop=True)
+        traf.resultstosave2 = traf.resultstosave2.append(
+            {'Name': traf.index, 'Name2': None}, ignore_index=True)
         traf.index += 1
-        traf.resultstosave2 = traf.resultstosave2.append(pd.Series(), ignore_index=True)
+        # traf.resultstosave2 = traf.resultstosave2.append(pd.Series(), ignore_index=True)
 
         # traf.resultstosave2['Numbering'][self.index[-1]] = self.index[-1]
         # print('self.index is: ', self.index)
@@ -268,6 +270,7 @@ class Afms(TrafficArrays):
                 if column_name not in traf.resultstosave2:
                     traf.resultstosave2[column_name] = None
                 traf.resultstosave2[column_name][int(self.index[index])] = str(sim.utc.strftime("%H:%M:%S"))
+                traf.resultstosave2['Name2'][int(self.index[index])] = traf.id[index]
                 stack.stack('WRITER2 {} {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index], index))
 
                 # stack.stack('WRITER')
