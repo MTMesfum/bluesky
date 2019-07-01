@@ -1,0 +1,4 @@
+def initial():
+
+
+    print('Succesfully imported initial settings and colours!')

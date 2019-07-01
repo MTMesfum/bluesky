@@ -20,23 +20,23 @@ from bluesky.tools import aero
 from scratch_methods import *
 import shutil
 
-pd.set_option('display.max_rows', 500)
-pd.set_option('display.max_columns', 500)
-pd.set_option('display.width', 1000)
+# pd.set_option('display.max_rows', 500)
+# pd.set_option('display.max_columns', 500)
+# pd.set_option('display.width', 1000)
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    UWARNING = '\033[4m' + '\033[93m'
-    UBLUE = '\033[4m' + '\033[94m'
+# class bcolors:
+#     HEADER = '\033[95m'
+#     OKBLUE = '\033[94m'
+#     OKGREEN = '\033[92m'
+#     WARNING = '\033[93m'
+#     FAIL = '\033[91m'
+#     ENDC = '\033[0m'
+#     BOLD = '\033[1m'
+#     UNDERLINE = '\033[4m'
+#     UWARNING = '\033[4m' + '\033[93m'
+#     UBLUE = '\033[4m' + '\033[94m'
 
-
+# bs_desktop()
 # scenario_manager = "scenario\Trajectories-batch.scn"
 # scenario_manager = "scenario\Test10.scn"
 # settings_config = "settings.cfg"
@@ -44,7 +44,7 @@ class bcolors:
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = list(np.arange(1, 3))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = ['1 min', '2 det', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -58,7 +58,7 @@ traj_folder = traj_folder2
 runs = 0
 FE = False
 create_scenarios = False
-del_runs = True
+del_runs = False
 
 clear_mylog()
 timeit.default_timer()
@@ -109,8 +109,7 @@ if del_runs:
     except:
         pass
 
-import warnings
-warnings.filterwarnings("ignore")
+# warning
 
 
 # run a trajectory for every ensemble
@@ -150,7 +149,7 @@ for dir in os.listdir(traj_folder):
 
 # Open the folder with all the results
 talk_time(runs)
-exit()
+
 
 # overall_aggregate() #os.getcwd() + '\\output\\runs_save')
 skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
@@ -170,10 +169,13 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         'TAY011', 'EZY471', 'OHY2160',
         'WZZ114', 'MON752A'
         ]
-result_analysis(None, None, skip)
 
+overall_aggregate()
+exit()
+result_analysis()
 os.startfile('output\\runs')
-os.system("shutdown /s /t 300")
+
+# os.system("shutdown /s /t 300")
 
 # import pickle
 # df = pickle.load( open(

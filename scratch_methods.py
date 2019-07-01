@@ -1,27 +1,10 @@
-# import numpy as np
-# import sys
-# from math import *
 import pandas as pd, os, datetime, random
-# import pdb
-# import fileinput as fi
-# import geo
-# from bluesky.tools import geo
+import numpy as np, timeit, shutil, warnings
+from bluesky.tools import aero
 from bluesky.tools.geo import qdrdist as dist
 from bluesky.tools.geo import latlondist as dist2
-# from plugins.fms_mode import _eta2tw_cas_wfl as time_required2
-# from bluesky.tools.geo import vmach2cas as M2C
-from bluesky.tools import aero
-import numpy as np
-import timeit
-import shutil
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
-from xml.etree import ElementTree
-#from BlueSky import main
-# print(sys.argv)
-#sys.argv.append("--headless")
-#sys.arg,"--scenfile","\experimental\Trajectories.scn"])
-#main()
 
 settings_config = "settings.cfg"
 scenario_manager = "scenario\Trajectories-batch3.scn"
@@ -43,14 +26,7 @@ set_of_delays = [0, 90, 720, 1050]  # [s]
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
-
-# drive_folder = '/BlueSky Simulation/Run [ X ]/'
-# # drive_folder_inf = '0'
-# # drive_folder_prob = '0'
-# # drive_folder_det = '0'
-# # drive_folder_min = '0'
-# # drive_folder_output = '0'
-# # drive_folder_input = '0'
+warnings.filterwarnings("ignore")
 
 class bcolors:
     HEADER = '\033[95m'
@@ -588,7 +564,7 @@ def CreateSCN_Cruise(alpha, fl_ref, cap=999):
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
     return
 
-# This function is meant to create a set of scenarios which runs every traj
+# This function is meant to create a set of scenarios which runs every trajectory
 # of 1 ensemble of a case out of [min, det, stoch, inf]
 def CreateSCN_Cruise2(alpha, cap=999):
     if os.path.exists("scenario\\remon scen"):
@@ -1204,61 +1180,6 @@ def talk_run3(ensemble, dir, runs):
           bcolors.FAIL + ' [{} / {}]\n'.format(runs, str(ensemble).zfill(2)) +
           bcolors.ENDC)
 
-# This method reads in the mylog files and orders them on fuelflow for comparison
-def compare_ff(file=None):
-    if file is None:
-        files = os.listdir('output\\')
-        files = ['output\\' + files[files.index(i)] for i in files if 'MYLOG' in i]
-    else:
-        files = list([file])
-        files.append('dummy')
-    # print(files)
-    for i in files:
-        if i[-3:] != 'log':
-            continue
-        # set_of_ac = list()
-
-        with open(i, 'r') as fin:
-            data = fin.read().splitlines(True)
-            # print(data[0])
-        if 'MYLOG' in data[0]:
-            with open(i, 'w') as fout:
-                fout.writelines(data[1:])
-        with open(i, 'r') as f:
-            f = pd.read_csv(i)
-        # print(f.columns)
-        # f = f[2:]
-        # print(f)
-        f = f.sort_values([' id', '# simt']).reset_index(drop=True)
-        # f.reset_index
-        set_of_ac = set(f[' id'])
-        print('Number of rows in the log: ', len(f))
-        # print('The following aircrafts have been found: ', set_of_ac)
-        partial_0 = 0
-        to_save = i[:-4] + ' - formatted.xlsx'
-        writer = pd.ExcelWriter(to_save, engine='xlsxwriter')
-        for index, e in enumerate(set_of_ac):
-             #int(len(f)/2) +20
-            partial_1 = max(partial_0, f[f[' id'] == e].index[0])
-            if partial_0 == partial_1:
-                partial_1 = -1
-            f1 = f[partial_0:partial_1]
-            if partial_0 > 0:
-                f1 = f1.drop(columns='# simt')
-                partial_0 = partial_1
-            # f3 = pd.concat([f1[-250:], f2[-250:]], axis=1, ignore_index=True)
-
-            # f1.to_excel('output\\' + i[:-4] + '1.xlsx'.format(i))
-            # f2.to_excel('output\\' + i[:-4] + '2.xlsx'.format(i))
-            # f1[-100:].to_excel(writer)
-            # l = bool(index > 0)
-            # print(index)
-            # print(len(f.columns))
-            f1[-10:].to_excel(writer, startcol=((len(f.columns)+1)*index))
-        writer.save()
-        # os.startfile(to_save)
-    # exit()
-
 def time_required(distance, FL, speed):
     # distance in nm and speed in mach
     tas = aero.vcas2tas(speed * aero.nm / 3600, FL * 100 * aero.ft) / aero.nm # [Nm / s]
@@ -1355,93 +1276,6 @@ def upload_file(file_upload, name, dir=None):
     print("File '{}' has been uploaded!".format(file_upload))
 
 
-def overall_aggregate(path=None, upload=False):
-    if path is None:
-        path = os.getcwd() + '\\' + dest_output
-    # path = "C:\Documents\Git 2\output\\runs ----"
-    Dir = os.listdir(path)
-    to_save = pd.DataFrame()
-    skip_list = ['py', 'skip', 'xlogs', 'xls', 'anal']
-    to_skip = False
-    for i, dir in enumerate(Dir):
-        for skip in skip_list:
-            if skip in dir:
-                print('skipped: ', dir)
-                to_skip = True
-                continue
-        if to_skip:
-            to_skip = False
-            continue
-
-        Files = os.listdir(path + '\\' + dir)
-        l = 1
-
-        for j, file in enumerate(Files):
-            if '~$' in file:
-                 continue
-
-            if j == 0:
-                apple = pd.read_excel(os.path.join(path, dir, file), index_col=None, header=None)
-                banana = list(range(0, len(apple.columns)))
-                to_pop = list([0, 1, 2, 3, 5, 6, 7])
-                to_pop.reverse()
-                for k in to_pop:
-                    banana.pop(k)
-                apple = apple.drop(columns=banana, axis=1)
-                if i == 0:
-                    to_save = apple.drop(columns=list([0, 1, 5, 6, 7]))
-                else:
-                    to_save = pd.concat([to_save, apple[[2, 3]]], axis=1)
-                apple = apple.drop(columns=list([0, 1, 2, 3, 5]))
-                continue
-
-            apple2 = pd.read_excel(os.path.join(path, dir, file), index_col=None, header=None)
-            apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
-            apple[7] = apple[7] + apple2[7]
-            l += 1
-
-        apple[6] = (apple[6] / l).dt.round('1s')
-        apple[7] = round(apple[7] / l, 2)
-        to_save = pd.concat([to_save, apple], axis=1)
-
-        del apple, apple2
-
-    filename0 = 'meta-analysis.xlsx'#.format(22)
-    filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
-    to_save.columns = (['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1',
-                        'Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2',
-                        'Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3',
-                        'Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4'])
-    # print(to_save.columns)
-    for dir in Dir:
-        if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
-        elif 'det' in dir:  apple = ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
-        elif 'prob' in dir: apple = ['Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3']
-        elif 'inf' in dir:  apple = ['Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4']
-        else: continue
-
-        dir2 = apple[1]
-        to_save[apple[0]] = pd.to_numeric(to_save[apple[0]], errors='coerce')
-        to_save[dir2] = [r.pop(0) + '-' + r.pop(0) for r in to_save[dir2].astype(str).str.split('-')]
-        to_save2 = to_save[apple]
-        to_save2 = to_save2.sort_values(by=[dir2, apple[0]], ascending=True)
-        to_save[apple] = to_save2.values
-
-    with open(os.getcwd() + '/scenario/number_of_ac.txt', "r") as fin:
-        number_ac = int(fin.read())
-
-    with open(filename, 'wb') as f:
-        to_save[0:8].to_excel(f)
-
-    for k, i in enumerate(range(1, number_ac)):
-        j = i * len(set_of_delays)
-        l = k + j + 1
-        append_df_to_excel(filename, to_save[j:j + len(set_of_delays)], 'Sheet1', l)
-
-    if upload:
-        upload_file(filename, filename0)
-    pass
-
 # df = pd.read_excel('queries\\remon raw scenarios\\AC type 2.xlsx')
 # unique_types = set(df['AC type'])
 # compare_ff('C:\Documents\BlueSky_Joost\output\\runs\\xlogs output\\1 min\ADH931\\1 min ADH931 D0 OE01 D0.log')
@@ -1511,7 +1345,222 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
     # save the workbook
     writer.save()
 
-def result_analysis(path=None, upload=False, skip_flights=None):
+# Analysis tools for the results!!
+# This method reads in the mylog files and orders them on fuelflow for comparison
+def compare_ff(file=None):
+    if file is None:
+        files = os.listdir('output\\')
+        files = ['output\\' + files[files.index(i)] for i in files if 'MYLOG' in i]
+    else:
+        files = list([file])
+        files.append('dummy')
+    # print(files)
+    for i in files:
+        if i[-3:] != 'log':
+            continue
+        # set_of_ac = list()
+
+        with open(i, 'r') as fin:
+            data = fin.read().splitlines(True)
+            # print(data[0])
+        if 'MYLOG' in data[0]:
+            with open(i, 'w') as fout:
+                fout.writelines(data[1:])
+        with open(i, 'r') as f:
+            f = pd.read_csv(i)
+        # print(f.columns)
+        # f = f[2:]
+        # print(f)
+        f = f.sort_values([' id', '# simt']).reset_index(drop=True)
+        # f.reset_index
+        set_of_ac = set(f[' id'])
+        print('Number of rows in the log: ', len(f))
+        # print('The following aircrafts have been found: ', set_of_ac)
+        partial_0 = 0
+        to_save = i[:-4] + ' - formatted.xlsx'
+        writer = pd.ExcelWriter(to_save, engine='xlsxwriter')
+        for index, e in enumerate(set_of_ac):
+             #int(len(f)/2) +20
+            partial_1 = max(partial_0, f[f[' id'] == e].index[0])
+            if partial_0 == partial_1:
+                partial_1 = -1
+            f1 = f[partial_0:partial_1]
+            if partial_0 > 0:
+                f1 = f1.drop(columns='# simt')
+                partial_0 = partial_1
+            # f3 = pd.concat([f1[-250:], f2[-250:]], axis=1, ignore_index=True)
+
+            # f1.to_excel('output\\' + i[:-4] + '1.xlsx'.format(i))
+            # f2.to_excel('output\\' + i[:-4] + '2.xlsx'.format(i))
+            # f1[-100:].to_excel(writer)
+            # l = bool(index > 0)
+            # print(index)
+            # print(len(f.columns))
+            f1[-10:].to_excel(writer, startcol=((len(f.columns)+1)*index))
+        writer.save()
+        # os.startfile(to_save)
+    # exit()
+
+# This method creates an overall analysis over all the ensembles
+def overall_aggregate(path=None, upload=False):
+    if path is None:
+        path = os.path.join(os.getcwd(), dest_output)
+    # path = "C:\Documents\Git 2\output\\runs ----"
+    Dir = os.listdir(path)
+    to_save = pd.DataFrame()
+    skip_list = ['py', 'skip', 'xlogs', 'xls', 'anal']
+    to_skip = False
+    for i, dir in enumerate(Dir):
+        for skip in skip_list:
+            if skip in dir:
+                print('skipped: ', dir)
+                to_skip = True
+                continue
+        if to_skip:
+            to_skip = False
+            continue
+
+        Files = os.listdir(os.path.join(path, dir))
+        for m, n in enumerate(Files):
+            Files[m] = os.path.join(path, dir, n)
+
+        Files_input_log = os.listdir(os.path.join(os.getcwd(), dest_dir_input_logs, dir))
+        for m, n in enumerate(Files_input_log):
+            Files_input_log[m] = os.path.join(os.getcwd(), dest_dir_input_logs, dir, n)
+        l = 1
+        print('Assessing folder {}!'.format(dir))
+        for j, file in enumerate(Files):
+            if '~$' in file:
+                 continue
+
+            if j == 0:
+                apple = pd.read_excel(file, index_col=None, header=None)
+                banana = list(range(0, len(apple.columns)))
+                to_pop = list([0, 1, 2, 3, 5, 6, 7])
+                to_pop.reverse()
+                for k in to_pop:
+                    banana.pop(k)
+                # print('banana is: ', banana)
+                apple = apple.drop(columns=banana, axis=1)
+
+                if i == 0:
+                    to_save = apple.drop(columns=list([0, 1, 5, 6, 7]))
+                    pd_files = pd.read_excel(file, index_col=None, header=None)
+                    pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
+                    pd_files_names.sort()
+                else:
+                    to_save = pd.concat([to_save, apple[[2, 3]]], axis=1)
+
+                apple = apple.drop(columns=list([0, 1, 2, 3, 5]))
+                continue
+
+            apple2 = pd.read_excel(file, index_col=None, header=None)
+            apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
+            apple[7] = apple[7] + apple2[7]
+            l += 1
+
+        apple[6] = (apple[6] / l).dt.round('1s')
+        apple[7] = round(apple[7] / l, 2)
+
+        # -------------------- TW start and end ???
+        # -------------------- Arrival delay relative to TW
+        # -------------------- Flight Time
+        # -------------------- Start Time Flight
+        # ExcelDoc = pd.read_excel(file, index_col=None, header=None)
+        # Ensemble = ExcelDoc[1][0]
+        # Flights = ExcelDoc[ExcelDoc[3].str.contains(k)].reset_index(drop=True).sort_values(2) \
+        #     .dropna(axis='columns').drop(columns=list([0, 1, 4, 8]))
+
+
+        # cols = Flights.columns.tolist()
+        pd_min = list()
+        pd_max = list()
+        for m, n in enumerate(pd_files_names):
+            k = n + '-' + dir[2:] + '-0'
+            log2 = ''.join(list([line for line in open(Files_input_log[0], 'r') if k in line]))
+
+            apple_0 = log2.find('TW_SIZE_AT {}'.format(k))
+            apple_1 = log2[apple_0-45:apple_0-10].split()[1]
+            apple_2 = int(log2[apple_0:apple_0+50].split()[2])
+            # print(apple_2)
+            # exit()
+            # apple_1 = log2.find('RTA_AT {}-{}-{}'.format(k, dir[2:], p))
+            # apple = log2[apple:apple + 50].split()[3][:8]
+            apple_3 = datetime.datetime(100, 1, 1, int(apple_1[-8:-6]), int(apple_1[-5:-3]), int(apple_1[-2:]))
+
+
+            # print(banana)
+            # print(log2[banana-50:banana])
+            # exit()
+            apple_4 = apple_3 - datetime.timedelta(seconds=apple_2 / 2)
+            apple_5 = apple_3 + datetime.timedelta(seconds=apple_2 / 2)
+            pd_min.append(apple_4.strftime('%H:%M:%S'))
+            pd_max.append(apple_5.strftime('%H:%M:%S'))
+
+            # apple = log2.find('ADDWPT {}-{}-0-{}'.format(k, dir[2:], o))
+            # FL.append(log2[apple:apple + 100].split()[2])
+            # apple = log2.find('RTA_AT {}-{}-0-{}'.format(k, dir[2:], o))
+            # apple = log2[apple:apple + 50].split()[2]
+            # banana = log2.find('TW_SIZE_AT {}-{}-0-{}'.format(k, dir[2:], o))
+            # banana = int(log2[banana:banana + 50].split()[2])
+            # apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
+            # apple1 = apple - datetime.timedelta(seconds=banana)
+            # apple2 = apple
+            # pd_min.append(apple1.strftime('%H:%M:%S'))
+            # pd_max.append(apple2.strftime('%H:%M:%S'))
+        # -----------------
+        pd_min = pd.DataFrame([item for item in pd_min for _ in range(8)])
+        pd_max = pd.DataFrame([item for item in pd_max for _ in range(8)])
+        # print('pd_min is: ', pd_min)
+        # print('pd_max is: ', pd_max)
+
+        to_save = pd.concat([to_save, pd_min, pd_max, apple], axis=1)
+        print(to_save)
+        exit()
+        del apple, apple2
+
+
+
+    print('Saving the results!')
+    filename0 = 'meta-analysis.xlsx'#.format(22)
+    filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
+    to_save.columns = (['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1',
+                        'Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2',
+                        'Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3',
+                        'Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4'])
+    # print(to_save.columns)
+    for dir in Dir:
+        if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
+        elif 'det' in dir:  apple = ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
+        elif 'prob' in dir: apple = ['Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3']
+        elif 'inf' in dir:  apple = ['Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4']
+        else: continue
+
+        dir2 = apple[1]
+        to_save[apple[0]] = pd.to_numeric(to_save[apple[0]], errors='coerce')
+        to_save[dir2] = [r.pop(0) + '-' + r.pop(0) for r in to_save[dir2].astype(str).str.split('-')]
+        to_save2 = to_save[apple]
+        to_save2 = to_save2.sort_values(by=[dir2, apple[0]], ascending=True)
+        to_save[apple] = to_save2.values
+
+    with open(os.getcwd() + '/scenario/number_of_ac.txt', "r") as fin:
+        number_ac = int(fin.read())
+
+    with open(filename, 'wb') as f:
+        to_save[0:8].to_excel(f)
+
+    for k, i in enumerate(range(1, number_ac/8)):
+        j = i * len(set_of_delays)
+        l = k + j + 1
+        append_df_to_excel(filename, to_save[j:j + len(set_of_delays)], 'meta-analysis', l)
+
+    if upload:
+        upload_file(filename, filename0)
+    pass
+
+# This method creates an analysis per ensemble
+def result_analysis(path=None, upload=False, skip_flights='zero'):
+
     if path is None:
         path = os.path.join(os.getcwd(), dest_output)
 
@@ -1521,13 +1570,18 @@ def result_analysis(path=None, upload=False, skip_flights=None):
 
     Dir = os.listdir(path)
     to_save = pd.DataFrame()
-    skip_list = ['py', 'skip', 'put', 'xls']
+    skip_list = ['py', 'skip', 'put', 'xls', 'anal']
+    to_skip = False
 
     for i, dir in enumerate(Dir):
         for skip in skip_list:
             if skip in dir:
                 print('skipped: ', dir)
+                to_skip = True
                 continue
+        if to_skip:
+            to_skip = False
+            continue
 
         Files = os.listdir(os.path.join(path, dir))
         for m, n in enumerate(Files):
@@ -1544,14 +1598,13 @@ def result_analysis(path=None, upload=False, skip_flights=None):
                    'colour red if too late for TW',
                    'colour yellow if too early for TW',
                    'colour green if within TW', '', ''])
-        l = 1
+
         for k in pd_files_names:
             if k in skip_flights:
                 continue
             print('\nStarting trajectory {}!'.format(k))
             filename0 = '{}{}.xlsx'.format(k, dir[1:])
             filename = os.path.join(path_analysis, filename0)
-            # with open(k, 'wb') as f:
             to_save = to_save.reindex(to_save.columns.tolist() + ['Name', 'Vstart'])
 
             # Read in both files
@@ -1559,18 +1612,26 @@ def result_analysis(path=None, upload=False, skip_flights=None):
                 ExcelDoc = pd.read_excel(m, index_col=None, header=None)
                 Ensemble = ExcelDoc[1][0]
                 Flights = ExcelDoc[ExcelDoc[3].str.contains(k)].reset_index(drop=True).sort_values(2)\
-                    .dropna(axis='columns').drop(columns=list([0, 1, 4]))
+                    .dropna(axis='columns').drop(columns=list([0, 1, 4, 8]))
                 Flights = Flights.rename(index=str, columns={
                     2: "Delay", 3: "Name", 5: "Start Time", 6: "End Time", 7: "Fuel Used [kg]"})
-                # print(Flights.columns)
                 log2 = ''.join(list([line for line in open(n, 'r') if k in line]))
 
                 # Add Columns
                 holder = list()
+                FL_start = list()
                 for o, p in enumerate(Flights['Name']):
                     apple = log2.find('CRE ' + p)
                     holder.append(log2[apple:apple + 70].split()[5])
-                Flights['Vstart [kts]'] = holder
+                    FL_start.append(log2[apple:apple + 100].split()[6][:3])
+                Flights['Vstart [Mach]'] = None
+                cruise_speed = pd.read_excel(cruise_file)
+                actype = log2[apple:apple + 100].split()[2]
+                for o, _ in enumerate(Flights['Vstart [Mach]']):
+                    # Flights['Vstart [Mach]'][o] = round(aero.vcas2mach(int(holder[o]) * aero.nm / 3600,
+                    #                                                    int(FL_start[o]) * 100 * aero.ft), 2)
+                    Flights['Vstart [Mach]'][o] = \
+                        cruise_speed[cruise_speed['AC Type'] == actype]['FL' + FL_start[o]].item()
                 cols = Flights.columns.tolist()
                 cols.insert(2, cols.pop(-1))
                 Flights = Flights[cols]
@@ -1595,21 +1656,20 @@ def result_analysis(path=None, upload=False, skip_flights=None):
                         pd_max.append(apple2.strftime('%H:%M:%S'))
                     else:
                         apple = log2.find('ADDWPT {}-{}-0-{}'.format(k, dir[2:], o))
-                        # print(log2[apple:apple + 100].split())
                         FL.append(log2[apple:apple + 100].split()[2])
                         apple = log2.find('RTA_AT {}-{}-0-{}'.format(k, dir[2:], o))
                         apple = log2[apple:apple+50].split()[2]
                         banana = log2.find('TW_SIZE_AT {}-{}-0-{}'.format(k, dir[2:], o))
                         banana = int(log2[banana:banana + 50].split()[2])
                         apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
-                        apple1 = apple - datetime.timedelta(seconds=banana/2)
-                        apple2 = apple + datetime.timedelta(seconds=banana/2)
+                        apple1 = apple - datetime.timedelta(seconds=banana)
+                        apple2 = apple
                         pd_min.append(apple1.strftime('%H:%M:%S'))
                         pd_max.append(apple2.strftime('%H:%M:%S'))
 
                 for o, p in enumerate(range(len(FL))):
                     q = f'WP{o} [{FL[o]}]' #.format(str(o), FL[o])
-                    Flights = Flights.rename(index=str, columns={(o+8): q})
+                    Flights = Flights.rename(index=str, columns={(o+9): q})
 
                 # Add Rows
                 holder1 = list(['-', 'Goal Early', '-', pd_min[0], pd_min[-1], '-'])
@@ -1635,27 +1695,16 @@ def result_analysis(path=None, upload=False, skip_flights=None):
                 Flights['nWP = {}'.format(Flights.shape[1]-6)] = holder
                 Flights['Legend'] = legend
 
-                # # Apply color mapping
-                # Flights = Flights.style.apply(color, subset=list(Flights.columns[6:-2]))
-
                 # Create second Waypoint Analysis with Normalised Time
                 Flights2 = Flights.copy()
                 for q, r in enumerate(Flights2):
                     if 'FL' not in r:
                         continue
-                    # print(r)
                     holder = list()
-                    # print(Flights2[r])
                     for o, p in zip(Flights2['Start Time'], Flights2[r]):
-                        # print(o)
-                        # print(r)
-                        # if r == 'WP5 [FL380]':
-                        #     print('Eureka!')
-                        # print(p)
                         apple = datetime.datetime(100, 1, 1, int(o[-8:-6]), int(o[-5:-3]), int(o[-2:]))
                         banana = datetime.datetime(100, 1, 1, int(p[-8:-6]), int(p[-5:-3]), int(p[-2:]))
                         citrus = banana - apple
-                        # print(banana, apple, citrus)
                         # days = divmod(, 86400)  # Get days (without [0]!)
                         hours = divmod(int(citrus.total_seconds()), 3600)  # Use remainder of days to calc hours
                         minutes = divmod(hours[1], 60)  # Use remainder of hours to calc minutes
@@ -1666,8 +1715,7 @@ def result_analysis(path=None, upload=False, skip_flights=None):
 
                 # Create Speed Input Analysis
                 Speed_input2 = pd.DataFrame()
-                # cols = Flights.columns.tolist()
-                for q in Flights['Name'][2:]:
+                for s, q in enumerate(Flights['Name'][2:]):
                     obj = [[] for i in range(3)]
                     Speed_input = pd.DataFrame()
                     X = 'SPD2 {}'.format(q)
@@ -1678,7 +1726,7 @@ def result_analysis(path=None, upload=False, skip_flights=None):
                     obj[0].append('Time')
                     obj[1].append('# {} inputs'.format(len(indices1)))
                     obj[1].append('SPD2')
-                    obj[2].append('- - -')
+                    obj[2].append('# V = {}'.format(Flights['Vstart [Mach]'][s+2]))
                     obj[2].append('SPD')
 
                     for o, (p, r) in enumerate(zip(indices1, indices2)):
@@ -1719,14 +1767,7 @@ def result_analysis(path=None, upload=False, skip_flights=None):
             # os.startfile(filename)
 
             if upload:
-                upload_file(filename, filename0) #, analysis)
-
-    # for k, i in enumerate(range(1, 6)):
-    #     j = i * 8
-    #     l = k + j + 1
-    #     append_df_to_excel(filename, to_save[j:j + 8], 'Sheet1', l)
-    #     exit()
-
+                upload_file(filename, filename0)
     pass
 
 def indices(lst, element):

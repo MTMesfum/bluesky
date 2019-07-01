@@ -276,6 +276,8 @@ class DataLogger(TrafficArrays):
         print('ac_limit is2: ', self.aclimit2)
         if traf.resultstosave2.iloc[-1, -1] is not None and \
                 (len(traf.id) == 1 or self.aclimit2 == self.aclimit):
+            traf.resultstosave3 = traf.resultstosave3.sort_values('AC ID').reset_index(drop=True)
+            traf.resultstosave2 = traf.resultstosave2.sort_values('AC ID').reset_index(drop=True)
             traf.resultstosave = pd.concat([traf.resultstosave3,
                                             traf.resultstosave2], axis=1)
             # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
