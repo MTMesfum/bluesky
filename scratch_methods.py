@@ -1444,12 +1444,12 @@ def overall_aggregate(path=None, upload=False):
                 apple = apple.drop(columns=banana, axis=1)
 
                 if i == 0:
-                    to_save = apple.drop(columns=list([0, 1, 5, 6, 7]))
+                    to_save = apple.drop(columns=list([0, 1, 6, 7]))
                     pd_files = pd.read_excel(file, index_col=None, header=None)
                     pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
                     pd_files_names.sort()
                 else:
-                    to_save = pd.concat([to_save, apple[[2, 3]]], axis=1)
+                    to_save = pd.concat([to_save, apple[[2, 3, 5]]], axis=1)
 
                 apple = apple.drop(columns=list([0, 1, 2, 3, 5]))
                 continue
@@ -1462,10 +1462,10 @@ def overall_aggregate(path=None, upload=False):
         apple[6] = (apple[6] / l).dt.round('1s')
         apple[7] = round(apple[7] / l, 2)
 
-        # -------------------- TW start and end ???
+
         # -------------------- Arrival delay relative to TW
         # -------------------- Flight Time
-        # -------------------- Start Time Flight
+
         # ExcelDoc = pd.read_excel(file, index_col=None, header=None)
         # Ensemble = ExcelDoc[1][0]
         # Flights = ExcelDoc[ExcelDoc[3].str.contains(k)].reset_index(drop=True).sort_values(2) \
@@ -1515,8 +1515,6 @@ def overall_aggregate(path=None, upload=False):
         # print('pd_max is: ', pd_max)
 
         to_save = pd.concat([to_save, pd_min, pd_max, apple], axis=1)
-        print(to_save)
-        exit()
         del apple, apple2
 
 
@@ -1524,10 +1522,10 @@ def overall_aggregate(path=None, upload=False):
     print('Saving the results!')
     filename0 = 'meta-analysis.xlsx'#.format(22)
     filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
-    to_save.columns = (['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1',
-                        'Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2',
-                        'Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3',
-                        'Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4'])
+    to_save.columns = (['Delay 1', 'Min', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
+                        'Delay 2', 'Det', ' Dep 2', 'Arr 2 min', 'Arr 2 max', 'Arrival 2', 'Fuel Con 2',
+                        'Delay 3', 'Prob', ' Dep 3', 'Arr 3 min', 'Arr 3 max', 'Arrival 3', 'Fuel Con 3',
+                        'Delay 4', 'Inf', ' Dep 4', 'Arr 4 min', 'Arr 4 max', 'Arrival 4', 'Fuel Con 4'])
     # print(to_save.columns)
     for dir in Dir:
         if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
@@ -1547,9 +1545,9 @@ def overall_aggregate(path=None, upload=False):
         number_ac = int(fin.read())
 
     with open(filename, 'wb') as f:
-        to_save[0:8].to_excel(f)
+        to_save[0:8].to_excel(f, sheet_name='meta-analysis')
 
-    for k, i in enumerate(range(1, number_ac/8)):
+    for k, i in enumerate(range(1, int(number_ac/len(set_of_delays)))):
         j = i * len(set_of_delays)
         l = k + j + 1
         append_df_to_excel(filename, to_save[j:j + len(set_of_delays)], 'meta-analysis', l)

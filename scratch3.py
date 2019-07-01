@@ -170,9 +170,10 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         'WZZ114', 'MON752A'
         ]
 
+result_analysis()
 overall_aggregate()
 exit()
-result_analysis()
+
 os.startfile('output\\runs')
 
 # os.system("shutdown /s /t 300")
