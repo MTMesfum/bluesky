@@ -6,6 +6,13 @@ from bluesky.tools.geo import latlondist as dist2
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
+'''                 ######################################## 
+                    ########################################
+                    ###         Initial Settings!!!      ###
+                    ########################################   
+                    ########################################             
+'''
+
 settings_config = "settings.cfg"
 scenario_manager = "scenario\Trajectories-batch3.scn"
 scenario_manager2 = "scenario\Trajectories-batch4.scn"
@@ -40,11 +47,17 @@ class bcolors:
     UWARNING = '\033[4m' + '\033[93m'
     UBLUE = '\033[4m' + '\033[94m'
 
+
+'''                 ########################################
+                    ########################################
+                    ###         Simulator controls!!!    ###
+                    ########################################   
+                    ########################################             
+'''
 def set_delays(input= [0, 90, 720, 1050]):
     global set_of_delays
     set_of_delays = input
     pass
-
 
 def find_index(to_search, target):
     for number, i in enumerate(to_search):
@@ -173,6 +186,13 @@ def replace_speed(speed):
     # os.startfile(exp)
     pass
 
+
+'''                 ######################################## 
+                    ########################################
+                    ###         Simulator Starters!!!    ###
+                    ########################################   
+                    ########################################             
+'''
 # Run a simulation of BlueSky using the desktop path
 def bs_desktop():
     global drive_folder, drive_folder_inf, drive_folder_prob, drive_folder_det, \
@@ -235,6 +255,14 @@ def bs_desktop_TU_2():
     os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
                     cd C:\Documents\Git 2 && conda activate py36 && python BlueSky.py")
 
+
+'''                 ######################################## 
+                    ########################################
+                    ###         Display Methods!!!       ###
+                    ########################################   
+                    ########################################             
+'''
+
 # Cut the number to 3 digits
 def cut3(one):
     return round(one, 3)
@@ -251,6 +279,13 @@ def addSecs(time, set_of_delays2):
     list_of_times = [time + datetime.timedelta(seconds=x) for x in set_of_delays2]
     return list_of_times, set_of_delays2
 
+
+'''                 ######################################## 
+                    ########################################
+                    ###         Scenario Creators!!!     ###
+                    ########################################     
+                    ########################################            
+'''
 # Create a scenario file from the provided trajectories and save it in the provided name
 # The first entry in the method decides whether a random delay is added
 def CreateSCN(alpha, save_file, folder = "queries\\"):
@@ -996,6 +1031,13 @@ def CreateSCNM3(save_file):
         fin.write('\n'.join(gamma))
     # os.startfile('scenario\\' + save_file + '.scn')
 
+
+'''                 ######################################## 
+                    ########################################
+                    ###   Simulation Save Controls!!!    ###
+                    ########################################   
+                    ########################################             
+'''
 # Clean up,  and open the output file
 def writerfix(traj, dir, counter):
     dest_dir = 'output\\runs\{0}'.format(dir)
@@ -1141,6 +1183,13 @@ def clear_mylog():
         os.remove('output\\' + i)
         print('The file {} has been deleted!'.format(i))
 
+
+'''                 ######################################## 
+                    ########################################
+                    ###          Timer Controls!!!       ###
+                    ########################################   
+                    ########################################             
+'''
 def talk_time(runs):
     print(bcolors.UWARNING + "\nExecuting simulation {1} and {0} seconds have passed!".format(
         int(timeit.default_timer()), runs) + bcolors.ENDC)
@@ -1225,6 +1274,13 @@ def time_required2(distances_nm, FL, speed):
     # total_time_s = np.sum(times_s)
     return step_time_s
 
+
+'''                 ######################################## 
+                    ########################################
+                    ###     Upload to Drive Method!!!    ###
+                    ########################################   
+                    ########################################             
+'''
 def upload_file(file_upload, name, dir=None):
     gauth = GoogleAuth()
     # Try to load saved client credentials
@@ -1276,13 +1332,15 @@ def upload_file(file_upload, name, dir=None):
     print("File '{}' has been uploaded!".format(file_upload))
 
 
-# df = pd.read_excel('queries\\remon raw scenarios\\AC type 2.xlsx')
-# unique_types = set(df['AC type'])
-# compare_ff('C:\Documents\BlueSky_Joost\output\\runs\\xlogs output\\1 min\ADH931\\1 min ADH931 D0 OE01 D0.log')
+'''                 ######################################## 
+                    ########################################
+                    ###        Excel Writer Method!!!    ###
+                    ########################################   
+                    ########################################             
+'''
 
 def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
-                       truncate_sheet=False,
-                       **to_excel_kwargs):
+                       truncate_sheet=False, **to_excel_kwargs):
     """
     Append a DataFrame [df] to existing Excel file [filename]
     into [sheet_name] Sheet.
@@ -1345,7 +1403,14 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
     # save the workbook
     writer.save()
 
-# Analysis tools for the results!!
+
+'''                 ######################################## 
+                    ########################################
+                    ### Analysis tools for the results!! ###
+                    ########################################   
+                    ########################################             
+'''
+
 # This method reads in the mylog files and orders them on fuelflow for comparison
 def compare_ff(file=None):
     if file is None:
@@ -1557,7 +1622,7 @@ def overall_aggregate(path=None, upload=False):
     pass
 
 # This method creates an analysis per ensemble
-def result_analysis(path=None, upload=False, skip_flights='zero'):
+def result_analysis(path=None, upload=False, skip_flights='zero', skip_dir=False):
 
     if path is None:
         path = os.path.join(os.getcwd(), dest_output)
@@ -1568,7 +1633,10 @@ def result_analysis(path=None, upload=False, skip_flights='zero'):
 
     Dir = os.listdir(path)
     to_save = pd.DataFrame()
-    skip_list = ['py', 'skip', 'put', 'xls', 'anal']
+    if skip_dir:
+        skip_list = ['py', 'skip', 'put', 'xls', 'anal'] + list(skip_dir)
+    else:
+        skip_list = ['py', 'skip', 'put', 'xls', 'anal']
     to_skip = False
 
     for i, dir in enumerate(Dir):
@@ -1595,12 +1663,12 @@ def result_analysis(path=None, upload=False, skip_flights='zero'):
                    'colour blue if RTA',
                    'colour red if too late for TW',
                    'colour yellow if too early for TW',
-                   'colour green if within TW', '', ''])
+                   'colour green if within TW', '', '', '', ''])
 
         for k in pd_files_names:
             if k in skip_flights:
                 continue
-            print('\nStarting trajectory {}!'.format(k))
+            print('\nStarting trajectory {} of directory {}!'.format(k, dir))
             filename0 = '{}{}.xlsx'.format(k, dir[1:])
             filename = os.path.join(path_analysis, filename0)
             to_save = to_save.reindex(to_save.columns.tolist() + ['Name', 'Vstart'])
@@ -1675,6 +1743,8 @@ def result_analysis(path=None, upload=False, skip_flights='zero'):
                 holder2 = ['-', 'Goal Late', '-', pd_max[0], pd_max[-1], '-']
                 holder2.extend(pd_max)
                 Flights.ix[len(Flights):len(Flights)+2] = np.nan
+                Flights = Flights.append(pd.Series(), ignore_index=True)
+                Flights = Flights.append(pd.Series(), ignore_index=True)
                 Flights = Flights.shift(2)
                 Flights.ix[0] = pd.Series(holder1, index=Flights.columns)
                 Flights.ix[1] = pd.Series(holder2, index=Flights.columns)

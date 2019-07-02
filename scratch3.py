@@ -170,13 +170,14 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         'WZZ114', 'MON752A'
         ]
 
-result_analysis()
+result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
 overall_aggregate()
-exit()
+talk_time(runs)
+# exit()
 
 os.startfile('output\\runs')
 
-# os.system("shutdown /s /t 300")
+os.system("shutdown /s /t 300")
 
 # import pickle
 # df = pickle.load( open(
