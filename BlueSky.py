@@ -49,9 +49,9 @@ def main():
     # server-headless: start server only
     # detached: start only one simulation node, without networking
     #   ==> useful for calling bluesky from within another python script/program
-    # sys.argv.append('--headless')
-    # sys.argv.append('--scenfile')
-    # sys.argv.append('Flight Test\\SCNM_FE.scn')
+    sys.argv.append('--headless')
+    sys.argv.append('--scenfile')
+    sys.argv.append('Flight Test\\SCNM_FE.scn')
     # sys.argv.append('Trajectories-batch4.scn')
     # sys.argv.append('Trajectories-batch.scn')
     if '--detached' in sys.argv:

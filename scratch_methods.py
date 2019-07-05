@@ -26,6 +26,7 @@ wind_ensemble = "Tigge_2014-09-08_00_243036.nc"
 flight_date = "9,9,2014"
 cruise_file = 'C:\Documents\Git 2\queries\AC Cruise Speed.xlsx'
 dt = 0.5
+TW_place = True # position of the TW. True is in middle, False is on the bottom
 TW_inf = 3600  # [s]
 TW_min = 60  # [s]
 set_of_delays = [0, 90, 720, 1050]  # [s]
@@ -186,6 +187,11 @@ def replace_speed(speed):
     # os.startfile(exp)
     pass
 
+# Place the TW either in the middle or on the bottom
+def set_TW_place(set):
+    global TW_place
+    TW_place = set
+    pass
 
 '''                 ######################################## 
                     ########################################
@@ -609,7 +615,6 @@ def CreateSCN_Cruise2(alpha, cap=999):
     FileName = os.listdir(folder)
     cruise_speed = pd.read_excel(cruise_file)
     sub_FL = 0
-    # print(FileName)
 
     # How to build new scenarios:
     # -> get flight
@@ -620,11 +625,6 @@ def CreateSCN_Cruise2(alpha, cap=999):
     # 	-> save respective min etc
     print('')
     for index, k in enumerate(FileName):
-        # if cap == index:
-        #     fl_ref = fl_ref - 20
-        # print('FileName is: ', k)
-        # print('FL_ref is: ', fl_ref)
-        # print('cap is {} with index {}'.format(cap, index))
         if cap == index-1:
             return
         acid, ext = os.path.splitext(k)
@@ -660,13 +660,8 @@ def CreateSCN_Cruise2(alpha, cap=999):
             banana = list()
             banana.append('00:00:00.00> FF')
             m += 1
-            # print(cruise_speed[cruise_speed['AC Type'] == actype[:-2]])
-            # print('actype is: ', actype[:-2])
-            # print(str(scenario['fl'][0].item()))
             target_speed = cruise_speed[cruise_speed['AC Type'] == actype[:-2]]['FL' + str(scenario['fl'][0])].item()
             for apple, delay in zip(basket_of_apples, set_of_delays2):
-                # print(l)
-                # print(apple, delay)
                 apple = str(apple.time())
                 aircraftid = acid + '-' + l + '-' + str(delay)
                 for i in range(scenario.shape[0]):
@@ -706,7 +701,6 @@ def CreateSCN_Cruise2(alpha, cap=999):
                             banana.append(apple + '.00> ' + aircraftid + ' AT ' + follow2
                                           + ' ' + FL_OLD)
                             o = list(range(1, scenario.shape[0], 1))
-                            # test = list(range(0, scenario.shape[0], 5))
                             o.append(scenario.shape[0])
                             o.pop(0)
                             citrus1, citrus2, citrus3 = ([], [], [])
@@ -714,21 +708,15 @@ def CreateSCN_Cruise2(alpha, cap=999):
                             time_to_add = 0
                             time = scenario.time_over[0]
                             time = datetime.datetime(1, 1, 1, int(time[-8:-6]), int(time[-5:-3]), int(time[-2:]))
-                            # print(time)
-                            # print(o)
-                            # print(test)
-                            # print(scenario)
+
                             for n in o:
                                 if n == o[0]:
-                                    wp_0 = aircraftid + '-ORIG ' #+ str(1) + ' '
+                                    wp_0 = aircraftid + '-ORIG '
 
                                 wp_1 = aircraftid + '-' + str(n-1) + ' '
                                 citrus2.append(apple + '.00> ' + aircraftid + ' OWN_SPD_FROM '
                                                + wp_0 + ' ' + str(target_speed))
 
-                                # for p in range(q-1, n-1):
-                                # p = q-1
-                                # print(str(scenario['fl'][q].item()))
                                 target_speed0 = target_speed
                                 target_speed = cruise_speed[cruise_speed['AC Type'] == actype[:-2]][
                                     'FL' + str(scenario['fl'][q])].item()
@@ -739,43 +727,24 @@ def CreateSCN_Cruise2(alpha, cap=999):
                                                             scenario['st_y(gpt.coords)'][q-1],
                                                             scenario['st_x(gpt.coords)'][q],
                                                             scenario['st_y(gpt.coords)'][q])
-                                # print(scenario['fl'][q])
-                                # print(target_speed)
-                                # print(distance_local)
-                                # print(n)
-                                # print(target_speed)
-                                # print(distance_local)
-                                # print(scenario['fl'][q]-sub_FL)
+
                                 time_to_add += time_required2(distance_local, scenario['fl'][q]-sub_FL, target_speed)
                                 if target_speed0 != target_speed:
                                     citrus2.append(apple + '.00> ' + aircraftid + ' OWN_SPD_FROM '
                                                    + wp_0 + ' ' + str(target_speed))
-
-                                # time_to_add += time_required(distance_local, scenario['fl'][q]-sub_FL, target_speed)
-                                # print('Q is {} and time_to_add is {}'.format(q-1, time_to_add))
                                 q += 1
 
-                                if l == 'min':      secs = TW_min/2
-                                elif l == 'det':    secs = TW_det/2 * 60
-                                elif l == 'prob':   secs = TW_stoch/2 * 60
-                                elif l == 'inf':    secs = TW_inf/2
+                                if TW_place:
+                                    secs = 0
+                                else:
+                                    if l == 'min':      secs = TW_min/2
+                                    elif l == 'det':    secs = TW_det/2 * 60
+                                    elif l == 'prob':   secs = TW_stoch/2 * 60
+                                    elif l == 'inf':    secs = TW_inf/2
 
-                                # now = dt.datetime.now()
-                                # print(secs)
-                                # print(time_to_add)
                                 delta = datetime.timedelta(seconds=(secs+round(time_to_add)))
-                                # print(delta)
-                                # time_to_add = 0
                                 t = time.time()
-                                # print(t)
-                                # 12:39:11.039864
-
-                                # print(()
-                                # print((dt.datetime.combine(dt.date(1, 1, 1), t) + delta).time())
-
-                                # time = (datetime.datetime.combine(datetime.date(1, 1, 1), t) + delta)
                                 time2 = (datetime.datetime.combine(datetime.date(1, 1, 1), t) + delta).time()
-                                # print(time2)
                                 banana.append(apple + '.00> ' + aircraftid + ' RTA_AT ' + wp_1 + str(time2))
                                 citrus1.append(apple + '.00> ' + aircraftid + ' TW_SIZE_AT ' + wp_1 + str(int(secs*2)))
                                 citrus3.append(apple + '.00> ' + aircraftid + ' AFMS_FROM ' + wp_0 + 'tw')
@@ -785,7 +754,6 @@ def CreateSCN_Cruise2(alpha, cap=999):
                             banana.append(apple + '.00> ' + aircraftid + ' AFMS_FROM ' + wp_1 + 'off')
                             banana.append(apple + '.00> VNAV ' + aircraftid + ' ON')
                             banana.append(apple + '.00> LNAV ' + aircraftid + ' ON')
-                            # banana.append(apple + '.00> dt 0.5')
 
                         else:
                             if i == 1:
@@ -1716,8 +1684,12 @@ def result_analysis(path=None, upload=False, skip_flights='zero', skip_dir=False
                         apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
                         banana = log2.find('TW_SIZE_AT {}-{}-0'.format(k, dir[2:]))
                         banana = int(log2[banana:banana+50].split()[2])
-                        apple1 = apple - datetime.timedelta(seconds=banana/2)
-                        apple2 = apple + datetime.timedelta(seconds=banana/2)
+                        if TW_place:
+                            apple1 = apple - datetime.timedelta(seconds=banana/2)
+                            apple2 = apple + datetime.timedelta(seconds=banana/2)
+                        else:
+                            apple1 = apple #- datetime.timedelta(seconds=banana/2)
+                            apple2 = apple + datetime.timedelta(seconds=banana)
                         pd_min.append(apple1.strftime('%H:%M:%S'))
                         pd_max.append(apple2.strftime('%H:%M:%S'))
                     else:
@@ -1728,8 +1700,8 @@ def result_analysis(path=None, upload=False, skip_flights='zero', skip_dir=False
                         banana = log2.find('TW_SIZE_AT {}-{}-0-{}'.format(k, dir[2:], o))
                         banana = int(log2[banana:banana + 50].split()[2])
                         apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
-                        apple1 = apple - datetime.timedelta(seconds=banana)
-                        apple2 = apple
+                        apple1 = apple - datetime.timedelta(seconds=banana/2)
+                        apple2 = apple + datetime.timedelta(seconds=banana/2)
                         pd_min.append(apple1.strftime('%H:%M:%S'))
                         pd_max.append(apple2.strftime('%H:%M:%S'))
 

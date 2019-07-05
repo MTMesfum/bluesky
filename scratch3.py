@@ -37,6 +37,7 @@ import shutil
 #     UBLUE = '\033[4m' + '\033[94m'
 
 # bs_desktop()
+# exit()
 # scenario_manager = "scenario\Trajectories-batch.scn"
 # scenario_manager = "scenario\Test10.scn"
 # settings_config = "settings.cfg"
@@ -56,8 +57,8 @@ traj_folder2 = 'scenario\\remon scen'
 set_dt(1.0)
 traj_folder = traj_folder2
 runs = 0
-FE = False
-create_scenarios = False
+FE = True
+create_scenarios = True
 del_runs = False
 
 clear_mylog()
@@ -66,9 +67,9 @@ set_delays(set_of_delays)
 
 # This section is used to find the most FE speed
 if FE:
-    zeta = [0.95, 0.1, 0.001]
+    zeta = [0.78, 0.15, 0.01]
     # CreateSCN_FE('B737', 'FL360', zeta[0], zeta[1], zeta[2])
-    CreateSCN_FE('A332', 'FL410', zeta[0], zeta[1], zeta[2])
+    CreateSCN_FE('A332', 'FL400', zeta[0], zeta[1], zeta[2])
     set_dt(0.1)
     try:
         os.remove("output\\WRITER Standard File.xlsx")
@@ -86,6 +87,7 @@ if FE:
     exit()
 
 if create_scenarios:
+    set_TW_place(True)
     CreateSCN_Cruise2(True)
     # exit()
     CreateSCNM3('Trajectories-batch3')
@@ -98,7 +100,7 @@ if create_scenarios:
     # bs_desktop()
     # compare_ff()
 
-    # exit()
+    exit()
 
 # exit()
 if del_runs:
