@@ -801,7 +801,8 @@ def CreateSCN_Cruise2(alpha, cap=999):
 
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
     with open(os.getcwd() + '/scenario/number_of_ac.txt', "w+") as fin:
-        number = (len(FileName)-3) * len(set_of_delays)
+        # number = (len(FileName)-3) * len(set_of_delays)
+        number = 360
         fin.write(str(number))
 
     return

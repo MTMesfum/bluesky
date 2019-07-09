@@ -54,12 +54,12 @@ set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_dt(0.1)
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(1.0)
+set_dt(0.1)
 traj_folder = traj_folder2
 runs = 0
-FE = True
+FE = False
 create_scenarios = True
-del_runs = False
+del_runs = True
 
 # position of the TW. True is in middle, False is on the bottom
 set_TW_place(True)
@@ -104,7 +104,7 @@ if create_scenarios:
     # bs_desktop()
     # compare_ff()
 
-    exit()
+    # exit()
 
 # exit()
 if del_runs:
@@ -176,9 +176,9 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         'WZZ114', 'MON752A'
         ]
 
-result_analysis()
+# result_analysis()
 # result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
-overall_aggregate()
+# overall_aggregate()
 talk_time(runs)
 # exit()
 
