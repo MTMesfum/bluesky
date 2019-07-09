@@ -734,15 +734,16 @@ def CreateSCN_Cruise2(alpha, cap=999):
                                                    + wp_0 + ' ' + str(target_speed))
                                 q += 1
 
-                                if TW_place:
-                                    secs = 0
-                                else:
-                                    if l == 'min':      secs = TW_min/2
-                                    elif l == 'det':    secs = TW_det/2 * 60
-                                    elif l == 'prob':   secs = TW_stoch/2 * 60
-                                    elif l == 'inf':    secs = TW_inf/2
+                                if l == 'min':      secs = TW_min/2
+                                elif l == 'det':    secs = TW_det/2 * 60
+                                elif l == 'prob':   secs = TW_stoch/2 * 60
+                                elif l == 'inf':    secs = TW_inf/2
 
-                                delta = datetime.timedelta(seconds=(secs+round(time_to_add)))
+                                if TW_place:
+                                    delta = datetime.timedelta(seconds=(round(time_to_add)))
+                                else:
+                                    delta = datetime.timedelta(seconds=(secs+round(time_to_add)))
+
                                 t = time.time()
                                 time2 = (datetime.datetime.combine(datetime.date(1, 1, 1), t) + delta).time()
                                 banana.append(apple + '.00> ' + aircraftid + ' RTA_AT ' + wp_1 + str(time2))
@@ -1698,7 +1699,9 @@ def result_analysis(path=None, upload=False, skip_flights='zero', skip_dir=False
                         apple = log2.find('RTA_AT {}-{}-0-{}'.format(k, dir[2:], o))
                         apple = log2[apple:apple+50].split()[2]
                         banana = log2.find('TW_SIZE_AT {}-{}-0-{}'.format(k, dir[2:], o))
+                        print(log2[banana:banana + 50].split())
                         banana = int(log2[banana:banana + 50].split()[2])
+                        print('banana is: ', banana)
                         apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
                         apple1 = apple - datetime.timedelta(seconds=banana/2)
                         apple2 = apple + datetime.timedelta(seconds=banana/2)

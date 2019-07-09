@@ -43,9 +43,9 @@ import shutil
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(np.arange(1, 3))
+list_ensemble = list(np.arange(40, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '2 det', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 90, 300, 600, 720, 900, 1020, 1200]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -61,15 +61,19 @@ FE = True
 create_scenarios = True
 del_runs = False
 
+# position of the TW. True is in middle, False is on the bottom
+set_TW_place(True)
+
 clear_mylog()
 timeit.default_timer()
 set_delays(set_of_delays)
 
 # This section is used to find the most FE speed
 if FE:
-    zeta = [0.78, 0.15, 0.01]
+    zeta = [0.86, 0.04, 0.001]
+    # zzeta = [0.78]
     # CreateSCN_FE('B737', 'FL360', zeta[0], zeta[1], zeta[2])
-    CreateSCN_FE('A332', 'FL400', zeta[0], zeta[1], zeta[2])
+    CreateSCN_FE('B763', 'FL380', zeta[0], zeta[1], zeta[2])
     set_dt(0.1)
     try:
         os.remove("output\\WRITER Standard File.xlsx")
@@ -77,7 +81,7 @@ if FE:
     except:     pass
     bs_desktop()
     apple = pd.read_excel("output\\WRITER Standard File.xlsx")
-    apple['index2'] = pd.Series(np.flip(np.arange(zeta[0]-zeta[1], zeta[0]+zeta[1], zeta[2])), index=apple.index)
+    apple['index2'] = pd.Series((np.arange(zeta[0]-zeta[1], zeta[0]+zeta[1], zeta[2])), index=apple.index)
     apple.to_excel("output\\WRITER Standard File2.xlsx")
     banana = min(apple['Fuel Consumed'])
     apple = apple[apple['Fuel Consumed'] <= banana]
@@ -87,7 +91,7 @@ if FE:
     exit()
 
 if create_scenarios:
-    set_TW_place(True)
+    # set_TW_place(True)
     CreateSCN_Cruise2(True)
     # exit()
     CreateSCNM3('Trajectories-batch3')
@@ -172,7 +176,8 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         'WZZ114', 'MON752A'
         ]
 
-result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
+result_analysis()
+# result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
 overall_aggregate()
 talk_time(runs)
 # exit()
