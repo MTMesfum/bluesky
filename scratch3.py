@@ -43,7 +43,7 @@ import shutil
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(np.arange(1, 51))
+list_ensemble = list(np.arange(1, 5))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
 skip_entire_dir = [ ] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
@@ -54,7 +54,7 @@ set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
 # set_dt(0.1)
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(0.1)
+set_dt(1)
 traj_folder = traj_folder2
 runs = 0
 FE = False
@@ -169,7 +169,6 @@ if create_scenarios_custom:
     CreateSCN_Cruise3(True, selection)
     CreateSCNM3('Trajectories-batch3')
     orig = "1 min"
-exit()
 
 # exit()
 if del_runs:
@@ -244,9 +243,10 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
 # overall_aggregate('F:\Documents\BlueSky Backup\Run Desktop TU 1')
 # overall_aggregate('F:\Documents\BlueSky Backup\Run Desktop TU 2')
 # result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 1')
-result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 2')
+# result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 2')
 # result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
-# overall_aggregate()
+result_analysis()
+overall_aggregate()
 talk_time(runs)
 # exit()
 
