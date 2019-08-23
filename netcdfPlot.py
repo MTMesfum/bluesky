@@ -1,24 +1,16 @@
-"""
-Implementation of the weather module in BlueSky with support for netCDF files.
-The module assumes only the difference of the wind in comparison to the
-average wind of the complete ensemble set.
-
-NOTE:
-This WindIris module will only work correctly if the DATE is set before loading
-the wind data.
-
-Original Author: Remon van den Brandt
-Update Author: René Verbeek
-Date: 17-5-2019
-"""
-
-
+import os
+os.environ["PROJ_LIB"] = "C:\\Programs\\Tools\\Anaconda\\Program\\Library\\share"
 from netCDF4 import date2num, num2date
 from scipy import ndimage, interpolate
-import numpy as np
-import iris
 from bluesky.tools.aero import vatmos, kts
 import bluesky as bs
+from netCDF4 import Dataset
+import numpy as np
+# import iris
+import matplotlib.pyplot as plt
+# import os
+
+from mpl_toolkits.basemap import Basemap
 
 
 class WindIris:
@@ -239,3 +231,5 @@ class WindIris:
         north = ndimage.map_coordinates(cube_n, coord, order=1, mode='wrap')
         east = ndimage.map_coordinates(cube_e, coord, order=1, mode='wrap')
         return north, east
+
+# apple = WindIris()
