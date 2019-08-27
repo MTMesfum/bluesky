@@ -10,186 +10,186 @@
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_01
-00:00:00.00> PCALL "remon scen\1 min\min AEE8.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf AEE8.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_02
-00:00:00.00> PCALL "remon scen\1 min\min AFL2326.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf AFL2326.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_03
-00:00:00.00> PCALL "remon scen\1 min\min BER3907.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf BER3907.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_04
-00:00:00.00> PCALL "remon scen\1 min\min DLH1781.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH1781.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_05
-00:00:00.00> PCALL "remon scen\1 min\min DLH1835.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH1835.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_06
-00:00:00.00> PCALL "remon scen\1 min\min DLH2557.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH2557.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_07
-00:00:00.00> PCALL "remon scen\1 min\min DLH2EJ.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH2EJ.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_08
-00:00:00.00> PCALL "remon scen\1 min\min DLH2JW.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH2JW.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_09
-00:00:00.00> PCALL "remon scen\1 min\min DLH35N.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH35N.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_10
-00:00:00.00> PCALL "remon scen\1 min\min DLH37F.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH37F.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_11
-00:00:00.00> PCALL "remon scen\1 min\min DLH48H.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH48H.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_12
-00:00:00.00> PCALL "remon scen\1 min\min DLH587.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH587.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_13
-00:00:00.00> PCALL "remon scen\1 min\min DLH62K.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH62K.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_14
-00:00:00.00> PCALL "remon scen\1 min\min DLH681.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH681.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_15
-00:00:00.00> PCALL "remon scen\1 min\min DLH9CF.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf DLH9CF.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_16
-00:00:00.00> PCALL "remon scen\1 min\min EZY81NL.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf EZY81NL.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_17
-00:00:00.00> PCALL "remon scen\1 min\min GMI2209.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf GMI2209.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_18
-00:00:00.00> PCALL "remon scen\1 min\min IBE31DD.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf IBE31DD.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_19
-00:00:00.00> PCALL "remon scen\1 min\min IBE31DP.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf IBE31DP.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_20
-00:00:00.00> PCALL "remon scen\1 min\min ICE532.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf ICE532.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_21
-00:00:00.00> PCALL "remon scen\1 min\min NAX56MG.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf NAX56MG.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_22
-00:00:00.00> PCALL "remon scen\1 min\min NLY1GG.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf NLY1GG.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_23
-00:00:00.00> PCALL "remon scen\1 min\min NLY6WW.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf NLY6WW.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_24
-00:00:00.00> PCALL "remon scen\1 min\min SAS4759.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf SAS4759.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_25
-00:00:00.00> PCALL "remon scen\1 min\min SBI795.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf SBI795.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_26
-00:00:00.00> PCALL "remon scen\1 min\min SBI797.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf SBI797.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_27
-00:00:00.00> PCALL "remon scen\1 min\min SBI897.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf SBI897.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_28
-00:00:00.00> PCALL "remon scen\1 min\min SDM6657.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf SDM6657.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_29
-00:00:00.00> PCALL "remon scen\1 min\min TRA908V.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf TRA908V.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_30
-00:00:00.00> PCALL "remon scen\1 min\min TRA9352.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf TRA9352.scn
 00:00:00.00> FF
 23:59:00.00> HOLD
 
 # Load trajectories for a run
 00:00:00.00> SCEN Test_31
-00:00:00.00> PCALL "remon scen\1 min\min VOE27SR.scn
+00:00:00.00> PCALL "remon scen\3 inf\inf VOE27SR.scn
 00:00:00.00> FF
 23:59:00.00> HOLD

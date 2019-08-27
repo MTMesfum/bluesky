@@ -43,9 +43,9 @@ import shutil
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(np.arange(1, 5))
+list_ensemble = list(np.arange(1, 3))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = [ ] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = ['1 min', '3 prob', '4 inf', '3 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -54,16 +54,16 @@ set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
 # set_dt(0.1)
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(1)
+set_dt(100)
 traj_folder = traj_folder2
 runs = 0
 FE = False
-create_scenarios = False
-create_scenarios_custom = True
+create_scenarios = True
+create_scenarios_custom = False
 del_runs = False
 
 # position of the TW. True is in middle, False is on the bottom
-set_TW_place(True)
+set_TW_place(False)
 
 clear_mylog()
 timeit.default_timer()
@@ -162,7 +162,7 @@ if create_scenarios_custom:
             citrus = apple[apple['callsign_geo'] == j].reset_index(drop=True)
             if j in selection:
                 counter += 1
-                print("Saving trajectory #{} : {}".format(counter, j))
+                print("Saving trajectory #{} : {}".format(str(counter).zfill(2), j))
                 name = j
                 citrus.to_excel(path_traj + "\\" + name + ".xlsx", j)
 
@@ -240,13 +240,13 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         'WZZ114', 'MON752A'
         ]
 
-# overall_aggregate('F:\Documents\BlueSky Backup\Run Desktop TU 1')
+overall_aggregate('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
 # overall_aggregate('F:\Documents\BlueSky Backup\Run Desktop TU 2')
-# result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 1')
+result_analysis('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
 # result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 2')
 # result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
-result_analysis()
-overall_aggregate()
+# result_analysis2()
+# overall_aggregate2()
 talk_time(runs)
 # exit()
 
