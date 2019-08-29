@@ -179,9 +179,6 @@ if del_runs:
     except:
         pass
 
-# warning
-
-
 # run a trajectory for every ensemble
 for dir in os.listdir(traj_folder):
     if dir in skip_entire_dir:
