@@ -43,9 +43,9 @@ import shutil
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(np.arange(1, 3))
+list_ensemble = list(np.arange(15, 26)) + list(np.arange(40, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '3 prob', '4 inf', '3 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = ['1 min', '2 det', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -54,16 +54,16 @@ set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
 # set_dt(0.1)
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(100)
+set_dt(0.1)
 traj_folder = traj_folder2
 runs = 0
 FE = False
-create_scenarios = True
-create_scenarios_custom = False
-del_runs = False
+create_scenarios = False
+create_scenarios_custom = True
+del_runs = True
 
 # position of the TW. True is in middle, False is on the bottom
-set_TW_place(False)
+set_TW_place(True)
 
 clear_mylog()
 timeit.default_timer()
@@ -149,13 +149,13 @@ if create_scenarios_custom:
 
     if selection_made:
         # Use the selection list to create the trajectories
-        selection = ['DLH35N', 'DLH37F', 'EZY81NL', 'GMI2209', 'IBE31DD',
+        selection = ['DLH35N', 'DLH37F', 'EZY81NL', 'GMI2209',
                      'IBE31DP', 'SBI795', 'SBI797', 'SDM6657', 'VOE27SR',
                      'AEE8', 'BER3907', 'DLH48H', 'DLH62K',
                      'AFL2326', 'DLH1781', 'DLH1835', 'DLH2557', 'DLH2EJ',
                      'DLH2JW', 'DLH587', 'DLH681', 'DLH9CF', 'NLY1GG',
                      'NLY6WW', 'SBI897', 'TRA908V', 'TRA9352', 'NAX56MG',
-                     'SAS4759', 'ICE532', 'TRA9352', 'IBE31DD']
+                     'SAS4759', 'ICE532', 'IBE31DD']
 
         for i, j in enumerate(banana):
             # print("Processing trajectory #{}/{} : {}".format(i+1, durian, j))
@@ -240,19 +240,19 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         'WZZ114', 'MON752A'
         ]
 
-overall_aggregate('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
+# overall_aggregate('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
 # overall_aggregate('F:\Documents\BlueSky Backup\Run Desktop TU 2')
-result_analysis('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
+# result_analysis('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
 # result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 2')
 # result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
-# result_analysis2()
-# overall_aggregate2()
+# result_analysis()
+# overall_aggregate()
 talk_time(runs)
 # exit()
-
+# overall_aggregate('F:\Documents\BlueSky Backup\Run 09 Jul TW_mid')
 os.startfile('output\\runs')
 
-os.system("shutdown /s /t 60")
+os.system("shutdown /s /t 180")
 
 # import pickle
 # df = pickle.load( open(

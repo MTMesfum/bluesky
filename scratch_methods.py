@@ -630,6 +630,7 @@ def CreateSCN_Cruise2(alpha, cap=999):
             return
         acid, ext = os.path.splitext(k)
         if ext != '.csv' or acid in list(cruise_speed['skip']):
+            FileName.remove(k)
             continue
         print('Creating scenario for Flight {}!'.format(k))
         scenario = pd.read_csv(folder + k)
@@ -802,8 +803,9 @@ def CreateSCN_Cruise2(alpha, cap=999):
 
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
     with open(os.getcwd() + '/scenario/number_of_ac.txt', "w+") as fin:
-        # number = (len(FileName)-3) * len(set_of_delays)
-        number = 360
+        number = len(FileName) * len(set_of_delays)
+        print(number, 'aircraft per simulation')
+        # number = 360
         fin.write(str(number))
 
     return
@@ -834,7 +836,7 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
             return
         acid, ext = os.path.splitext(k)
         if ext != '.xlsx' or acid in list(cruise_speed['skip']):
-            print('skipped')
+            FileName.remove(k)
             continue
         print('Creating scenario for Flight {}'.format(os.path.splitext(k)[0]))
         scenario = pd.read_excel(folder + k)
@@ -1010,7 +1012,7 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
     with open('C:\Documents\Git 2\scenario\\number_of_ac.txt', "w+") as fin:
         # number = (len(FileName)-3) * len(set_of_delays)
-        number = (len(FileName)-1) * len(set_of_delays)
+        number = len(FileName) * len(set_of_delays)
         fin.write(str(number))
 
     return
@@ -1808,6 +1810,7 @@ def overall_aggregate2(path=None, upload=False):
     Dir = os.listdir(path)
     to_save = pd.DataFrame()
     skip_list = ['py', 'skip', 'xlogs', 'xls', 'anal']
+    spacer = len(set_of_delays) - 1
     to_skip = False
     print(' ')
     for i, dir in enumerate(Dir):
@@ -1879,7 +1882,7 @@ def overall_aggregate2(path=None, upload=False):
             k = n + '-' + dir[2:] + '-0'
             log2 = ''.join(list([line for line in open(Files_input_log[0], 'r') if k in line]))
 
-            apple_0 = log2.find('TW_SIZE_AT {}'.format(k))
+            apple_0 = log2.find('TW_SIZE_AT {}-'.format(k))
             apple_1 = log2[apple_0-45:apple_0-10].split()[1]
             apple_2 = int(log2[apple_0:apple_0+50].split()[2])
             # print(apple_2)
@@ -1909,8 +1912,8 @@ def overall_aggregate2(path=None, upload=False):
             # pd_min.append(apple1.strftime('%H:%M:%S'))
             # pd_max.append(apple2.strftime('%H:%M:%S'))
         # -----------------
-        pd_min = pd.DataFrame([item for item in pd_min for _ in range(8)])
-        pd_max = pd.DataFrame([item for item in pd_max for _ in range(8)])
+        pd_min = pd.DataFrame([item for item in pd_min for _ in range(len(set_of_delays))])
+        pd_max = pd.DataFrame([item for item in pd_max for _ in range(len(set_of_delays))])
         # print('pd_min is: ', pd_min)
         # print('pd_max is: ', pd_max)
 
@@ -1934,7 +1937,6 @@ def overall_aggregate2(path=None, upload=False):
 
         dir2 = apple[1]
         to_save[apple[0]] = pd.to_numeric(to_save[apple[0]], errors='coerce')
-        print(dir2)
         to_save[dir2] = [r.pop(0) + '-' + r.pop(0) for r in to_save[dir2].astype(str).str.split('-')]
         to_save2 = to_save[apple]
         to_save2 = to_save2.sort_values(by=[dir2, apple[0]], ascending=True)
@@ -1942,21 +1944,21 @@ def overall_aggregate2(path=None, upload=False):
 
     with open(os.getcwd() + '/scenario/number_of_ac.txt', "r") as fin:
         number_ac = int(fin.read())
-
+    spacer += 1
     with open(filename, 'wb') as f:
-        to_save[0:8].to_excel(f, sheet_name='meta-analysis')
+        to_save[0:spacer].to_excel(f, sheet_name='meta-analysis')
 
-    for k, i in enumerate(range(1, int(number_ac/len(set_of_delays)))):
-        j = i * len(set_of_delays)
+    for k, i in enumerate(range(1, int(number_ac/spacer))):
+        j = i * spacer
         l = k + j + 1
-        append_df_to_excel(filename, to_save[j:j + len(set_of_delays)], 'meta-analysis', l)
+        append_df_to_excel(filename, to_save[j:j + spacer], 'meta-analysis', l)
 
     if upload:
         upload_file(filename, filename0)
     pass
 
 # This method creates an analysis per ensemble
-def result_analysis(path=None, upload=False, skip_flights='zero', skip_dir=False):
+def result_analysis(path=None, skip_dir=False, upload=False, skip_flights='zero'):
 
     if path is None:
         path = os.path.join(os.getcwd(), dest_output)
@@ -1972,14 +1974,15 @@ def result_analysis(path=None, upload=False, skip_flights='zero', skip_dir=False
     else:
         skip_list = ['py', 'skip', 'put', 'xls', 'anal']
     to_skip = False
+    cruise_speed = pd.read_excel(cruise_file)
 
     for i, dir in enumerate(Dir):
         for skip in skip_list:
             if skip in dir:
-                print('skipped: ', dir)
                 to_skip = True
                 continue
         if to_skip:
+            print('skipped: ', dir)
             to_skip = False
             continue
 
@@ -2038,7 +2041,6 @@ def result_analysis(path=None, upload=False, skip_flights='zero', skip_dir=False
                         holder.append(log2[apple:apple + 70].split()[5])
                         FL_start.append(log2[apple:apple + 100].split()[6][:3])
                     Flights['Vstart [Mach]'] = None
-                    cruise_speed = pd.read_excel(cruise_file)
                     actype = log2[apple:apple + 100].split()[2]
                     for o, _ in enumerate(Flights['Vstart [Mach]']):
                         # Flights['Vstart [Mach]'][o] = round(aero.vcas2mach(int(holder[o]) * aero.nm / 3600,
@@ -2192,7 +2194,7 @@ def result_analysis(path=None, upload=False, skip_flights='zero', skip_dir=False
     pass
 
 # This method creates an analysis per ensemble
-def result_analysis2(path=None, upload=False, skip_flights='zero', skip_dir=False):
+def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero'):
 
     if path is None:
         path = os.path.join(os.getcwd(), dest_output)
@@ -2208,14 +2210,15 @@ def result_analysis2(path=None, upload=False, skip_flights='zero', skip_dir=Fals
     else:
         skip_list = ['py', 'skip', 'put', 'xls', 'anal']
     to_skip = False
+    cruise_speed = pd.read_excel(cruise_file2)
 
     for i, dir in enumerate(Dir):
         for skip in skip_list:
             if skip in dir:
-                print('skipped: ', dir)
                 to_skip = True
                 continue
         if to_skip:
+            print('skipped: ', dir)
             to_skip = False
             continue
 
@@ -2236,11 +2239,11 @@ def result_analysis2(path=None, upload=False, skip_flights='zero', skip_dir=Fals
         pd_files = pd.read_excel(Files[0], index_col=None, header=None)
         pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
         pd_files_names.sort()
-        legend = (['', '',
+        legend = ([ ' ', ' ',
                    'colour blue if RTA',
                    'colour red if too late for TW',
                    'colour yellow if too early for TW',
-                   'colour green if within TW', '', '', '', ''])
+                   'colour green if within TW'])
 
         for k in pd_files_names:
             if k in skip_flights:
@@ -2274,13 +2277,13 @@ def result_analysis2(path=None, upload=False, skip_flights='zero', skip_dir=Fals
                         holder.append(log2[apple:apple + 70].split()[5])
                         FL_start.append(log2[apple:apple + 100].split()[6][:3])
                     Flights['Vstart [Mach]'] = None
-                    cruise_speed = pd.read_excel(cruise_file)
                     actype = log2[apple:apple + 100].split()[2]
                     for o, _ in enumerate(Flights['Vstart [Mach]']):
                         # Flights['Vstart [Mach]'][o] = round(aero.vcas2mach(int(holder[o]) * aero.nm / 3600,
                         #                                                    int(FL_start[o]) * 100 * aero.ft), 2)
                         Flights['Vstart [Mach]'][o] = \
-                            cruise_speed[cruise_speed['AC Type'] == actype]['FL' + str(round(FL_start[o], -1))].item()
+                            cruise_speed[cruise_speed['AC Type'] == actype][
+                                'FL' + str(round(int(FL_start[o]), -1))].item()
                     cols = Flights.columns.tolist()
                     cols.insert(2, cols.pop(-1))
                     Flights = Flights[cols]
@@ -2350,6 +2353,9 @@ def result_analysis2(path=None, upload=False, skip_flights='zero', skip_dir=Fals
                         holder.append('{}:{}:{}'.format(hours[0], minutes[0], seconds[0]))
                     holder[0] = actype
                     Flights['nWP = {}'.format(Flights.shape[1]-6)] = holder
+                    for o in range(Flights.shape[0]+1):
+                        if o > len(legend):
+                            legend = legend + list(' ')
                     Flights['Legend'] = legend
 
                     # Create second Waypoint Analysis with Normalised Time

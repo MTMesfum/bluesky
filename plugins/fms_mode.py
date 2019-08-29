@@ -667,6 +667,8 @@ class Afms(TrafficArrays):
             estimated_cas_m_s = (k*estimated_cas_m_s + (1-k)*previous_estimate_m_s)  # Stability of iteration
             if abs(previous_estimate_m_s - estimated_cas_m_s) < 0.1:
                 break
+        if abs(previous_estimate_m_s - estimated_cas_m_s) > 5:
+            estimated_cas_m_s = current_cas_m_s
         # print('estimated cas is: ', estimated_cas_m_s * 3600 / bs.tools.aero.nm)
         return estimated_cas_m_s
 
@@ -739,6 +741,3 @@ class Afms(TrafficArrays):
             return 0.0
         else:
             return total_time_s
-
-
-
