@@ -159,7 +159,7 @@ class DataLogger(TrafficArrays):
         # print(traf.tas)
         # print('Vmax is: ', traf.perf.asas.vmax)
         # Either pick the speed which is put in or the max operating speed
-        ac_speed = min(traf.perf.mmo[ac_id], ac_target_speed)
+        ac_speed = min(traf.perf.mmo[ac_id] - 0.001, ac_target_speed)
         # print('\nThe target speed is: ', ac_target_speed)
         # print('The max speed is: ', traf.perf.mmo[ac_id])
         # print('The selected speed is: ', ac_speed)

@@ -43,9 +43,9 @@ import shutil
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = list(np.arange(15, 26)) + list(np.arange(40, 51))
+list_ensemble = np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '2 det', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = ['1 min', '2 det', '3 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -59,7 +59,7 @@ traj_folder = traj_folder2
 runs = 0
 FE = False
 create_scenarios = False
-create_scenarios_custom = True
+create_scenarios_custom = False
 del_runs = True
 
 # position of the TW. True is in middle, False is on the bottom
@@ -247,9 +247,12 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
 talk_time(runs)
 # exit()
 # overall_aggregate('F:\Documents\BlueSky Backup\Run 09 Jul TW_mid')
+overall_aggregate2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx1')
+result_analysis2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx1', ['1 min', '2 det'])
+
 os.startfile('output\\runs')
 
-os.system("shutdown /s /t 180")
+# os.system("shutdown /s /t 180")
 
 # import pickle
 # df = pickle.load( open(

@@ -24,8 +24,8 @@ dest_output = "output\\runs"
 writer_file = 'output\WRITER Standard File.xlsx'
 wind_ensemble = "Tigge_2014-09-08_00_243036.nc"
 flight_date = "9,9,2014"
-cruise_file = 'C:\Documents\Git 2\queries\AC Cruise Speed.xlsx'
-cruise_file2 = 'C:\Documents\Git 2\queries\AC Cruise Speed 2.xlsx'
+cruise_file = 'queries\AC Cruise Speed.xlsx'
+cruise_file2 = 'queries\AC Cruise Speed 2.xlsx'
 dt = 0.5
 TW_place = True # position of the TW. True is in middle, False is on the bottom
 TW_inf = 3600  # [s]
@@ -243,8 +243,8 @@ def bs_desktop_TU_1():
     drive_folder_input = '1b5fi3qI1fv0KuPJdyB3CFcKz_dQFHIYv'
     drive_folder_gen = '1f3WN6BuDU__JF_C6nQ2GE0C8ECxZyy2X'
     # use json1 + find path of anaconda!
-    os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
-                    cd C:\Documents\Git 2 && conda activate py36 && python BlueSky.py")
+    os.system("call D:\mmesfum\Programs\Anaconda\Scripts\\activate.bat && \
+                    cd /d D:\mmesfum\Documents\BlueSky && conda activate py36 && python BlueSky.py")
 
 # Run a simulation of BlueSky using the desktop TU 2 path
 def bs_desktop_TU_2():
@@ -259,8 +259,8 @@ def bs_desktop_TU_2():
     drive_folder_input = '1K_GjK_McE1KMg7YenogiPg4bAIOmKb-H'
     drive_folder_gen = '1RzqBSLCInHhzgkkkZ0bXOTrCjYih1rfe'
     # use json2 + find path of anaconda!
-    os.system("call C:\Programs\Tools\Anaconda\Program\Scripts\\activate.bat && \
-                    cd C:\Documents\Git 2 && conda activate py36 && python BlueSky.py")
+    os.system("call D:\mmesfum\Programs\Anaconda\Scripts\\activate.bat && \
+                    cd /d D:\mmesfum\Documents\BlueSky && conda activate py36 && python BlueSky.py")
 
 
 '''                 ######################################## 
@@ -996,7 +996,7 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
 
                     FL_OLD = FlightLevel
 
-            dest_dir = 'C:\Documents\Git 2\scenario\\remon scen\\' + str(m) + ' ' + l + '\\'
+            dest_dir = 'scenario\\remon scen\\' + str(m) + ' ' + l + '\\'
             if not os.path.isdir(dest_dir):
                 os.makedirs(dest_dir)
             with open(dest_dir + l + ' ' + acid + '.scn', "w") as fin:
@@ -1010,7 +1010,7 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
     #     print(scenario)
 
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
-    with open('C:\Documents\Git 2\scenario\\number_of_ac.txt', "w+") as fin:
+    with open('scenario\\number_of_ac.txt', "w+") as fin:
         # number = (len(FileName)-3) * len(set_of_delays)
         number = len(FileName) * len(set_of_delays)
         fin.write(str(number))
@@ -1650,162 +1650,8 @@ def compare_ff(file=None):
 def overall_aggregate(path=None, upload=False):
     if path is None:
         path = os.path.join(os.getcwd(), dest_output)
-    # path = "C:\Documents\Git 2\output\\runs ----"
-    Dir = os.listdir(path)
-    to_save = pd.DataFrame()
-    skip_list = ['py', 'skip', 'xlogs', 'xls', 'anal']
-    to_skip = False
-    print(' ')
-    for i, dir in enumerate(Dir):
-        for skip in skip_list:
-            if skip in dir:
-                print('skipped: ', dir)
-                to_skip = True
-                continue
-        if to_skip:
-            to_skip = False
-            continue
-
-        Files = os.listdir(os.path.join(path, dir))
-        for m, n in enumerate(Files):
-            Files[m] = os.path.join(path, dir, n)
-
-        Files_input_log = os.listdir(os.path.join(path, os.path.split(dest_dir_input_logs)[1], dir))
-        for m, n in enumerate(Files_input_log):
-            Files_input_log[m] = os.path.join(path, os.path.split(dest_dir_input_logs)[1], dir, n)
-        l = 1
-        print('Assessing folder {}!'.format(dir))
-        for j, file in enumerate(Files):
-            if '~$' in file:
-                 continue
-
-            if j == 0:
-                apple = pd.read_excel(file, index_col=None, header=None)
-                banana = list(range(0, len(apple.columns)))
-                to_pop = list([0, 1, 2, 3, 5, 6, 7])
-                to_pop.reverse()
-                for k in to_pop:
-                    banana.pop(k)
-                # print('banana is: ', banana)
-                apple = apple.drop(columns=banana, axis=1)
-
-                if i == 0:
-                    to_save = apple.drop(columns=list([0, 1, 6, 7]))
-                    pd_files = pd.read_excel(file, index_col=None, header=None)
-                    pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
-                    pd_files_names.sort()
-                else:
-                    to_save = pd.concat([to_save, apple[[2, 3, 5]]], axis=1)
-
-                apple = apple.drop(columns=list([0, 1, 2, 3, 5]))
-                continue
-
-            apple2 = pd.read_excel(file, index_col=None, header=None)
-            apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
-            apple[7] = apple[7] + apple2[7]
-            l += 1
-
-        apple[6] = (apple[6] / l).dt.round('1s')
-        apple[7] = round(apple[7] / l, 2)
-
-
-        # -------------------- Arrival delay relative to TW
-        # -------------------- Flight Time
-
-        # ExcelDoc = pd.read_excel(file, index_col=None, header=None)
-        # Ensemble = ExcelDoc[1][0]
-        # Flights = ExcelDoc[ExcelDoc[3].str.contains(k)].reset_index(drop=True).sort_values(2) \
-        #     .dropna(axis='columns').drop(columns=list([0, 1, 4, 8]))
-
-
-        # cols = Flights.columns.tolist()
-        pd_min = list()
-        pd_max = list()
-        for m, n in enumerate(pd_files_names):
-            k = n + '-' + dir[2:] + '-0'
-            log2 = ''.join(list([line for line in open(Files_input_log[0], 'r') if k in line]))
-
-            apple_0 = log2.find('TW_SIZE_AT {}'.format(k))
-            apple_1 = log2[apple_0-45:apple_0-10].split()[1]
-            apple_2 = int(log2[apple_0:apple_0+50].split()[2])
-            # print(apple_2)
-            # exit()
-            # apple_1 = log2.find('RTA_AT {}-{}-{}'.format(k, dir[2:], p))
-            # apple = log2[apple:apple + 50].split()[3][:8]
-            apple_3 = datetime.datetime(100, 1, 1, int(apple_1[-8:-6]), int(apple_1[-5:-3]), int(apple_1[-2:]))
-
-
-            # print(banana)
-            # print(log2[banana-50:banana])
-            # exit()
-            apple_4 = apple_3 - datetime.timedelta(seconds=apple_2 / 2)
-            apple_5 = apple_3 + datetime.timedelta(seconds=apple_2 / 2)
-            pd_min.append(apple_4.strftime('%H:%M:%S'))
-            pd_max.append(apple_5.strftime('%H:%M:%S'))
-
-            # apple = log2.find('ADDWPT {}-{}-0-{}'.format(k, dir[2:], o))
-            # FL.append(log2[apple:apple + 100].split()[2])
-            # apple = log2.find('RTA_AT {}-{}-0-{}'.format(k, dir[2:], o))
-            # apple = log2[apple:apple + 50].split()[2]
-            # banana = log2.find('TW_SIZE_AT {}-{}-0-{}'.format(k, dir[2:], o))
-            # banana = int(log2[banana:banana + 50].split()[2])
-            # apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
-            # apple1 = apple - datetime.timedelta(seconds=banana)
-            # apple2 = apple
-            # pd_min.append(apple1.strftime('%H:%M:%S'))
-            # pd_max.append(apple2.strftime('%H:%M:%S'))
-        # -----------------
-        pd_min = pd.DataFrame([item for item in pd_min for _ in range(8)])
-        pd_max = pd.DataFrame([item for item in pd_max for _ in range(8)])
-        # print('pd_min is: ', pd_min)
-        # print('pd_max is: ', pd_max)
-
-        to_save = pd.concat([to_save, pd_min, pd_max, apple], axis=1)
-        del apple, apple2
-
-
-
-    print('Saving the results!')
-    filename0 = 'meta-analysis.xlsx'#.format(22)
-    filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
-    to_save.columns = (['Delay 1', 'Min', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
-                        'Delay 2', 'Det', ' Dep 2', 'Arr 2 min', 'Arr 2 max', 'Arrival 2', 'Fuel Con 2',
-                        'Delay 3', 'Prob', ' Dep 3', 'Arr 3 min', 'Arr 3 max', 'Arrival 3', 'Fuel Con 3',
-                        'Delay 4', 'Inf', ' Dep 4', 'Arr 4 min', 'Arr 4 max', 'Arrival 4', 'Fuel Con 4'])
-    # print(to_save.columns)
-    for dir in Dir:
-        if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
-        elif 'det' in dir:  apple = ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
-        elif 'prob' in dir: apple = ['Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3']
-        elif 'inf' in dir:  apple = ['Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4']
-        else: continue
-
-        dir2 = apple[1]
-        to_save[apple[0]] = pd.to_numeric(to_save[apple[0]], errors='coerce')
-        to_save[dir2] = [r.pop(0) + '-' + r.pop(0) for r in to_save[dir2].astype(str).str.split('-')]
-        to_save2 = to_save[apple]
-        to_save2 = to_save2.sort_values(by=[dir2, apple[0]], ascending=True)
-        to_save[apple] = to_save2.values
-
     with open(os.getcwd() + '/scenario/number_of_ac.txt', "r") as fin:
         number_ac = int(fin.read())
-
-    with open(filename, 'wb') as f:
-        to_save[0:8].to_excel(f, sheet_name='meta-analysis')
-
-    for k, i in enumerate(range(1, int(number_ac/len(set_of_delays)))):
-        j = i * len(set_of_delays)
-        l = k + j + 1
-        append_df_to_excel(filename, to_save[j:j + len(set_of_delays)], 'meta-analysis', l)
-
-    if upload:
-        upload_file(filename, filename0)
-    pass
-
-# This method creates an overall analysis over all the ensembles
-def overall_aggregate2(path=None, upload=False):
-    if path is None:
-        path = os.path.join(os.getcwd(), dest_output)
     # path = "C:\Documents\Git 2\output\\runs ----"
     Dir = os.listdir(path)
     to_save = pd.DataFrame()
@@ -1843,7 +1689,6 @@ def overall_aggregate2(path=None, upload=False):
                 to_pop.reverse()
                 for k in to_pop:
                     banana.pop(k)
-                # print('banana is: ', banana)
                 apple = apple.drop(columns=banana, axis=1)
 
                 if i == 0:
@@ -1851,6 +1696,8 @@ def overall_aggregate2(path=None, upload=False):
                     pd_files = pd.read_excel(file, index_col=None, header=None)
                     pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
                     pd_files_names.sort()
+                    appleMax = pd.DataFrame(np.ones(number_ac)*0)
+                    appleMin = pd.DataFrame(np.ones(number_ac)*1e6)
                 else:
                     to_save = pd.concat([to_save, apple[[2, 3, 5]]], axis=1)
 
@@ -1859,76 +1706,240 @@ def overall_aggregate2(path=None, upload=False):
 
             apple2 = pd.read_excel(file, index_col=None, header=None)
             apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
+            appleMin = appleMin.clip_upper(apple2[7], axis=0)
+            appleMax = appleMax.clip_lower(apple2[7], axis=0)
             apple[7] = apple[7] + apple2[7]
             l += 1
 
         apple[6] = (apple[6] / l).dt.round('1s')
         apple[7] = round(apple[7] / l, 2)
 
+        # Calculate the standard deviation of the Fuel Consumption
+        for j, file in enumerate(Files):
+            if '~$' in file:
+                continue
 
-        # -------------------- Arrival delay relative to TW
-        # -------------------- Flight Time
+            if j == 0:
+                apple_0 = pd.read_excel(file, index_col=None, header=None)
+                banana = list(range(0, len(apple_0.columns)))
+                to_pop = list([0, 1, 2, 3, 5, 6, 7])
+                to_pop.reverse()
+                for k in to_pop:
+                    banana.pop(k)
+                apple_0 = apple_0.drop(columns=banana, axis=1)
 
-        # ExcelDoc = pd.read_excel(file, index_col=None, header=None)
-        # Ensemble = ExcelDoc[1][0]
-        # Flights = ExcelDoc[ExcelDoc[3].str.contains(k)].reset_index(drop=True).sort_values(2) \
-        #     .dropna(axis='columns').drop(columns=list([0, 1, 4, 8]))
+                if i == 0:
+                    pd_files = pd.read_excel(file, index_col=None, header=None)
+                    pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
+                    pd_files_names.sort()
+                    appleStdDev = apple[7]*0
+                continue
 
+            apple_1 = pd.read_excel(file, index_col=None, header=None)
+            appleStdDev = appleStdDev.add((apple_1[7] - apple[7])**2)
 
-        # cols = Flights.columns.tolist()
+        appleStdDev = (appleStdDev / l)**(1/2)
         pd_min = list()
         pd_max = list()
         for m, n in enumerate(pd_files_names):
             k = n + '-' + dir[2:] + '-0'
             log2 = ''.join(list([line for line in open(Files_input_log[0], 'r') if k in line]))
+            logType = ''.join(list([line for line in open(Files_input_log[0], 'r') if 'CRE ' in line]))
 
-            apple_0 = log2.find('TW_SIZE_AT {}-'.format(k))
+            if i == 0:
+                appleType = list()
+                for q in pd_files_names:
+                    apple_0 = logType.find('CRE {}-MIN-0 '.format(q))
+                    appleType.append(logType[apple_0:apple_0 + 50].split()[2])
+
+            apple_0 = log2.find('TW_SIZE_AT {}'.format(k))
             apple_1 = log2[apple_0-45:apple_0-10].split()[1]
             apple_2 = int(log2[apple_0:apple_0+50].split()[2])
-            # print(apple_2)
-            # exit()
-            # apple_1 = log2.find('RTA_AT {}-{}-{}'.format(k, dir[2:], p))
-            # apple = log2[apple:apple + 50].split()[3][:8]
             apple_3 = datetime.datetime(100, 1, 1, int(apple_1[-8:-6]), int(apple_1[-5:-3]), int(apple_1[-2:]))
-
-
-            # print(banana)
-            # print(log2[banana-50:banana])
-            # exit()
             apple_4 = apple_3 - datetime.timedelta(seconds=apple_2 / 2)
             apple_5 = apple_3 + datetime.timedelta(seconds=apple_2 / 2)
             pd_min.append(apple_4.strftime('%H:%M:%S'))
             pd_max.append(apple_5.strftime('%H:%M:%S'))
 
-            # apple = log2.find('ADDWPT {}-{}-0-{}'.format(k, dir[2:], o))
-            # FL.append(log2[apple:apple + 100].split()[2])
-            # apple = log2.find('RTA_AT {}-{}-0-{}'.format(k, dir[2:], o))
-            # apple = log2[apple:apple + 50].split()[2]
-            # banana = log2.find('TW_SIZE_AT {}-{}-0-{}'.format(k, dir[2:], o))
-            # banana = int(log2[banana:banana + 50].split()[2])
-            # apple = datetime.datetime(100, 1, 1, int(apple[-8:-6]), int(apple[-5:-3]), int(apple[-2:]))
-            # apple1 = apple - datetime.timedelta(seconds=banana)
-            # apple2 = apple
-            # pd_min.append(apple1.strftime('%H:%M:%S'))
-            # pd_max.append(apple2.strftime('%H:%M:%S'))
-        # -----------------
         pd_min = pd.DataFrame([item for item in pd_min for _ in range(len(set_of_delays))])
         pd_max = pd.DataFrame([item for item in pd_max for _ in range(len(set_of_delays))])
-        # print('pd_min is: ', pd_min)
-        # print('pd_max is: ', pd_max)
-
+        apple2 = pd.concat([appleMin.round(2), appleMax.round(2), appleStdDev.round(2)], axis=1)
         to_save = pd.concat([to_save, pd_min, pd_max, apple], axis=1)
         del apple, apple2
-
-
 
     print('Saving the results!')
     filename0 = 'meta-analysis.xlsx'#.format(22)
     filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
     to_save.columns = (['Delay 1', 'Min', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
+                        'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1',
                         'Delay 2', 'Det', ' Dep 2', 'Arr 2 min', 'Arr 2 max', 'Arrival 2', 'Fuel Con 2',
-                        'Delay 3', 'Inf', ' Dep 3', 'Arr 3 min', 'Arr 3 max', 'Arrival 3', 'Fuel Con 3'])
-    # print(to_save.columns)
+                        'Fuel Min 2', 'Fuel Max 2', 'Fuel StdD 2',
+                        'Delay 3', 'Prob', ' Dep 3', 'Arr 3 min', 'Arr 3 max', 'Arrival 3', 'Fuel Con 3',
+                        'Fuel Min 3', 'Fuel Max 3', 'Fuel StdD 3',
+                        'Delay 4', 'Inf', ' Dep 4', 'Arr 4 min', 'Arr 4 max', 'Arrival 4', 'Fuel Con 4',
+                        'Fuel Min 4', 'Fuel Max 4', 'Fuel StdD 4'])
+    for dir in Dir:
+        if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
+        elif 'det' in dir:  apple = ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
+        elif 'prob' in dir: apple = ['Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3']
+        elif 'inf' in dir:  apple = ['Delay 4', 'Inf', 'Arrival 4', 'Fuel Con 4']
+        else: continue
+
+        dir2 = apple[1]
+        to_save[apple[0]] = pd.to_numeric(to_save[apple[0]], errors='coerce')
+        to_save[dir2] = [r.pop(0) + '-' + r.pop(0) for r in to_save[dir2].astype(str).str.split('-')]
+        to_save2 = to_save[apple]
+        to_save2 = to_save2.sort_values(by=[dir2, apple[0]], ascending=True)
+        to_save[apple] = to_save2.values
+
+    spacer += 1
+
+    with open(filename, 'wb') as f:
+        to_save.index.name = appleType[0]
+        to_save[0:spacer].to_excel(f, sheet_name='meta-analysis')
+
+    for k, i in enumerate(range(1, int(number_ac/len(set_of_delays)))):
+        j = i * spacer
+        l = k + j + 1
+        to_save.index.name = appleType[k]
+        append_df_to_excel(filename, to_save[j:j + spacer], 'meta-analysis', l)
+
+    if upload:
+        upload_file(filename, filename0)
+    pass
+
+# This method creates an overall analysis over all the ensembles
+def overall_aggregate2(path=None, upload=False):
+    if path is None:
+        path = os.path.join(os.getcwd(), dest_output)
+    with open(os.getcwd() + '/scenario/number_of_ac.txt', "r") as fin:
+        number_ac = int(fin.read())
+    # path = "C:\Documents\Git 2\output\\runs ----"
+    Dir = os.listdir(path)
+    to_save = pd.DataFrame()
+    skip_list = ['py', 'skip', 'xlogs', 'xls', 'anal']
+    spacer = len(set_of_delays) - 1
+    to_skip = False
+    print(' ')
+    for i, dir in enumerate(Dir):
+        for skip in skip_list:
+            if skip in dir:
+                print('skipped: ', dir)
+                to_skip = True
+                continue
+        if to_skip:
+            to_skip = False
+            continue
+
+        Files = os.listdir(os.path.join(path, dir))
+        for m, n in enumerate(Files):
+            Files[m] = os.path.join(path, dir, n)
+
+        Files_input_log = os.listdir(os.path.join(path, os.path.split(dest_dir_input_logs)[1], dir))
+        for m, n in enumerate(Files_input_log):
+            Files_input_log[m] = os.path.join(path, os.path.split(dest_dir_input_logs)[1], dir, n)
+        l = 1
+        print('Assessing folder {}!'.format(dir))
+        for j, file in enumerate(Files):
+            if '~$' in file:
+                 continue
+
+            if j == 0:
+                apple = pd.read_excel(file, index_col=None, header=None)
+                banana = list(range(0, len(apple.columns)))
+                to_pop = list([0, 1, 2, 3, 5, 6, 7])
+                to_pop.reverse()
+                for k in to_pop:
+                    banana.pop(k)
+                apple = apple.drop(columns=banana, axis=1)
+
+                if i == 0:
+                    to_save = apple.drop(columns=list([0, 1, 6, 7]))
+                    pd_files = pd.read_excel(file, index_col=None, header=None)
+                    pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
+                    pd_files_names.sort()
+                    appleMax = pd.DataFrame(np.ones(number_ac)*0)
+                    appleMin = pd.DataFrame(np.ones(number_ac)*1e6)
+                else:
+                    to_save = pd.concat([to_save, apple[[2, 3, 5]]], axis=1)
+
+                apple = apple.drop(columns=list([0, 1, 2, 3, 5]))
+                continue
+
+            apple2 = pd.read_excel(file, index_col=None, header=None)
+            apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
+            appleMin = appleMin.clip_upper(apple2[7], axis=0)
+            appleMax = appleMax.clip_lower(apple2[7], axis=0)
+            apple[7] = apple[7] + apple2[7]
+            l += 1
+
+        apple[6] = (apple[6] / l).dt.round('1s')
+        apple[7] = round(apple[7] / l, 2)
+
+        # Calculate the standard deviation of the Fuel Consumption
+        for j, file in enumerate(Files):
+            if '~$' in file:
+                continue
+
+            if j == 0:
+                apple_0 = pd.read_excel(file, index_col=None, header=None)
+                banana = list(range(0, len(apple_0.columns)))
+                to_pop = list([0, 1, 2, 3, 5, 6, 7])
+                to_pop.reverse()
+                for k in to_pop:
+                    banana.pop(k)
+                apple_0 = apple_0.drop(columns=banana, axis=1)
+
+                if i == 0:
+                    pd_files = pd.read_excel(file, index_col=None, header=None)
+                    pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
+                    pd_files_names.sort()
+                    appleStdDev = apple[7]*0
+                continue
+
+            apple_1 = pd.read_excel(file, index_col=None, header=None)
+            appleStdDev = appleStdDev.add((apple_1[7] - apple[7])**2)
+
+        appleStdDev = (appleStdDev / l)**(1/2)
+        print('Number of Ensembles: ', l)
+        pd_min = list()
+        pd_max = list()
+        for m, n in enumerate(pd_files_names):
+            k = n + '-' + dir[2:] + '-0'
+            log2 = ''.join(list([line for line in open(Files_input_log[0], 'r') if k in line]))
+            logType = ''.join(list([line for line in open(Files_input_log[0], 'r') if 'CRE ' in line]))
+
+            if i == 0:
+                appleType = list()
+                for q in pd_files_names:
+                    apple_0 = logType.find('CRE {}-MIN-0 '.format(q))
+                    appleType.append(logType[apple_0:apple_0 + 50].split()[2])
+
+            apple_0 = log2.find('TW_SIZE_AT {}'.format(k))
+            apple_1 = log2[apple_0-45:apple_0-10].split()[1]
+            apple_2 = int(log2[apple_0:apple_0+50].split()[2])
+            apple_3 = datetime.datetime(100, 1, 1, int(apple_1[-8:-6]), int(apple_1[-5:-3]), int(apple_1[-2:]))
+            apple_4 = apple_3 - datetime.timedelta(seconds=apple_2 / 2)
+            apple_5 = apple_3 + datetime.timedelta(seconds=apple_2 / 2)
+            pd_min.append(apple_4.strftime('%H:%M:%S'))
+            pd_max.append(apple_5.strftime('%H:%M:%S'))
+
+        pd_min = pd.DataFrame([item for item in pd_min for _ in range(len(set_of_delays))])
+        pd_max = pd.DataFrame([item for item in pd_max for _ in range(len(set_of_delays))])
+        apple2 = pd.concat([appleMin.round(2), appleMax.round(2), appleStdDev.round(2)], axis=1)
+        to_save = pd.concat([to_save, pd_min, pd_max, apple, apple2], axis=1)
+        del apple, apple2
+
+    print('Saving the results!')
+    filename0 = 'meta-analysis.xlsx'#.format(22)
+    filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
+    to_save.columns = (['Delay 1', 'Min', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
+                        'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1',
+                        'Delay 2', 'Det', ' Dep 2', 'Arr 2 min', 'Arr 2 max', 'Arrival 2', 'Fuel Con 2',
+                        'Fuel Min 2', 'Fuel Max 2', 'Fuel StdD 2',
+                        'Delay 3', 'Inf', ' Dep 3', 'Arr 3 min', 'Arr 3 max', 'Arrival 3', 'Fuel Con 3',
+                        'Fuel Min 3', 'Fuel Max 3', 'Fuel StdD 3'])
+
     for dir in Dir:
         if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
         elif 'det' in dir:  apple = ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
@@ -1942,15 +1953,16 @@ def overall_aggregate2(path=None, upload=False):
         to_save2 = to_save2.sort_values(by=[dir2, apple[0]], ascending=True)
         to_save[apple] = to_save2.values
 
-    with open(os.getcwd() + '/scenario/number_of_ac.txt', "r") as fin:
-        number_ac = int(fin.read())
     spacer += 1
+
     with open(filename, 'wb') as f:
+        to_save.index.name = appleType[0]
         to_save[0:spacer].to_excel(f, sheet_name='meta-analysis')
 
     for k, i in enumerate(range(1, int(number_ac/spacer))):
         j = i * spacer
         l = k + j + 1
+        to_save.index.name = appleType[k]
         append_df_to_excel(filename, to_save[j:j + spacer], 'meta-analysis', l)
 
     if upload:
@@ -2256,6 +2268,8 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
             # Read in both files
             # print(Files, Files_input_log)
             for a, b in zip(range(0, len(Files_input_log), 10), range(10, len(Files_input_log)+1, 10)):
+                if a > 9:
+                    break
                 print(' ')
                 print('Start = ', a, '| Stop = ', b)
                 filename0 = '{}{} - {}.xlsx'.format(k, dir[1:], b)
