@@ -1801,7 +1801,7 @@ def overall_aggregate(path=None, upload=False):
     for k, i in enumerate(range(1, int(number_ac/len(set_of_delays)))):
         j = i * spacer
         l = k + j + 1
-        to_save.index.name = appleType[k]
+        to_save.index.name = appleType[k+1]
         append_df_to_excel(filename, to_save[j:j + spacer], 'meta-analysis', l)
 
     if upload:
@@ -1962,7 +1962,7 @@ def overall_aggregate2(path=None, upload=False):
     for k, i in enumerate(range(1, int(number_ac/spacer))):
         j = i * spacer
         l = k + j + 1
-        to_save.index.name = appleType[k]
+        to_save.index.name = appleType[k+1]
         append_df_to_excel(filename, to_save[j:j + spacer], 'meta-analysis', l)
 
     if upload:
