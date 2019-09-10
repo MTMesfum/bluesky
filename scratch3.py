@@ -59,7 +59,7 @@ traj_folder = traj_folder2
 runs = 0
 FE = False
 create_scenarios = False
-create_scenarios_custom = False
+create_scenarios_custom = True
 del_runs = True
 
 # position of the TW. True is in middle, False is on the bottom
@@ -71,10 +71,10 @@ set_delays(set_of_delays)
 
 # This section is used to find the most FE speed
 if FE:
-    zeta = [0.65, 0.03, 0.001]
+    zeta = [0.81, 0.01, 0.001]
     # zzeta = [0.78]
     # CreateSCN_FE('B737', 'FL360', zeta[0], zeta[1], zeta[2])
-    CreateSCN_FE('A319', 'FL320', zeta[0], zeta[1], zeta[2])
+    CreateSCN_FE('B763', 'FL380', zeta[0], zeta[1], zeta[2])
     set_dt(0.1)
     try:
         os.remove("output\\WRITER Standard File.xlsx")
@@ -92,85 +92,88 @@ if FE:
     exit()
 
 if create_scenarios:
-    # set_TW_place(True)
     CreateSCN_Cruise2(True)
-    # exit()
     CreateSCNM3('Trajectories-batch3')
-
-
     # orig = "remon scen\\1 min" + '\\min ADH931 D{}.scn'.format(str(set_of_delays[0]))
     orig = "1 min" #+ '\\min ADH931.scn'
-
     # replace_batch_set2(orig, "Trajectories-batch3", "Trajectories-batch4")
-    # bs_desktop()
     # compare_ff()
-
-    # exit()
 
 if create_scenarios_custom:
     file1 = "scenario\\custom scen raw\\"
     file2 = "Trajectories_adapted.csv"
     file3 = "scenario\\remon scen"
     file4 = "scenario\\custom scen"
+    save_file = 'scenario\\selected_trajectories.txt'
+    save_file = os.path.join(os.getcwd(), save_file)
 
-    selection_made = True
+    selection_made = False
     apple = pd.read_csv(file1 + file2)
     apple = apple[apple.columns[1:-9]]
     banana = set(apple['callsign_geo'])
-    durian = len(banana)
 
-    # path_traj = os.path.join(file4, 'trajectories')
     path_traj = os.path.join(os.getcwd(), file4)
     if not os.path.isdir(path_traj):
         os.makedirs(path_traj)
 
-    counter = 0
-    ac_types = ['A320', 'B737', 'B752',
-                'A319', 'A321', 'B77L', 'B738']
-
     if not selection_made:
         # Create a selection list
+        counter = 0
+        ac_types = ['A320', 'B737', 'B752', 'B734',
+                    'A319', 'A321', 'B77L', 'B738',
+                    'B736', 'B738', 'B733']
+        selection = list()
         for i, j in enumerate(banana):
-            # print("Processing trajectory #{}/{} : {}".format(i+1, durian, j))
+            # Filter trajectories by Flight Time and Flight Level
+            limit_up    = 600   # [minutes]
+            limit_down  = 100   # [minutes]
+            limit_FL = 600      # [FL]
             citrus = apple[apple['callsign_geo'] == j].reset_index(drop=True)
+            apple['fl'] = pd.to_numeric(apple['fl'])
+            durian = apple.fl.max()
             date_1 = datetime.datetime.strptime(citrus['time_over'][0], '%d/%m/%Y %H:%M')
             date_2 = datetime.datetime.strptime(citrus['time_over'][citrus.shape[0] - 1], '%d/%m/%Y %H:%M')
-            if (date_2 - date_1).total_seconds() / 60 > 100 and citrus['AAC-type'][0] in ac_types \
-                    and (date_2 - date_1).total_seconds() / 60 < 110:
+            actype = citrus['AAC-type'][0]
+            if (date_2 - date_1).total_seconds() / 60 > limit_down and actype in ac_types \
+                    and (date_2 - date_1).total_seconds() / 60 < limit_up and durian <= limit_FL:
                 counter += 1
-                print("Saving trajectory #{} : {}".format(counter, j))
-                name = citrus['AAC-type'][0] + " - " + j
-                citrus.to_excel(path_traj + "\\" + name + ".xlsx", j)
+                print("Selecting trajectory #{} : {}   | {}    | FL{}".format(counter, j, actype, durian))
+                print(citrus)
+                print(actype)
+                selection.append(j)
+        exit()
 
-        FileName = os.listdir(file3)
-        for i, j in enumerate(FileName):
-            FileName[i] = os.path.splitext(FileName[i].split()[2])[0]
-        print(FileName)
+        # selection = ['DLH35N', 'DLH37F', 'EZY81NL', 'GMI2209',
+        #              'IBE31DP', 'SBI795', 'SBI797', 'SDM6657', 'VOE27SR',
+        #              'AEE8', 'BER3907', 'DLH48H', 'DLH62K',
+        #              'AFL2326', 'DLH1781', 'DLH1835', 'DLH2557', 'DLH2EJ',
+        #              'DLH2JW', 'DLH587', 'DLH681', 'DLH9CF', 'NLY1GG',
+        #              'NLY6WW', 'SBI897', 'TRA908V', 'TRA9352', 'NAX56MG',
+        #              'SAS4759', 'ICE532', 'IBE31DD']
 
-    if selection_made:
-        # Use the selection list to create the trajectories
-        selection = ['DLH35N', 'DLH37F', 'EZY81NL', 'GMI2209',
-                     'IBE31DP', 'SBI795', 'SBI797', 'SDM6657', 'VOE27SR',
-                     'AEE8', 'BER3907', 'DLH48H', 'DLH62K',
-                     'AFL2326', 'DLH1781', 'DLH1835', 'DLH2557', 'DLH2EJ',
-                     'DLH2JW', 'DLH587', 'DLH681', 'DLH9CF', 'NLY1GG',
-                     'NLY6WW', 'SBI897', 'TRA908V', 'TRA9352', 'NAX56MG',
-                     'SAS4759', 'ICE532', 'IBE31DD']
+        with open(save_file, 'w') as fin:
+            fin.write(str(selection))
 
-        for i, j in enumerate(banana):
-            # print("Processing trajectory #{}/{} : {}".format(i+1, durian, j))
-            citrus = apple[apple['callsign_geo'] == j].reset_index(drop=True)
-            if j in selection:
-                counter += 1
-                print("Saving trajectory #{} : {}".format(str(counter).zfill(2), j))
-                name = j
-                citrus.to_excel(path_traj + "\\" + name + ".xlsx", j)
-
+    selection = str("".join(list([line for line in open(save_file, 'r')])))
+    print('The selected trajectories are:\n')
+    for counter, word in enumerate(selection.split()):
+        if ((counter+1) % 3) == 0:  print(word)
+        else:                   print(word, end='')
+    counter = 0
+    print(' ')
+    for i, j in enumerate(banana):
+        citrus = apple[apple['callsign_geo'] == j].reset_index(drop=True)
+        if j in selection:
+            counter += 1
+            print("Saving trajectory #{} : {}".format(str(counter).zfill(2), j))
+            name = j
+            citrus.to_excel(path_traj + "\\" + name + ".xlsx", j)
+    exit()
     CreateSCN_Cruise3(True, selection)
     CreateSCNM3('Trajectories-batch3')
     orig = "1 min"
 
-# exit()
+
 if del_runs:
     if os.path.isdir("output\\runs"):
         shutil.rmtree("output\\runs")
@@ -245,12 +248,12 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
 # result_analysis()
 # overall_aggregate()
 talk_time(runs)
-# exit()
+exit()
 # overall_aggregate('F:\Documents\BlueSky Backup\Run 09 Jul TW_mid')
-overall_aggregate2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx1')
-result_analysis2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx1', ['1 min', '2 det'])
+# overall_aggregate2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx3')
+# result_analysis2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx3')
 
-os.startfile('output\\runs')
+# os.startfile('output\\runs')
 
 # os.system("shutdown /s /t 180")
 
