@@ -1820,7 +1820,7 @@ def overall_aggregate2(path=None, upload=False):
     skip_list = ['py', 'skip', 'xlogs', 'xls', 'anal']
     spacer = len(set_of_delays) - 1
     to_skip = False
-    print(' ')
+    print('\n' + bcolors.HEADER + 'Creating meta-analysis for:\n' + os.path.split(path)[-1] + bcolors.ENDC, '\n')
     for i, dir in enumerate(Dir):
         for skip in skip_list:
             if skip in dir:
@@ -1858,8 +1858,11 @@ def overall_aggregate2(path=None, upload=False):
                     pd_files = pd.read_excel(file, index_col=None, header=None)
                     pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
                     pd_files_names.sort()
-                    appleMax = pd.DataFrame(np.ones(number_ac)*0)
-                    appleMin = pd.DataFrame(np.ones(number_ac)*1e6)
+
+                    appleMax  = pd.DataFrame(np.ones(number_ac)*0)
+                    appleMin  = pd.DataFrame(np.ones(number_ac)*1e6)
+                    appleMax2  = pd.DataFrame(np.ones(number_ac)*0)
+                    appleMin2  = pd.DataFrame(np.ones(number_ac)*1e8)
                 else:
                     to_save = pd.concat([to_save, apple[[2, 3, 5]]], axis=1)
 
@@ -1870,13 +1873,15 @@ def overall_aggregate2(path=None, upload=False):
             apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
             appleMin = appleMin.clip_upper(apple2[7], axis=0)
             appleMax = appleMax.clip_lower(apple2[7], axis=0)
+            appleMin2 = appleMin2.clip_upper(pd.to_timedelta(apple2[6], unit='s').dt.total_seconds(), axis=0)
+            appleMax2 = appleMax2.clip_lower(pd.to_timedelta(apple2[6], unit='s').dt.total_seconds(), axis=0)
             apple[7] = apple[7] + apple2[7]
             l += 1
 
         apple[6] = (apple[6] / l).dt.round('1s')
         apple[7] = round(apple[7] / l, 2)
 
-        # Calculate the standard deviation of the Fuel Consumption
+        # Calculate the standard deviation of the Fuel Consumption and Arrival Time
         for j, file in enumerate(Files):
             if '~$' in file:
                 continue
@@ -1894,16 +1899,20 @@ def overall_aggregate2(path=None, upload=False):
                     pd_files = pd.read_excel(file, index_col=None, header=None)
                     pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
                     pd_files_names.sort()
-                    appleStdDev = apple[7]*0
+                    appleStdDev     = apple[7]*0
+                    appleStdDev2    = apple[7]*0
                 continue
 
             apple_1 = pd.read_excel(file, index_col=None, header=None)
-            appleStdDev = appleStdDev.add((apple_1[7] - apple[7])**2)
+            appleStdDev     = appleStdDev.add((apple_1[7] - apple[7])**2)
+            appleStdDev2    = appleStdDev2.add(((pd.to_timedelta(apple_1[6], unit='s').dt.total_seconds() -
+                                                    pd.to_timedelta(apple[6], unit='s').dt.total_seconds()).astype(int))**2)
 
-        appleStdDev = (appleStdDev / l)**(1/2)
-        print('Number of Ensembles: ', l)
-        pd_min = list()
-        pd_max = list()
+        appleStdDev     = (appleStdDev  / l)**(1/2)
+        appleStdDev2    = (appleStdDev2 / l)**(1/2)
+        print('Number of Ensembles:', l)
+        pd_min  = list()
+        pd_max  = list()
         for m, n in enumerate(pd_files_names):
             k = n + '-' + dir[2:] + '-0'
             log2 = ''.join(list([line for line in open(Files_input_log[0], 'r') if k in line]))
@@ -1924,26 +1933,53 @@ def overall_aggregate2(path=None, upload=False):
             pd_min.append(apple_4.strftime('%H:%M:%S'))
             pd_max.append(apple_5.strftime('%H:%M:%S'))
 
+        appleMin3 = list()
+        appleMax3 = list()
         pd_min = pd.DataFrame([item for item in pd_min for _ in range(len(set_of_delays))])
         pd_max = pd.DataFrame([item for item in pd_max for _ in range(len(set_of_delays))])
+
+        for m in range(len(appleMin2)):
+            holder = datetime.datetime(100, 1, 1, 0, 0, 0) + datetime.timedelta(seconds=int(appleMin2.values[m]))
+            appleMin3.append(holder.strftime('%H:%M:%S'))
+            holder = datetime.datetime(100, 1, 1, 0, 0, 0) + datetime.timedelta(seconds=int(appleMax2.values[m]))
+            appleMax3.append(holder.strftime('%H:%M:%S'))
+
+        appleMin3 = pd.DataFrame(appleMin3)
+        appleMax3 = pd.DataFrame(appleMax3)
         apple2 = pd.concat([appleMin.round(2), appleMax.round(2), appleStdDev.round(2)], axis=1)
-        to_save = pd.concat([to_save, pd_min, pd_max, apple, apple2], axis=1)
+        apple3 = pd.concat([appleMin3, appleMax3, appleStdDev2.round(2)], axis=1)
+        to_save = pd.concat([to_save, pd_min, pd_max, apple, apple2, apple3], axis=1)
         del apple, apple2
 
-    print('Saving the results!')
     filename0 = 'meta-analysis.xlsx'#.format(22)
-    filename = path + '\\' + 'meta-analysis.xlsx' #.format(22)
-    to_save.columns = (['Delay 1', 'Min', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
-                        'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1',
-                        'Delay 2', 'Det', ' Dep 2', 'Arr 2 min', 'Arr 2 max', 'Arrival 2', 'Fuel Con 2',
-                        'Fuel Min 2', 'Fuel Max 2', 'Fuel StdD 2',
-                        'Delay 3', 'Inf', ' Dep 3', 'Arr 3 min', 'Arr 3 max', 'Arrival 3', 'Fuel Con 3',
-                        'Fuel Min 3', 'Fuel Max 3', 'Fuel StdD 3'])
+    filename = path + '\\' + 'meta-analysis-Sep.xlsx' #.format(22)
+    print(bcolors.OKGREEN + '\nSaving the results in ' + os.path.split(filename)[-1] + bcolors.ENDC)
 
+    if '3 prob' in Dir:
+        to_save.columns = (['Delay 1', 'Min', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
+                            'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1', 'Arr Min 1 ', 'Arr Max 1', 'Arr StdD 1',
+                            'Delay 2', 'Det', ' Dep 2', 'Arr 2 min', 'Arr 2 max', 'Arrival 2', 'Fuel Con 2',
+                            'Fuel Min 2', 'Fuel Max 2', 'Fuel StdD 2', 'Arr Min 2 ', 'Arr Max 2', 'Arr StdD 2',
+                            'Delay 3', 'Prob', ' Dep 3', 'Arr 3 min', 'Arr 3 max', 'Arrival 3', 'Fuel Con 3',
+                            'Fuel Min 3', 'Fuel Max 3', 'Fuel StdD 3', 'Arr Min 3 ', 'Arr Max 3', 'Arr StdD 3',
+                            'Delay 4', 'Inf', ' Dep 4', 'Arr 4 min', 'Arr 4 max', 'Arrival 4', 'Fuel Con 4',
+                            'Fuel Min 4', 'Fuel Max 4', 'Fuel StdD 4', 'Arr Min 4 ', 'Arr Max 4', 'Arr StdD 4'])
+    else:
+        to_save.columns = (['Delay 1', 'Min', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
+                            'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1', 'Arr Min 1 ', 'Arr Max 1', 'Arr StdD 1',
+                            'Delay 2', 'Det', ' Dep 2', 'Arr 2 min', 'Arr 2 max', 'Arrival 2', 'Fuel Con 2',
+                            'Fuel Min 2', 'Fuel Max 2', 'Fuel StdD 2', 'Arr Min 2 ', 'Arr Max 2', 'Arr StdD 2',
+                            'Delay 3', 'Inf', ' Dep 3', 'Arr 3 min', 'Arr 3 max', 'Arrival 3', 'Fuel Con 3',
+                            'Fuel Min 3', 'Fuel Max 3', 'Fuel StdD 3', 'Arr Min 3 ', 'Arr Max 3', 'Arr StdD 3'])
+
+    # Select the columns which have to be ordered together
     for dir in Dir:
-        if 'min' in dir:    apple = ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
-        elif 'det' in dir:  apple = ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
-        elif 'inf' in dir:  apple = ['Delay 3', 'Inf', 'Arrival 3', 'Fuel Con 3']
+        if 'min' in dir:        apple = to_save.columns[00:13] # ['Delay 1', 'Min', 'Arrival 1', 'Fuel Con 1']
+        elif 'det' in dir:      apple = to_save.columns[13:26] # ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
+        elif 'prob' in dir:     apple = to_save.columns[26:39] # ['Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3']
+        elif 'inf' in dir:
+            if '3 prob' in Dir: apple = to_save.columns[39:52] # apple = ['Delay 4', 'Inf', 'Dep 4', 'Arrival 4', 'Fuel Con 4']
+            else:               apple = to_save.columns[26:39] # apple = ['Delay 3', 'Inf', 'Arrival 3', 'Fuel Con 3']
         else: continue
 
         dir2 = apple[1]

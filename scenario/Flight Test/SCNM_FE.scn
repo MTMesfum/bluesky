@@ -110,6 +110,206 @@
 00:00:00.00> SCEN Test_20
 00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 20, 8200
 23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_21
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 21, 8210
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_22
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 22, 8220
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_23
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 23, 8230
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_24
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 24, 8240
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_25
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 25, 8250
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_26
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 26, 8260
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_27
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 27, 8270
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_28
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 28, 8280
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_29
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 29, 8290
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_30
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 30, 8300
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_31
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 31, 8310
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_32
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 32, 8320
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_33
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 33, 8330
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_34
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 34, 8340
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_35
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 35, 8350
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_36
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 36, 8360
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_37
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 37, 8370
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_38
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 38, 8380
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_39
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 39, 8390
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_40
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 40, 8400
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_41
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 41, 8410
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_42
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 42, 8420
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_43
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 43, 8430
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_44
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 44, 8440
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_45
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 45, 8450
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_46
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 46, 8460
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_47
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 47, 8470
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_48
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 48, 8480
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_49
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 49, 8490
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_50
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 50, 8500
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_51
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 51, 8510
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_52
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 52, 8520
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_53
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 53, 8530
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_54
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 54, 8540
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_55
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 55, 8550
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_56
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 56, 8560
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_57
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 57, 8570
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_58
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 58, 8580
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_59
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 59, 8590
+23:59:00.00> HOLD
+
+# Load trajectories for a run
+00:00:00.00> SCEN Test_60
+00:00:00.00> PCALL "Flight Test/B763 FL380.scn" 60, 8600
+23:59:00.00> HOLD
 # Distance between Waypoint 0 and 1 is 70.66.
 # Distance between Waypoint 1 and 2 is 70.22.
 # Distance between Waypoint 2 and 3 is 69.78.
