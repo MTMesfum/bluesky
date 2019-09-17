@@ -264,6 +264,7 @@ class Afms(TrafficArrays):
             #         print('traf_lat is {} and traf_lon is {}'.format(traf_lat, traf_lon))
                     # stack.stack('WRITER2 {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index]))
                     # holder[index] = traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-2
+            # Check whether the final waypoint has been reached
             if holder[index] == traf.ap.route[bs.traf.id2idx(traf.id[index])].nwp-2:
                 # stack.stack('HOLD')
                 column_name = '[ {0} ]'.format(holder[index] - 1)
@@ -278,6 +279,7 @@ class Afms(TrafficArrays):
                 # del self.interval_counter[index], self.currentwp[index],\
                 #     self.lat[index], self.lon[index], self.index[index]
                 continue
+            # Check whether a new waypoint has been reached
             elif self.interval_counter[index] % (self.dt/settings.simdt) == 0 or \
                self.currentwp[index] != holder[index] or \
                     self.currentwp[index] == []:
@@ -286,6 +288,10 @@ class Afms(TrafficArrays):
                 self.interval_counter[index] = 0
                 self.currentwp[index] = holder[index]
                 list_to_update.append(index)
+                # 1) Get the pos data of the aircraft
+                # 2) Use the pos data to find the local winddata
+                # 3) Echo the winddata so it's saved in the inputlog
+                stack.stack('ECHO {}')
             else:
                 self.interval_counter[index] += 1
                 continue
