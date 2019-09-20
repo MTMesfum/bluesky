@@ -43,7 +43,7 @@ import shutil
 # settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = np.arange(42, 51) #np.flip(np.arange(1, 51))
+list_ensemble = np.arange(7, 51) #np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
 skip_entire_dir = ['1 min', '2 det'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
@@ -54,13 +54,14 @@ set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
 # set_dt(0.1)
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(0.1)
+set_dt(0.10)
 traj_folder = traj_folder2
 runs = 0
+run = True
 FE = False
 create_scenarios = False
 create_scenarios_custom = True
-del_runs = False
+del_runs = True
 
 # position of the TW. True is in middle, False is on the bottom
 set_TW_place(True)
@@ -160,7 +161,7 @@ if create_scenarios_custom:
 
         with open(save_file, 'w') as fin:
             fin.write(str(selection))
-        exit()
+        # exit()
 
     selection = str("".join(list([line for line in open(save_file, 'r')])))
     print('The selected trajectories are:\n')
@@ -190,39 +191,40 @@ if del_runs:
         pass
 
 # run a trajectory for every ensemble
-for dir in os.listdir(traj_folder):
-    if dir in skip_entire_dir:
-        continue
-    traj_counter = 0
-    traj = os.listdir(traj_folder + "\\" + dir)
-    # traj = [traj[traj.index(i)] for i in traj if ('D'+str(set_of_delays[0])) in i]
-    traj.append('dummy')
-    # print('traj holds: ', traj)
+if run:
+    for dir in os.listdir(traj_folder):
+        if dir in skip_entire_dir:
+            continue
+        traj_counter = 0
+        traj = os.listdir(traj_folder + "\\" + dir)
+        # traj = [traj[traj.index(i)] for i in traj if ('D'+str(set_of_delays[0])) in i]
+        traj.append('dummy')
+        # print('traj holds: ', traj)
 
-    # scen_next = traj_folder[9:] + '\\' + dir + '\\' + sgl_traj
-    # print(scen_next)
-    replace_batch_set2(dir, "Trajectories-batch3", "Trajectories-batch4")
-    # replace_batch(scen_next)
-    # exit()
-    talk_traj2(dir, traj_counter)
-    # if dir == '2 det':
-    #     if sgl_traj in ['det ADH931 D0.scn',
-    #                     'det ADH931 D720.scn', 'det ADH931 D1050.scn']:
-    #         continue
-    for ensemble in list_ensemble:
-        replace_ensemble(ensemble, "Trajectories-batch4.scn")
-        runs += 1
-        talk_time(runs)
-        talk_run3(ensemble, dir, runs)
-        bs_desktop()
-        # Move the input and output log files into their log folders
-        movelog2(ensemble, dir, False)
+        # scen_next = traj_folder[9:] + '\\' + dir + '\\' + sgl_traj
+        # print(scen_next)
+        replace_batch_set2(dir, "Trajectories-batch3", "Trajectories-batch4")
+        # replace_batch(scen_next)
         # exit()
-    # exit()
-        writerfix2(dir, traj_counter, False)
-    # if traj_counter == 3:
-    #     exit()
-    traj_counter += 1
+        talk_traj2(dir, traj_counter)
+        # if dir == '2 det':
+        #     if sgl_traj in ['det ADH931 D0.scn',
+        #                     'det ADH931 D720.scn', 'det ADH931 D1050.scn']:
+        #         continue
+        for ensemble in list_ensemble:
+            replace_ensemble(ensemble, "Trajectories-batch4.scn")
+            runs += 1
+            talk_time(runs)
+            talk_run3(ensemble, dir, runs)
+            bs_desktop()
+            # Move the input and output log files into their log folders
+            movelog2(ensemble, dir, False)
+            # exit()
+        # exit()
+            writerfix2(dir, traj_counter, False)
+        # if traj_counter == 3:
+        #     exit()
+        traj_counter += 1
 
 # Open the folder with all the results
 talk_time(runs)
@@ -252,8 +254,8 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
 # result_analysis('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
 # result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 2')
 # result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
-result_analysis2()
-overall_aggregate2()
+# overall_aggregate2('F:\Documents\BlueSky Backup\Run 17 Sep TW_mid Munich Wx1 Few')
+# result_analysis2('F:\Documents\BlueSky Backup\Run 17 Sep TW_mid Munich Wx1 Few')
 talk_time(runs)
 # exit()
 # overall_aggregate('F:\Documents\BlueSky Backup\Run 09 Jul TW_mid')

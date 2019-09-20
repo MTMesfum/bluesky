@@ -214,8 +214,8 @@ class WindIris:
         if list(self.ens):
             # if ens member is different from the one currently loaded
             if self.__ens is not ens:
-                self.north = 1*(self.cubes[0].extract(iris.Constraint(ensemble_member=ens)).data - self.north_mean)
-                self.east = 1*(self.cubes[1].extract(iris.Constraint(ensemble_member=ens)).data - self.east_mean)
+                self.north = 3*(self.cubes[0].extract(iris.Constraint(ensemble_member=ens)).data - self.north_mean)
+                self.east = 3*(self.cubes[1].extract(iris.Constraint(ensemble_member=ens)).data - self.east_mean)
             self.__ens = ens
 
     def __interpolate(self, cube_n, cube_e, lat, lon, pressure, time):

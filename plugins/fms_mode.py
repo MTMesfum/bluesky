@@ -280,18 +280,21 @@ class Afms(TrafficArrays):
                 #     self.lat[index], self.lon[index], self.index[index]
                 continue
             # Check whether a new waypoint has been reached
-            elif self.interval_counter[index] % (self.dt/settings.simdt) == 0 or \
-               self.currentwp[index] != holder[index] or \
+            elif self.interval_counter[index] % (self.dt / settings.simdt) == 0 or \
+                    self.currentwp[index] != holder[index] or \
                     self.currentwp[index] == []:
                 # print('\nMass at waypoint {} for AC {} is {}.\n'.format(
-                    # holder[index], traf_id, traf.perf.mass[index]))
+                # holder[index], traf_id, traf.perf.mass[index]))
                 self.interval_counter[index] = 0
                 self.currentwp[index] = holder[index]
                 list_to_update.append(index)
+                column_name = traf.ap.route[bs.traf.id2idx(traf.id[index])]
                 # 1) Get the pos data of the aircraft
+                stack.stack(f'ECHO {traf.id[index]} {self.currentwp[index]} {traf.lat[index]} {traf.lon[index]} {traf.alt[index]}')
                 # 2) Use the pos data to find the local winddata
+                vn, ve = bs.traf.wind.getdata(traf.lat[index], traf.lon[index], traf.alt[index])
                 # 3) Echo the winddata so it's saved in the inputlog
-                stack.stack('ECHO {}')
+                stack.stack(f'ECHO {traf.id[index]} {self.currentwp[index]} {vn} {ve} {traf.alt[index]}')
             else:
                 self.interval_counter[index] += 1
                 continue
@@ -458,7 +461,7 @@ class Afms(TrafficArrays):
                             if tools.aero.vcas2mach(time_window_cas_m_s, flightlevels_m[0]) > 0.95:
                                 abcd = '0.95'
                                 stack.stack(f'SPD2 {traf.id[idx]}, {abcd}')
-                            elif flightlevels_m[0] > 7620:
+                            elif flightlevels_m[0] > 6090:
                                 abcd = '{0:.3f}'.format(tools.aero.vcas2mach(time_window_cas_m_s, flightlevels_m[0]))
                                 stack.stack(f'SPD2 {traf.id[idx]}, {abcd}')
                             else:
