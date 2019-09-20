@@ -57,11 +57,11 @@ traj_folder2 = 'scenario\\remon scen'
 set_dt(0.10)
 traj_folder = traj_folder2
 runs = 0
-run = True
+run = False
 FE = False
 create_scenarios = False
-create_scenarios_custom = True
-del_runs = True
+create_scenarios_custom = False
+del_runs = False
 
 # position of the TW. True is in middle, False is on the bottom
 set_TW_place(True)
@@ -254,17 +254,17 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
 # result_analysis('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
 # result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 2')
 # result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
-# overall_aggregate2('F:\Documents\BlueSky Backup\Run 17 Sep TW_mid Munich Wx1 Few')
-# result_analysis2('F:\Documents\BlueSky Backup\Run 17 Sep TW_mid Munich Wx1 Few')
+overall_aggregate2('F:\Documents\BlueSky Backup\Run 17 Sep TW_mid Munich Wx3 Few')
+result_analysis2('F:\Documents\BlueSky Backup\Run 17 Sep TW_mid Munich Wx3 Few')
 talk_time(runs)
-# exit()
+exit()
 # overall_aggregate('F:\Documents\BlueSky Backup\Run 09 Jul TW_mid')
 # overall_aggregate2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx3')
 # result_analysis2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx3')
 
 # os.startfile('output\\runs')
 
-os.system("shutdown /s /t 180")
+# os.system("shutdown /s /t 180")
 
 # import pickle
 # df = pickle.load( open(
