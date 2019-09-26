@@ -18,7 +18,6 @@ from bluesky.tools import aero
 """
 # Methods are described in scratch_methods ##############################################
 from scratch_methods import *
-import shutil
 
 # pd.set_option('display.max_rows', 500)
 # pd.set_option('display.max_columns', 500)
@@ -36,39 +35,45 @@ import shutil
 #     UWARNING = '\033[4m' + '\033[93m'
 #     UBLUE = '\033[4m' + '\033[94m'
 
-# bs_desktop()
-# exit()
-# scenario_manager = "scenario\Trajectories-batch.scn"
-# scenario_manager = "scenario\Test10.scn"
-# settings_config = "settings.cfg"
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = np.arange(7, 51) #np.flip(np.arange(1, 51))
+list_ensemble = np.arange(1, 51) #np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '2 det'] # ['1 min', '2 det', '3 prob', '4 inf']
-set_of_delays = [0, 180, 300, 600, 900, 1200, 1800]
+skip_entire_dir = ['1 min', '2 det', '3 prob'] # ['1 min', '2 det', '3 prob', '4 inf']
+set_of_delays = [0, 300, 600, 900, 1200, 1500, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
               #                       [ 0,   1,   2,   3,   4,    5]
-# dt = 0.5
-# set_dt(0.1)
+
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(0.10)
+set_dt(1.0)
 traj_folder = traj_folder2
 runs = 0
-run = False
+analysis = False
+run = True
 FE = False
-create_scenarios = False
+create_scenarios = True
 create_scenarios_custom = False
-del_runs = False
+del_runs = True
 
 # position of the TW. True is in middle, False is on the bottom
-set_TW_place(True)
+set_TW_place(False)
 
 clear_mylog()
 timeit.default_timer()
 set_delays(set_of_delays)
+
+if analysis:
+    analysis_path = 'F:\\Documents\\BlueSky Backup\\Run 20 Sep TW_mid Old Wx1\\xlogs input\\4 inf'
+    analysis_path = None
+    flights = ['TAP1015', 'AZA1572', 'BEL7PC', 'EXS79G']
+    selection = [0, 600, 1200, 1800]
+
+    for flight in flights:
+        getLog(analysis_path, flight, selection, False, False)
+    exit()
+
 
 # This section is used to find the most FE speed
 if FE:
@@ -93,12 +98,10 @@ if FE:
     exit()
 
 if create_scenarios:
-    CreateSCN_Cruise2(True)
+    selected = ['TAP1015', 'AZA1572', 'BEL7PC', 'EXS79G']
+    CreateSCN_Cruise2(True, selected)
     CreateSCNM3('Trajectories-batch3')
-    # orig = "remon scen\\1 min" + '\\min ADH931 D{}.scn'.format(str(set_of_delays[0]))
     orig = "1 min" #+ '\\min ADH931.scn'
-    # replace_batch_set2(orig, "Trajectories-batch3", "Trajectories-batch4")
-    # compare_ff()
 
 if create_scenarios_custom:
     file1 = "scenario\\custom scen raw\\"
@@ -197,20 +200,10 @@ if run:
             continue
         traj_counter = 0
         traj = os.listdir(traj_folder + "\\" + dir)
-        # traj = [traj[traj.index(i)] for i in traj if ('D'+str(set_of_delays[0])) in i]
         traj.append('dummy')
-        # print('traj holds: ', traj)
-
-        # scen_next = traj_folder[9:] + '\\' + dir + '\\' + sgl_traj
-        # print(scen_next)
         replace_batch_set2(dir, "Trajectories-batch3", "Trajectories-batch4")
-        # replace_batch(scen_next)
-        # exit()
         talk_traj2(dir, traj_counter)
-        # if dir == '2 det':
-        #     if sgl_traj in ['det ADH931 D0.scn',
-        #                     'det ADH931 D720.scn', 'det ADH931 D1050.scn']:
-        #         continue
+
         for ensemble in list_ensemble:
             replace_ensemble(ensemble, "Trajectories-batch4.scn")
             runs += 1
@@ -219,16 +212,12 @@ if run:
             bs_desktop()
             # Move the input and output log files into their log folders
             movelog2(ensemble, dir, False)
-            # exit()
-        # exit()
             writerfix2(dir, traj_counter, False)
-        # if traj_counter == 3:
-        #     exit()
         traj_counter += 1
 
 # Open the folder with all the results
 talk_time(runs)
-
+# os.startfile('output\\runs')
 
 # overall_aggregate() #os.getcwd() + '\\output\\runs_save')
 skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
@@ -249,21 +238,14 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         'WZZ114', 'MON752A'
         ]
 
-# overall_aggregate('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
-# overall_aggregate('F:\Documents\BlueSky Backup\Run Desktop TU 2')
-# result_analysis('F:\Documents\BlueSky Backup\Run 28 Jun TW_bot')
-# result_analysis('F:\Documents\BlueSky Backup\Run Desktop TU 2')
-# result_analysis(None, False, 'zero', ['min', 'det', 'prob'])
-overall_aggregate2('F:\Documents\BlueSky Backup\Run 17 Sep TW_mid Munich Wx3 Few')
-result_analysis2('F:\Documents\BlueSky Backup\Run 17 Sep TW_mid Munich Wx3 Few')
+try:
+    overall_aggregate2()
+    result_analysis2()
+except:
+    pass
+
 talk_time(runs)
-exit()
-# overall_aggregate('F:\Documents\BlueSky Backup\Run 09 Jul TW_mid')
-# overall_aggregate2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx3')
-# result_analysis2('F:\Documents\BlueSky Backup\Run 02 Sep TW_mid Munich Wx3')
-
-# os.startfile('output\\runs')
-
+# exit()
 # os.system("shutdown /s /t 180")
 
 # import pickle

@@ -128,7 +128,6 @@ class DataLogger(TrafficArrays):
               + '\033[0m')
         stack.stack('LOAD_WIND {}, {}'.format(ensemble, file))
 
-
     def create(self, n=1):
         super(DataLogger, self).create(n)
         if len(traf.id) > 1:
@@ -139,37 +138,15 @@ class DataLogger(TrafficArrays):
             self.initmass[0] = traf.perf.mass[0]
             self.inittime[0] = str(sim.utc.strftime("%H:%M:%S"))
             self.counter[0] = 0
-        print("\nAC {0} [{1}] has been created at {2}.".format(traf.id[-1], traf.type[-1],
-                                                             sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
-
+        print("AC " + '\033[92m' + "{0} [{1}]".format(traf.id[-1], traf.type[-1]) + '\033[0m'
+                + " has been created at " + '\033[94m' + "{}".format(
+                sim.utc.strftime("%d-%b-%Y %H:%M:%S")) + '\033[0m' + ".")
 
     def speed(self, ac_id, ac_target_speed):
-        # Check whether Vmax is exceeded, if so replace it with Vmax
-        # print(ac_id)
-        # print(traf.id[ac_id])
-        # index = self.idx2id(ac_id)
-        # print(index)
-        # This is the target altitude of the next waypoint
-        # print(traf.ap.route[ac_id].wpalt[traf.ap.route[ac_id].iactwp])
-        # This is the ac type
-        # print(traf.type[ac_id])
-        # Now find the maximum velocity of the ac type corresponding at that altitude
-        # print(traf.perf.vmo)
-        # print('The maximum operating mach number is: ', traf.perf.mmo)
-        # print(traf.tas)
-        # print('Vmax is: ', traf.perf.asas.vmax)
-        # Either pick the speed which is put in or the max operating speed
+        # Check whether Vmax is exceeded, if so: replace it with Vmax - margin
         ac_speed = min(traf.perf.mmo[ac_id] - 0.001, ac_target_speed)
-        # print('\nThe target speed is: ', ac_target_speed)
-        # print('The max speed is: ', traf.perf.mmo[ac_id])
-        # print('The selected speed is: ', ac_speed)
         stack.stack(f'SPD {traf.id[ac_id]} {ac_speed}')
 
-        # "SPD": [
-        #         #     "SPD acid,spd (CAS-kts/Mach)",
-        #         #     "acid,spd",
-        #         #     bs.traf.ap.selspdcmd,
-        #         #     "Speed command (autopilot)"
 
     def idx2id(self, ac_id):
         # Fast way of finding indices of all ACID's in a given list
@@ -178,11 +155,6 @@ class DataLogger(TrafficArrays):
 
 
     def talko(self, delcounter):
-        # if len(delcounter) == 1:
-        #     print("Aircraft {0} has been deleted at {1}.".format(traf.id[int(delcounter)], sim.utc))
-        #     print("Fuel used by {0} is {1} [kg].".format(traf.id[int(delcounter)],
-        #                                             np.array2string(self.fuelused[int(delcounter)], precision=2)))
-        # else:
         for i in range(0, len(delcounter)):
             print("Aircraft {0} has been deleted at {1}.".format(traf.id[int(delcounter[i])], sim.utc))
             print("Fuel used by {0} is {1} kg.".format(traf.id[int(delcounter[i])],
@@ -197,20 +169,6 @@ class DataLogger(TrafficArrays):
             results = results.append(df, ignore_index=True)
         return results
 
-    # def save2(self):
-    #     if self.wpcounter == -2:
-    #         traf.resultstosave2 = pd.DataFrame()
-    #         # number_of_waypoints = traf.ap.route[bs.traf.id2idx(traf.id[-1])].nwp
-    #         for i in range(1, traf.ap.route[traf.id2idx(traf.id[-1])].nwp+1):
-    #             if i < 10:
-    #                 holder = pd.DataFrame(["[ 0{0} ]".format(i)], columns=['Waypoint {0}'.format(i)])
-    #             else:
-    #                 holder = pd.DataFrame(["[ {0} ]".format(i)], columns=['Waypoint {0}'.format(i)])
-    #             traf.resultstosave2 = pd.concat([traf.resultstosave2, holder], axis=1)
-    #         self.wpcounter = 0
-    #         print(traf.resultstosave2)
-    #     pass
-
     def write(self, *args):
         curtime = []
         if traf.resultstosave.empty:
@@ -221,7 +179,7 @@ class DataLogger(TrafficArrays):
                            str(curtime), np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=3)]]
                 df = pd.DataFrame(holder, columns=self.dataframe_holder)
                 traf.resultstosave = traf.resultstosave.append(df, ignore_index=True)
-                print("\nAircraft {0} has been deleted at {1}.".format(traf.id[i], sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
+                print("Aircraft {0} has been deleted at {1}.".format(traf.id[i], sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
                 print("Fuel used by {0} is {1} [kg].\n".format(traf.id[i],
                                          np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
         traf.resultstosave = pd.concat([traf.resultstosave, traf.resultstosave2], axis=1)
@@ -256,10 +214,6 @@ class DataLogger(TrafficArrays):
     def write2(self, acid, traf_id, index, *args):
         curtime = []
         i = int(acid)
-        print('\nacid {} is saved on {}'.format(traf_id, acid))
-        # print('What is saved in i?? : ', i)
-        # print('i is supposed to be: ', traf.id[index])
-        # print('i as index is: ', traf.id[i])
         self.aclimit2 += 1
         curtime = str(sim.utc.strftime("%H:%M:%S"))
         traf.resultstosave = pd.DataFrame([[ensemble, str(self.delay[int(i)]), str(traf_id),
@@ -268,20 +222,21 @@ class DataLogger(TrafficArrays):
                               columns=self.dataframe_holder)
         traf.resultstosave3 = traf.resultstosave3.append(traf.resultstosave, ignore_index=True)
         stack.stack('DEL {}'.format(traf_id))
-        print("\nAircraft {0} has been deleted at {1}.".format(traf.id[i], sim.utc.strftime("%d-%b-%Y %H:%M:%S")))
-        print("Fuel used by {0} is {1} [kg].".format(traf.id[i],
-                                 np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
-        # print('traf.id length is: ', len(traf.id))
-        print('ac_limit is1: ', self.aclimit)
-        print('ac_limit is2: ', self.aclimit2)
-        if traf.resultstosave2.iloc[-1, -1] is not None and \
-                (len(traf.id) == 1 or self.aclimit2 == self.aclimit):
+        print("AC " + '\033[94m' + "{} [{}/{}] [{} [kg]]".format(traf.id[i], self.aclimit2, self.aclimit,
+            np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)) + '\033[0m' +
+              " has been deleted at " + '\033[92m' + "{}".format(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
+              + '\033[0m' + '.')
+        # print("Fuel used by {0} is {1} [kg].".format(traf.id[i],
+        #                          np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
+        # print('ac_limit is1: ', self.aclimit)
+        # print('ac_limit is2: ', self.aclimit2)
+        if traf.resultstosave2.iloc[-1, -1] is not None and self.aclimit2 == self.aclimit:
+            # \                (len(traf.id) == 1 or self.aclimit2 == self.aclimit):
             traf.resultstosave3 = traf.resultstosave3.sort_values('AC ID').reset_index(drop=True)
             traf.resultstosave2 = traf.resultstosave2.sort_values('AC ID').reset_index(drop=True)
             traf.resultstosave = pd.concat([traf.resultstosave3,
                                             traf.resultstosave2], axis=1)
-            # traf.resultstosave.to_csv('output\WRITER Standard File.csv')
-            # check whether the file exist, if it does append it, otherwise create it
+            # check whether the file exist, if it does: append it, otherwise create it
             exists = os.path.isfile('output\WRITER Standard File.xlsx')
             if exists:
                 with open('output\WRITER Standard File.xlsx', 'wb') as f:
@@ -291,7 +246,6 @@ class DataLogger(TrafficArrays):
             print('\033[94m' + '\033[4m' +
                   '\nSaving the results in a standard file with N = {}!!!\n'.format(self.aclimit2) +
                   '\033[0m')
-            # os.startfile('output\WRITER Standard File.xlsx')
         elif args:
             filename = str(args[0])
             print('\033[94m' + '\033[4m' + '\nSaving the results in {0}!!!\n\n'.format(filename) + '\033[0m')

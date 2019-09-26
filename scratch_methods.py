@@ -1,5 +1,7 @@
-import pandas as pd, os, datetime, random
+import pandas as pd, os, datetime, random, re
 import numpy as np, timeit, shutil, warnings
+import seaborn as sns; sns.set()
+import matplotlib.pyplot as plt
 from bluesky.tools import aero
 from bluesky.tools.geo import qdrdist as dist
 from bluesky.tools.geo import latlondist as dist2
@@ -420,7 +422,7 @@ def CreateSCN(alpha, save_file, folder = "queries\\"):
 
     # os.startfile("F:\Documents\Python Scripts\ThesisScript")
 
-# alpha = random delay
+# alpha = with delay
 target_speed = 272.8 #A320
 sub_FL = 0
 def CreateSCN_Cruise(alpha, fl_ref, cap=999):
@@ -475,7 +477,7 @@ def CreateSCN_Cruise(alpha, fl_ref, cap=999):
                                       + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
                                       + str(cut3(heading)) + ', ' + FlightLevel + ', ' + str(target_speed))
                         banana.append(apple + '.00> ASAS OFF')
-                        banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
+                        # banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
                         banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG, '
                                       + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
                                       + str(cut7(scenario['st_y(gpt.coords)'][i])))
@@ -608,12 +610,13 @@ def CreateSCN_Cruise(alpha, fl_ref, cap=999):
 
 # This function is meant to create a set of scenarios which runs every trajectory
 # of 1 ensemble of a case out of [min, det, stoch, inf]
-def CreateSCN_Cruise2(alpha, cap=999):
+def CreateSCN_Cruise2(alpha, selection, cap=999):
     if os.path.exists("scenario\\remon scen"):
         shutil.rmtree("scenario\\remon scen")
     folder = "scenario\\remon_raw_scenario\\"
     type_file = "AC Type 2.xlsx"
     FileName = os.listdir(folder)
+    FileName2 = reversed(FileName)
     cruise_speed = pd.read_excel(cruise_file)
     sub_FL = 0
 
@@ -624,15 +627,18 @@ def CreateSCN_Cruise2(alpha, cap=999):
     # 		-> run through set of delays
     # 		-> add to file
     # 	-> save respective min etc
-    print('')
-    for index, k in enumerate(FileName):
+    number = 0
+    for index, k in enumerate(FileName2):
+        acid, ext = os.path.splitext(k)
         if cap == index-1:
             return
-        acid, ext = os.path.splitext(k)
-        if ext != '.csv' or acid in list(cruise_speed['skip']):
+        elif acid not in selection:
+            continue
+        elif ext != '.csv' or acid in list(cruise_speed['skip']):
             FileName.remove(k)
             continue
         print('Creating scenario for Flight {}!'.format(k))
+        number += 1
         scenario = pd.read_csv(folder + k)
         actype_file = pd.read_excel(folder + type_file)
         actype = actype_file[actype_file['id'].str.contains(k[0:-4])]['AC type'].reset_index(drop=True)[0] + ', '
@@ -674,7 +680,7 @@ def CreateSCN_Cruise2(alpha, cap=999):
                                       + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
                                       + str(cut3(heading)) + ', ' + FlightLevel + ', ' + str(target_speed))
                         banana.append(apple + '.00> ASAS OFF')
-                        banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
+                        # banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
                         banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG, '
                                       + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
                                       + str(cut7(scenario['st_y(gpt.coords)'][i])))
@@ -794,20 +800,10 @@ def CreateSCN_Cruise2(alpha, cap=999):
             with open(dest_dir + l + ' ' + acid + '.scn', "w") as fin:
                 fin.write('\n'.join(banana))
 
-            # if not alpha:
-            #     break
-
-
-    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-    #     print(scenario)
-
-    # os.startfile("F:\Documents\Python Scripts\ThesisScript")
     with open(os.getcwd() + '/scenario/number_of_ac.txt', "w+") as fin:
-        number = len(FileName) * len(set_of_delays)
-        print(number, 'aircraft per simulation')
-        # number = 360
+        number = number * len(set_of_delays)
+        print('\nNumber of aircraft per simulation: ', number)
         fin.write(str(number))
-
     return
 
 # This function is meant to create a set of scenarios which runs every trajectory
@@ -816,8 +812,8 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
     if os.path.exists("scenario\\remon scen"):
         shutil.rmtree("scenario\\remon scen")
     folder = "scenario\\custom scen\\"
-    # type_file = "AC Type 2.xlsx"
     FileName = os.listdir(folder)
+    FileName2 = reversed(FileName)
     cruise_speed = pd.read_excel(cruise_file2)
     sub_FL = 0
 
@@ -828,22 +824,21 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
     # 		-> run through set of delays
     # 		-> add to file
     # 	-> save respective min etc
-    print('')
-    for index, k in enumerate(FileName):
-        if os.path.splitext(k)[0] not in selection:
-            continue
+    number = 0
+    for index, k in enumerate(FileName2):
+        acid, ext = os.path.splitext(k)
         if cap == index-1:
             return
-        acid, ext = os.path.splitext(k)
-        if ext != '.xlsx' or acid in list(cruise_speed['skip']):
+        elif acid not in selection:
+            continue
+        elif ext != '.csv' or acid in list(cruise_speed['skip']):
             FileName.remove(k)
             continue
         print('Creating scenario for Flight {}'.format(os.path.splitext(k)[0]))
+        number += 1
         scenario = pd.read_excel(folder + k)
-        # actype_file = pd.read_excel(folder + type_file)
         actype = scenario['AAC-type'][0] + ','
         TW_det = (scenario['negative'][0] + scenario['positive'][0])
-        # TW_stoch = actype_file[actype_file['id'].str.contains(k[0:-4])]['TW Stoch'].reset_index(drop=True)[0]
 
         if not acid in str(cruise_speed[['switch_10', 'switch_20', 'switch_30', 'switch_40', 'switch_50', 'switch_60']]):
             fl_cor = 0
@@ -882,7 +877,7 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
                                       + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
                                       + str(cut3(heading)) + ', ' + FlightLevel + ', ' + str(target_speed))
                         banana.append(apple + '.00> ASAS OFF')
-                        banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
+                        # banana.append(apple + '.00> PRINTER A delay of {0} seconds has been added.'.format(str(delay)))
                         banana.append(apple + '.00> DEFWPT ' + aircraftid + '-ORIG, '
                                       + str(cut7(scenario['st_x(gpt.coords)'][i])) + ', '
                                       + str(cut7(scenario['st_y(gpt.coords)'][i])))
@@ -1002,19 +997,10 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
             with open(dest_dir + l + ' ' + acid + '.scn', "w") as fin:
                 fin.write('\n'.join(banana))
 
-            # if not alpha:
-            #     break
-
-
-    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-    #     print(scenario)
-
-    # os.startfile("F:\Documents\Python Scripts\ThesisScript")
     with open('scenario\\number_of_ac.txt', "w+") as fin:
-        # number = (len(FileName)-3) * len(set_of_delays)
-        number = len(FileName) * len(set_of_delays)
+        number = number * len(set_of_delays)
+        print('\nNumber of aircraft per simulation: ', number)
         fin.write(str(number))
-
     return
 
 def CreateSCN_FE(actype, FlightLevel, v_bada, delta, steps=0.001):
@@ -1279,6 +1265,7 @@ def writerfix2(dir, counter, upload):
           bcolors.ENDC)
     # os.startfile('output\\runs\WRITER {0}.xlsx'.format(traj))
 
+# 'movelog' has been replaced by movelog2 and "PRINTER" lines have been disabled
 def movelog(ensemble, traj, dir):
     #Move the input log file into the input log folder
     dest_dir_input_logs2 = dest_dir_input_logs + "\\" + dir[0:7] + "\\" + traj[4:10]
@@ -1362,7 +1349,6 @@ def clear_mylog():
     for i in files:
         os.remove('output\\' + i)
         print('The file {} has been deleted!'.format(i))
-
 
 '''                 ######################################## 
                     ########################################
@@ -1454,7 +1440,6 @@ def time_required2(distances_nm, FL, speed):
     # total_time_s = np.sum(times_s)
     return step_time_s
 
-
 '''                 ######################################## 
                     ########################################
                     ###     Upload to Drive Method!!!    ###
@@ -1511,14 +1496,12 @@ def upload_file(file_upload, name, dir=None):
 
     print("File '{}' has been uploaded!".format(file_upload))
 
-
 '''                 ######################################## 
                     ########################################
                     ###        Excel Writer Method!!!    ###
                     ########################################   
                     ########################################             
 '''
-
 def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
                        truncate_sheet=False, **to_excel_kwargs):
     """
@@ -1583,14 +1566,12 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
     # save the workbook
     writer.save()
 
-
 '''                 ######################################## 
                     ########################################
                     ### Analysis tools for the results!! ###
                     ########################################   
                     ########################################             
 '''
-
 # This method reads in the mylog files and orders them on fuelflow for comparison
 def compare_ff(file=None):
     if file is None:
@@ -1921,7 +1902,7 @@ def overall_aggregate2(path=None, upload=False):
             if i == 0:
                 appleType = list()
                 for q in pd_files_names:
-                    apple_0 = logType.find('CRE {}-MIN-0 '.format(q))
+                    apple_0 = logType.find('CRE {}-INF-0 '.format(q))
                     appleType.append(logType[apple_0:apple_0 + 50].split()[2])
 
             apple_0 = log2.find('TW_SIZE_AT {}'.format(k))
@@ -1978,8 +1959,14 @@ def overall_aggregate2(path=None, upload=False):
         elif 'det' in dir:      apple = to_save.columns[13:26] # ['Delay 2', 'Det', 'Arrival 2', 'Fuel Con 2']
         elif 'prob' in dir:     apple = to_save.columns[26:39] # ['Delay 3', 'Prob', 'Arrival 3', 'Fuel Con 3']
         elif 'inf' in dir:
-            if '3 prob' in Dir: apple = to_save.columns[39:52] # apple = ['Delay 4', 'Inf', 'Dep 4', 'Arrival 4', 'Fuel Con 4']
-            else:               apple = to_save.columns[26:39] # apple = ['Delay 3', 'Inf', 'Arrival 3', 'Fuel Con 3']
+            if '3 prob' in Dir:
+                apple = to_save.columns[39:52] # apple = ['Delay 4', 'Inf', 'Dep 4', 'Arrival 4', 'Fuel Con 4']
+            elif '1 min' not in Dir:
+                to_save.columns = (['Delay 1', 'Inf', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
+                                    'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1', 'Arr Min 1 ', 'Arr Max 1', 'Arr StdD 1'])
+                apple = to_save.columns[00:13]
+            else:
+                apple = to_save.columns[26:39]  # apple = ['Delay 3', 'Inf', 'Arrival 3', 'Fuel Con 3']
         else: continue
 
         dir2 = apple[1]
@@ -2482,6 +2469,113 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
             if upload:
                 upload_file(filename, filename0)
     pass
+
+# Create a function that provides the filtered logs for a selected trajectory for plot-purposes
+# WPonly: True = First Wind measurement at WP only, False = Every Wind measurement
+# Choice: True = Magnitude + Direction, False = V north + Veast
+def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choice=True):
+    print('Processing flight {}!'.format(traj))
+
+    # Setup variables
+    if path == None:
+        path = 'C:\\Documents\\Git 2\\output\\runs\\xlogs input\\4 inf'
+    Dir = os.listdir(path)
+    file_path = os.path.join(path, Dir[0])
+    # log = ''.join(list([line for line in open(file_path, 'r') if 'CRE ' in line]))
+
+    # Find every delayed sibling-trajectory of the selected one
+    names = list()
+    for line in open(file_path, 'r'):
+        for word in line.split():
+            if traj in word:
+                if len(word.split('-')) < 4 and ':' not in word and ',' not in word:
+                    names.append(word)
+    names = list(set(i.upper() for i in names))
+    names.sort(key=lambda x: x.split("-", 2)[-1].zfill(4))
+
+    # Store the wind-data of every ensemble in a dataframe
+    if choice:
+        df = pd.DataFrame(columns=['Speed [m/s]', 'Direction [deg]', 'Delay', 'Waypoint'])
+    else:
+        df = pd.DataFrame(columns=['Speed [m/s]', 'North / East', 'Delay', 'Waypoint'])
+
+    for ensemble, ensembles in enumerate(Dir):
+        file_path = os.path.join(path, ensembles)
+        for name_0, name in enumerate(names):
+            log = ''.join(list([line for line in open(file_path, 'r') if 'ECHO {} '.format(name) in line]))
+            holder = None
+            for line_0, line in enumerate(log.split('\n')):
+                if line_0 % 2 == 0:
+                    continue
+                elif float(line.split()[2]) != holder:
+                    if choice:
+                        # Speed and Direction Version
+                        speed = np.sqrt(float(line.split(' ')[3][1:-1])**2 + float(line.split(' ')[4][1:-1])**2)
+                        direction = np.arctan(float(line.split(' ')[4][1:-1])/float(line.split(' ')[3][1:-1])) * 180/np.pi
+                        df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
+                                                      int(float(line.split(' ')[2]))]], columns=df.columns ), ignore_index=True)
+                    else:
+                        # V north and V east Version
+                        speed = float(line.split(' ')[3][1:-1])
+                        direction = str('V north')
+                        df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
+                                                      int(float(line.split(' ')[2]))]], columns=df.columns), ignore_index=True)
+                        speed = float(line.split(' ')[4][1:-1])
+                        direction = str('V east')
+                        df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
+                                                      int(float(line.split(' ')[2]))]], columns=df.columns), ignore_index=True)
+                    if wponly:
+                        holder = float(line.split()[2])
+
+    if choice:
+        # Speed and Direction Plots
+        dfsub = df[df['delay'].isin(selection)]
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(20, 10))
+
+        sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
+                      jitter=True, dodge=True, color=".3", ax=ax1)
+        sns.boxplot(x="Waypoint", y='Speed [m/s]', data=dfsub, hue="Delay", ax=ax1)
+        handles, labels = ax1.get_legend_handles_labels()
+        ax1.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
+        ax1.set_title('Magnitude of the Wind', fontsize=30)
+
+        sns.stripplot(x="Waypoint", y='Direction [deg]', hue="Delay", data=dfsub,
+                      jitter=True, dodge=True, color=".3", ax=ax2)
+        sns.boxplot(x="Waypoint", y='Direction [deg]', data=dfsub, hue="Delay", ax=ax2)
+        handles, labels = ax2.get_legend_handles_labels()
+        ax2.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
+        ax2.set_title('Direction of the Wind', fontsize=30)
+
+        print('Flight {} is shown'.format(traj))
+        plt.tight_layout()
+        plt.show()
+    else:
+        # V north and V east Plots
+        dfsub = df[df['Delay'].isin(selection)]
+        dfsub = dfsub[dfsub['North / East'] == 'V north']
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(20, 10))
+
+        sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
+                      jitter=True, dodge=True, color=".3", ax=ax1)
+        sns.boxplot(x="Waypoint", y='Speed [m/s]', data=dfsub, hue="Delay", ax=ax1)
+        handles, labels = ax1.get_legend_handles_labels()
+        ax1.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
+        ax1.set_title('North Component of the Wind', fontsize=30)
+
+        dfsub = df[df['Delay'].isin(selection)]
+        dfsub = dfsub[dfsub['North / East'] == 'V east']
+        sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
+                      jitter=True, dodge=True, color=".3", ax=ax2)
+        sns.boxplot(x="Waypoint", y="Speed [m/s]", data=dfsub, hue="Delay", ax=ax2)
+        handles, labels = ax2.get_legend_handles_labels()
+        ax2.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
+        ax2.set_title('East Component of the Wind', fontsize=30)
+
+        print('Flight {} is shown'.format(traj))
+        plt.tight_layout()
+        plt.show()
+
+    return
 
 def indices(lst, element):
     result = []
