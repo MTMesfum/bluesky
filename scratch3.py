@@ -53,7 +53,7 @@ runs = 0
 analysis = False
 run = True
 FE = False
-create_scenarios = True
+create_scenarios = False
 create_scenarios_custom = False
 del_runs = True
 
@@ -239,14 +239,14 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         ]
 
 try:
-    overall_aggregate2()
-    result_analysis2()
+    overall_aggregate2('C:\Documents\Git 2\output\\runs')
+    result_analysis2('C:\Documents\Git 2\output\\runs')
 except:
     pass
 
 talk_time(runs)
 # exit()
-# os.system("shutdown /s /t 180")
+os.system("shutdown /s /t 180")
 
 # import pickle
 # df = pickle.load( open(

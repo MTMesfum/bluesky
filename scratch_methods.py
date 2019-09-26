@@ -1827,6 +1827,7 @@ def overall_aggregate2(path=None, upload=False):
 
             if j == 0:
                 apple = pd.read_excel(file, index_col=None, header=None)
+                apple = apple.drop([0]).reset_index(drop=True)
                 banana = list(range(0, len(apple.columns)))
                 to_pop = list([0, 1, 2, 3, 5, 6, 7])
                 to_pop.reverse()
@@ -1837,9 +1838,9 @@ def overall_aggregate2(path=None, upload=False):
                 if i == 0:
                     to_save = apple.drop(columns=list([0, 1, 6, 7]))
                     pd_files = pd.read_excel(file, index_col=None, header=None)
+                    pd_files = pd_files.drop([0]).reset_index(drop=True)
                     pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
                     pd_files_names.sort()
-
                     appleMax  = pd.DataFrame(np.ones(number_ac)*0)
                     appleMin  = pd.DataFrame(np.ones(number_ac)*1e6)
                     appleMax2  = pd.DataFrame(np.ones(number_ac)*0)
@@ -1851,16 +1852,17 @@ def overall_aggregate2(path=None, upload=False):
                 continue
 
             apple2 = pd.read_excel(file, index_col=None, header=None)
+            apple2 = apple2.drop([0]).reset_index(drop=True)
             apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
-            appleMin = appleMin.clip_upper(apple2[7], axis=0)
-            appleMax = appleMax.clip_lower(apple2[7], axis=0)
+            appleMin = appleMin.clip_upper(apple2[7].astype(float), axis=0)
+            appleMax = appleMax.clip_lower(apple2[7].astype(float), axis=0)
             appleMin2 = appleMin2.clip_upper(pd.to_timedelta(apple2[6], unit='s').dt.total_seconds(), axis=0)
             appleMax2 = appleMax2.clip_lower(pd.to_timedelta(apple2[6], unit='s').dt.total_seconds(), axis=0)
-            apple[7] = apple[7] + apple2[7]
+            apple[7] = apple[7].astype(float) + apple2[7].astype(float)
             l += 1
 
         apple[6] = (apple[6] / l).dt.round('1s')
-        apple[7] = round(apple[7] / l, 2)
+        apple[7] = round(apple[7].astype(float) / l, 2)
 
         # Calculate the standard deviation of the Fuel Consumption and Arrival Time
         for j, file in enumerate(Files):
@@ -1878,6 +1880,7 @@ def overall_aggregate2(path=None, upload=False):
 
                 if i == 0:
                     pd_files = pd.read_excel(file, index_col=None, header=None)
+                    pd_files = pd_files.drop([0]).reset_index(drop=True)
                     pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
                     pd_files_names.sort()
                     appleStdDev     = apple[7]*0
@@ -1885,11 +1888,13 @@ def overall_aggregate2(path=None, upload=False):
                 continue
 
             apple_1 = pd.read_excel(file, index_col=None, header=None)
+            apple_1 = apple_1.drop([0]).reset_index(drop=True)
+            apple_1[7] = apple_1[7].astype(float)
             appleStdDev     = appleStdDev.add((apple_1[7] - apple[7])**2)
             appleStdDev2    = appleStdDev2.add(((pd.to_timedelta(apple_1[6], unit='s').dt.total_seconds() -
                                                     pd.to_timedelta(apple[6], unit='s').dt.total_seconds()).astype(int))**2)
 
-        appleStdDev     = (appleStdDev  / l)**(1/2)
+        appleStdDev     = (appleStdDev / l)**(1/2)
         appleStdDev2    = (appleStdDev2 / l)**(1/2)
         print('Number of Ensembles:', l)
         pd_min  = list()
@@ -1945,6 +1950,9 @@ def overall_aggregate2(path=None, upload=False):
                             'Fuel Min 3', 'Fuel Max 3', 'Fuel StdD 3', 'Arr Min 3 ', 'Arr Max 3', 'Arr StdD 3',
                             'Delay 4', 'Inf', ' Dep 4', 'Arr 4 min', 'Arr 4 max', 'Arrival 4', 'Fuel Con 4',
                             'Fuel Min 4', 'Fuel Max 4', 'Fuel StdD 4', 'Arr Min 4 ', 'Arr Max 4', 'Arr StdD 4'])
+    elif '1 min' not in Dir:
+        to_save.columns = (['Delay 1', 'Inf', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
+                            'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1', 'Arr Min 1 ', 'Arr Max 1', 'Arr StdD 1'])
     else:
         to_save.columns = (['Delay 1', 'Min', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
                             'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1', 'Arr Min 1 ', 'Arr Max 1', 'Arr StdD 1',
@@ -1962,8 +1970,6 @@ def overall_aggregate2(path=None, upload=False):
             if '3 prob' in Dir:
                 apple = to_save.columns[39:52] # apple = ['Delay 4', 'Inf', 'Dep 4', 'Arrival 4', 'Fuel Con 4']
             elif '1 min' not in Dir:
-                to_save.columns = (['Delay 1', 'Inf', ' Dep 1', 'Arr 1 min', 'Arr 1 max', 'Arrival 1', 'Fuel Con 1',
-                                    'Fuel Min 1', 'Fuel Max 1', 'Fuel StdD 1', 'Arr Min 1 ', 'Arr Max 1', 'Arr StdD 1'])
                 apple = to_save.columns[00:13]
             else:
                 apple = to_save.columns[26:39]  # apple = ['Delay 3', 'Inf', 'Arrival 3', 'Fuel Con 3']
@@ -1975,7 +1981,6 @@ def overall_aggregate2(path=None, upload=False):
         to_save2 = to_save[apple]
         to_save2 = to_save2.sort_values(by=[dir2, apple[0]], ascending=True)
         to_save[apple] = to_save2.values
-
     spacer += 1
 
     with open(filename, 'wb') as f:
@@ -2272,6 +2277,7 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
         # print('input log: ', Files_input_log)
 
         pd_files = pd.read_excel(Files[0], index_col=None, header=None)
+        pd_files = pd_files.drop([0]).reset_index(drop=True)
         pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
         pd_files_names.sort()
         legend = ([ ' ', ' ',
@@ -2279,26 +2285,25 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
                    'colour red if too late for TW',
                    'colour yellow if too early for TW',
                    'colour green if within TW'])
-
+        print(' ')
         for k in pd_files_names:
             if k in skip_flights:
                 continue
-            print('\nStarting trajectory {} of directory {}!'.format(k, dir))
+            print('Starting trajectory {} of directory {}!'.format(k, dir))
             filename0 = '{}{}.xlsx'.format(k, dir[1:])
             filename = os.path.join(path_analysis, filename0)
             to_save = to_save.reindex(to_save.columns.tolist() + ['Name', 'Vstart'])
 
             # Read in both files
-            # print(Files, Files_input_log)
             for a, b in zip(range(0, len(Files_input_log), 10), range(10, len(Files_input_log)+1, 10)):
                 if a > 9:
                     break
-                print(' ')
-                print('Start = ', a, '| Stop = ', b)
+                print('\nStart = ', a, '| Stop = ', b)
                 filename0 = '{}{} - {}.xlsx'.format(k, dir[1:], b)
                 filename = os.path.join(path_analysis, filename0)
                 for m, n in zip(Files[a:b], Files_input_log[a:b]):
                     ExcelDoc = pd.read_excel(m, index_col=None, header=None)
+                    ExcelDoc = ExcelDoc.drop([0]).reset_index(drop=True)
                     Ensemble = ExcelDoc[1][0]
                     Flights = ExcelDoc[ExcelDoc[3].str.contains(k)].reset_index(drop=True).sort_values(2)\
                         .dropna(axis='columns').drop(columns=list([0, 1, 4, 8]))
@@ -2316,10 +2321,7 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
                     Flights['Vstart [Mach]'] = None
                     actype = log2[apple:apple + 100].split()[2]
                     for o, _ in enumerate(Flights['Vstart [Mach]']):
-                        # Flights['Vstart [Mach]'][o] = round(aero.vcas2mach(int(holder[o]) * aero.nm / 3600,
-                        #                                                    int(FL_start[o]) * 100 * aero.ft), 2)
-                        Flights['Vstart [Mach]'][o] = \
-                            cruise_speed[cruise_speed['AC Type'] == actype][
+                        Flights['Vstart [Mach]'][o] = cruise_speed[cruise_speed['AC Type'] == actype][
                                 'FL' + str(round(int(FL_start[o]), -1))].item()
                     cols = Flights.columns.tolist()
                     cols.insert(2, cols.pop(-1))
@@ -2463,7 +2465,7 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
                     append_df_to_excel(filename, Speed_input, sheet, None, False, header=False)
 
                     print('Finished Ensemble {}!'.format(Ensemble))
-            print('Finished Trajectory {}!'.format(k))
+            print('Finished Trajectory {}!\n'.format(k))
             # os.startfile(filename)
 
             if upload:

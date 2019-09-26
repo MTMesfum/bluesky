@@ -95,10 +95,10 @@ class DataLogger(TrafficArrays):
             self.counter  = np.array([])
             self.initmass = np.array([])
             self.fuelused = np.array([])
+            self.delay = np.array([])
             self.inittime = ([])
             self.deltime  = ([])
             self.wpcounter = -2
-            self.delay = np.array([])
             with open(os.getcwd() + '\\scenario\\number_of_ac.txt', "r") as fin:
                 self.aclimit = int(fin.read())
                 self.aclimit2 = 0
@@ -134,10 +134,13 @@ class DataLogger(TrafficArrays):
             self.initmass[-1] = traf.perf.mass[-1]
             self.inittime[-1] = str(sim.utc.strftime("%H:%M:%S"))
             self.counter[-1] = 0
+            self.delay[-1] = int(traf.id[-1].split('-')[2])
         else:
             self.initmass[0] = traf.perf.mass[0]
             self.inittime[0] = str(sim.utc.strftime("%H:%M:%S"))
             self.counter[0] = 0
+            self.delay[0] = int(traf.id[0].split('-')[2])
+
         print("AC " + '\033[92m' + "{0} [{1}]".format(traf.id[-1], traf.type[-1]) + '\033[0m'
                 + " has been created at " + '\033[94m' + "{}".format(
                 sim.utc.strftime("%d-%b-%Y %H:%M:%S")) + '\033[0m' + ".")

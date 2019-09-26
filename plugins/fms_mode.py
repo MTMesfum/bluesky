@@ -159,8 +159,6 @@ class Afms(TrafficArrays):
             self.lon = np.array([])
             self.index = np.array([])
 
-        # self.partial_fuel = 64000 #A320 starting weight
-
     @staticmethod
     def _patch_route(rta_standard_window_size):  #
         """
