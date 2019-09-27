@@ -49,13 +49,17 @@ traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
 set_dt(1.0)
 traj_folder = traj_folder2
-runs = 0
+
 analysis = False
+
+runs = 0
+del_runs = True
 run = True
+
 FE = False
 create_scenarios = False
-create_scenarios_custom = False
-del_runs = True
+create_scenarios_custom = True
+selection_made = False
 
 # position of the TW. True is in middle, False is on the bottom
 set_TW_place(False)
@@ -65,15 +69,16 @@ timeit.default_timer()
 set_delays(set_of_delays)
 
 if analysis:
-    analysis_path = 'F:\\Documents\\BlueSky Backup\\Run 20 Sep TW_mid Old Wx1\\xlogs input\\4 inf'
-    analysis_path = None
+    analysis_path = 'C:\Documents\Git 2\output\\runs\\xlogs input\\4 inf'
+    # analysis_path = None
     flights = ['TAP1015', 'AZA1572', 'BEL7PC', 'EXS79G']
+    flights = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
+
     selection = [0, 600, 1200, 1800]
 
     for flight in flights:
-        getLog(analysis_path, flight, selection, False, False)
+        getLog(analysis_path, flight, selection, False)
     exit()
-
 
 # This section is used to find the most FE speed
 if FE:
@@ -111,7 +116,6 @@ if create_scenarios_custom:
     save_file = 'scenario\\selected_trajectories.txt'
     save_file = os.path.join(os.getcwd(), save_file)
 
-    selection_made = True
     apple = pd.read_csv(file1 + file2)
     apple = apple[apple.columns[1:-9]]
     banana = set(apple['callsign_geo'])
@@ -122,7 +126,7 @@ if create_scenarios_custom:
     os.makedirs(path_traj)
 
     if not selection_made:
-        # Create a selection list
+        # Create a selection list for ac type
         counter = 0
         ac_types = ['A320', 'B737', 'B752', 'B734',
                     'A319', 'A321', 'B77L', 'B738',
@@ -141,15 +145,11 @@ if create_scenarios_custom:
             date_2 = datetime.datetime.strptime(citrus['time_over'][citrus.shape[0] - 1], '%d/%m/%Y %H:%M')
             actype = citrus['AAC-type'][0]
             timedelta = (date_2 - date_1).total_seconds() / 60
-            # and actype in ac_types \
             if timedelta > limit_down \
                     and timedelta < limit_up and durian <= limit_FL:
                 counter += 1
                 print("Selecting trajectory #{} : {}   | FL{}    | {}".format(str(counter).zfill(2), actype, durian, j))
-                # print(citrus)
-                # print(actype)
                 selection.append(j)
-        # print(selection)
 
         # selection = ['DLH35N', 'DLH37F', 'EZY81NL', 'GMI2209',
         #              'IBE31DP', 'SBI795', 'SBI797', 'SDM6657', 'VOE27SR',
@@ -159,12 +159,13 @@ if create_scenarios_custom:
         #              'NLY6WW', 'SBI897', 'TRA908V', 'TRA9352', 'NAX56MG',
         #              'SAS4759', 'ICE532', 'IBE31DD']
 
-        selection = ['DLH48H', 'TRA9352', 'TRA908V',
-                     'DLH2WT', 'JEI252', 'DLH87P']
+        # selection = ['DLH48H', 'TRA9352', 'TRA908V',
+        #              'DLH2WT', 'JEI252', 'DLH87P']
+
+        selection = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
 
         with open(save_file, 'w') as fin:
             fin.write(str(selection))
-        # exit()
 
     selection = str("".join(list([line for line in open(save_file, 'r')])))
     print('The selected trajectories are:\n')
@@ -181,9 +182,11 @@ if create_scenarios_custom:
             name = j
             citrus.to_excel(path_traj + "\\" + name + ".xlsx", j)
 
+    print(' ')
     CreateSCN_Cruise3(True, selection)
-    CreateSCNM3('Trajectories-batch3')
-    orig = "1 min"
+    start_folder = file4
+    CreateSCNM3('Trajectories-batch3', start_folder)
+    orig = os.listdir(file3)[0]
 
 if del_runs:
     if os.path.isdir("output\\runs"):

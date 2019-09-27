@@ -831,7 +831,7 @@ def CreateSCN_Cruise3(alpha, selection, cap=999):
             return
         elif acid not in selection:
             continue
-        elif ext != '.csv' or acid in list(cruise_speed['skip']):
+        elif ext != '.xlsx' or acid in list(cruise_speed['skip']):
             FileName.remove(k)
             continue
         print('Creating scenario for Flight {}'.format(os.path.splitext(k)[0]))
@@ -1166,8 +1166,8 @@ def CreateSCNM2(save_file):
     # os.startfile('scenario\\' + save_file + '.scn')
 
 # Create a different scenario manager to run a every traj of one ensemble
-def CreateSCNM3(save_file):
-    alpha = len(os.listdir(os.getcwd() + "\\scenario\\remon scen\\1 min\\"))
+def CreateSCNM3(save_file, input="scenario\\remon scen\\1 min"):
+    alpha = len(os.listdir(os.path.join(os.getcwd(), input)))
     beta = 1
     gamma = list()
     gamma.append('# Load wind data')
@@ -2475,7 +2475,7 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
 # Create a function that provides the filtered logs for a selected trajectory for plot-purposes
 # WPonly: True = First Wind measurement at WP only, False = Every Wind measurement
 # Choice: True = Magnitude + Direction, False = V north + Veast
-def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choice=True):
+def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choice=False):
     print('Processing flight {}!'.format(traj))
 
     # Setup variables
@@ -2506,28 +2506,30 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choi
         for name_0, name in enumerate(names):
             log = ''.join(list([line for line in open(file_path, 'r') if 'ECHO {} '.format(name) in line]))
             holder = None
+            # div = 1
             for line_0, line in enumerate(log.split('\n')):
                 if line_0 % 2 == 0:
                     continue
                 elif float(line.split()[2]) != holder:
-                    if choice:
-                        # Speed and Direction Version
-                        speed = np.sqrt(float(line.split(' ')[3][1:-1])**2 + float(line.split(' ')[4][1:-1])**2)
-                        direction = np.arctan(float(line.split(' ')[4][1:-1])/float(line.split(' ')[3][1:-1])) * 180/np.pi
-                        df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
-                                                      int(float(line.split(' ')[2]))]], columns=df.columns ), ignore_index=True)
-                    else:
-                        # V north and V east Version
-                        speed = float(line.split(' ')[3][1:-1])
-                        direction = str('V north')
-                        df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
-                                                      int(float(line.split(' ')[2]))]], columns=df.columns), ignore_index=True)
-                        speed = float(line.split(' ')[4][1:-1])
-                        direction = str('V east')
-                        df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
-                                                      int(float(line.split(' ')[2]))]], columns=df.columns), ignore_index=True)
-                    if wponly:
-                        holder = float(line.split()[2])
+                    # if line_0 % div == 0:
+                        if choice:
+                            # Speed and Direction Version
+                            speed = np.sqrt(float(line.split(' ')[3][1:-1])**2 + float(line.split(' ')[4][1:-1])**2)
+                            direction = np.arctan(float(line.split(' ')[4][1:-1])/float(line.split(' ')[3][1:-1])) * 180/np.pi
+                            df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
+                                                          int(float(line.split(' ')[2]))]], columns=df.columns ), ignore_index=True)
+                        else:
+                            # V north and V east Version
+                            speed = float(line.split(' ')[3][1:-1])
+                            direction = str('V north')
+                            df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
+                                                          int(float(line.split(' ')[2]))]], columns=df.columns), ignore_index=True)
+                            speed = float(line.split(' ')[4][1:-1])
+                            direction = str('V east')
+                            df = df.append(pd.DataFrame([[speed, direction, int(name.split('-')[2]),
+                                                          int(float(line.split(' ')[2]))]], columns=df.columns), ignore_index=True)
+                        if wponly:
+                            holder = float(line.split()[2])
 
     if choice:
         # Speed and Direction Plots
