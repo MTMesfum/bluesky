@@ -69,11 +69,11 @@ timeit.default_timer()
 set_delays(set_of_delays)
 
 if analysis:
-    analysis_path = 'C:\Documents\Git 2\output\\runs\\xlogs input\\4 inf'
+    analysis_path = 'C:\Documents\Git 2\output\\runs\\xlogs input\\3 inf'
     # analysis_path = None
     flights = ['TAP1015', 'AZA1572', 'BEL7PC', 'EXS79G']
     flights = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
-
+    flights = ['DLH48H', 'JEI252']
     selection = [0, 600, 1200, 1800]
 
     for flight in flights:

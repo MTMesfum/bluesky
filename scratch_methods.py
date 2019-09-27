@@ -2500,8 +2500,9 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choi
         df = pd.DataFrame(columns=['Speed [m/s]', 'Direction [deg]', 'Delay', 'Waypoint'])
     else:
         df = pd.DataFrame(columns=['Speed [m/s]', 'North / East', 'Delay', 'Waypoint'])
-
+    counter = 0
     for ensemble, ensembles in enumerate(Dir):
+        counter += 1
         file_path = os.path.join(path, ensembles)
         for name_0, name in enumerate(names):
             log = ''.join(list([line for line in open(file_path, 'r') if 'ECHO {} '.format(name) in line]))
@@ -2531,6 +2532,7 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choi
                         if wponly:
                             holder = float(line.split()[2])
 
+    print(f"{counter} ensembles have been processed!")
     if choice:
         # Speed and Direction Plots
         dfsub = df[df['delay'].isin(selection)]
@@ -2538,19 +2540,21 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choi
 
         sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
                       jitter=True, dodge=True, color=".3", ax=ax1)
-        sns.boxplot(x="Waypoint", y='Speed [m/s]', data=dfsub, hue="Delay", ax=ax1)
+        sns.boxplot(x="Waypoint", y='Speed [m/s]', data=dfsub, hue="Delay",
+                    ax=ax1, showfliers=False)
         handles, labels = ax1.get_legend_handles_labels()
         ax1.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
         ax1.set_title('Magnitude of the Wind', fontsize=30)
 
         sns.stripplot(x="Waypoint", y='Direction [deg]', hue="Delay", data=dfsub,
                       jitter=True, dodge=True, color=".3", ax=ax2)
-        sns.boxplot(x="Waypoint", y='Direction [deg]', data=dfsub, hue="Delay", ax=ax2)
+        sns.boxplot(x="Waypoint", y='Direction [deg]', data=dfsub, hue="Delay",
+                    ax=ax2, showfliers=False)
         handles, labels = ax2.get_legend_handles_labels()
         ax2.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
         ax2.set_title('Direction of the Wind', fontsize=30)
 
-        print('Flight {} is shown'.format(traj))
+        print('Flight {} is shown!\n'.format(traj))
         plt.tight_layout()
         plt.show()
     else:
@@ -2561,7 +2565,8 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choi
 
         sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
                       jitter=True, dodge=True, color=".3", ax=ax1)
-        sns.boxplot(x="Waypoint", y='Speed [m/s]', data=dfsub, hue="Delay", ax=ax1)
+        sns.boxplot(x="Waypoint", y='Speed [m/s]', data=dfsub, hue="Delay",
+                    ax=ax1, showfliers=False)
         handles, labels = ax1.get_legend_handles_labels()
         ax1.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
         ax1.set_title('North Component of the Wind', fontsize=30)
@@ -2570,12 +2575,13 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choi
         dfsub = dfsub[dfsub['North / East'] == 'V east']
         sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
                       jitter=True, dodge=True, color=".3", ax=ax2)
-        sns.boxplot(x="Waypoint", y="Speed [m/s]", data=dfsub, hue="Delay", ax=ax2)
+        sns.boxplot(x="Waypoint", y="Speed [m/s]", data=dfsub, hue="Delay",
+                    ax=ax2, showfliers=False)
         handles, labels = ax2.get_legend_handles_labels()
         ax2.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
         ax2.set_title('East Component of the Wind', fontsize=30)
 
-        print('Flight {} is shown'.format(traj))
+        print('Flight {} is shown!\n'.format(traj))
         plt.tight_layout()
         plt.show()
 
