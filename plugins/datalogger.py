@@ -247,7 +247,7 @@ class DataLogger(TrafficArrays):
             else:
                 traf.resultstosave.to_excel('output\WRITER Standard File.xlsx')
             print('\033[94m' + '\033[4m' +
-                  '\nSaving the results in a standard file with N = {}!!!\n'.format(self.aclimit2) +
+                  '\nSaving the results in a standard file with {} aircraft!!!\n'.format(self.aclimit2) +
                   '\033[0m')
         elif args:
             filename = str(args[0])
@@ -266,7 +266,8 @@ class DataLogger(TrafficArrays):
             traf.resultstosave = pd.DataFrame(columns=self.dataframe_holder)
         # print(self.aclimit2)
         if self.aclimit2 == self.aclimit:
-            print('Final aircraft has landed!')
+            print('\033[94m' + '\033[4m' +
+                  'The final aircraft has landed!\n' + '\033[0m')
             stack.stack('EXIT')
         pass
 

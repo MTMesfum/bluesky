@@ -39,7 +39,7 @@ from scratch_methods import *
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = np.arange(1, 51) #np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '2 det', '3 prob'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 300, 600, 900, 1200, 1500, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -47,7 +47,7 @@ set_of_delays = [0, 300, 600, 900, 1200, 1500, 1800]
 
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(1.0)
+set_dt(0.1)
 traj_folder = traj_folder2
 
 analysis = False
@@ -57,12 +57,12 @@ del_runs = True
 run = True
 
 FE = False
-create_scenarios = False
-create_scenarios_custom = True
+create_scenarios = True
+create_scenarios_custom = False
 selection_made = False
 
 # position of the TW. True is in middle, False is on the bottom
-set_TW_place(False)
+set_TW_place(True)
 
 clear_mylog()
 timeit.default_timer()
@@ -71,9 +71,11 @@ set_delays(set_of_delays)
 if analysis:
     analysis_path = 'C:\Documents\Git 2\output\\runs\\xlogs input\\3 inf'
     # analysis_path = None
-    flights = ['TAP1015', 'AZA1572', 'BEL7PC', 'EXS79G']
-    flights = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
-    flights = ['DLH48H', 'JEI252']
+    # flights = ['TAP1015', 'AZA1572', 'BEL7PC', 'EXS79G']
+    # flights = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
+    flights = ['IBE31DD', 'SAS4759']
+
+    # flights = ['DLH48H', 'JEI252']
     selection = [0, 600, 1200, 1800]
 
     for flight in flights:
@@ -104,7 +106,7 @@ if FE:
 
 if create_scenarios:
     selected = ['TAP1015', 'AZA1572', 'BEL7PC', 'EXS79G']
-    CreateSCN_Cruise2(True, selected)
+    CreateSCN_Cruise2(True)
     CreateSCNM3('Trajectories-batch3')
     orig = "1 min" #+ '\\min ADH931.scn'
 
@@ -151,29 +153,29 @@ if create_scenarios_custom:
                 print("Selecting trajectory #{} : {}   | FL{}    | {}".format(str(counter).zfill(2), actype, durian, j))
                 selection.append(j)
 
-        # selection = ['DLH35N', 'DLH37F', 'EZY81NL', 'GMI2209',
-        #              'IBE31DP', 'SBI795', 'SBI797', 'SDM6657', 'VOE27SR',
-        #              'AEE8', 'DLH48H', 'DLH62K',
-        #              'AFL2326', 'DLH1781', 'DLH1835', 'DLH2557', 'DLH2EJ',
-        #              'DLH2JW', 'DLH587', 'DLH681', 'DLH9CF', 'NLY1GG',
-        #              'NLY6WW', 'SBI897', 'TRA908V', 'TRA9352', 'NAX56MG',
-        #              'SAS4759', 'ICE532', 'IBE31DD']
+        selection = ['DLH35N', 'DLH37F', 'EZY81NL', 'GMI2209',
+                     'IBE31DP', 'SBI795', 'SBI797', 'SDM6657', 'VOE27SR',
+                     'AEE8', 'DLH48H', 'DLH62K',
+                     'AFL2326', 'DLH1781', 'DLH1835', 'DLH2557', 'DLH2EJ',
+                     'DLH2JW', 'DLH587', 'DLH681', 'DLH9CF', 'NLY1GG',
+                     'NLY6WW', 'SBI897', 'TRA908V', 'TRA9352', 'NAX56MG',
+                     'SAS4759', 'ICE532', 'IBE31DD']
 
         # selection = ['DLH48H', 'TRA9352', 'TRA908V',
         #              'DLH2WT', 'JEI252', 'DLH87P']
 
-        selection = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
+        # selection = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
 
         with open(save_file, 'w') as fin:
             fin.write(str(selection))
 
     selection = str("".join(list([line for line in open(save_file, 'r')])))
-    print('The selected trajectories are:\n')
+    print('\nThe selected trajectories are:\n')
     for counter, word in enumerate(selection.split()):
         if ((counter+1) % 3) == 0:  print(word)
         else:                   print(word, end='')
     counter = 0
-    print(' ')
+    print('\n')
     for i, j in enumerate(banana):
         citrus = apple[apple['callsign_geo'] == j].reset_index(drop=True)
         if j in selection:
@@ -184,8 +186,7 @@ if create_scenarios_custom:
 
     print(' ')
     CreateSCN_Cruise3(True, selection)
-    start_folder = file4
-    CreateSCNM3('Trajectories-batch3', start_folder)
+    CreateSCNM3('Trajectories-batch3', file4)
     orig = os.listdir(file3)[0]
 
 if del_runs:
@@ -242,8 +243,8 @@ skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
         ]
 
 try:
-    overall_aggregate2('C:\Documents\Git 2\output\\runs')
-    result_analysis2('C:\Documents\Git 2\output\\runs')
+    overall_aggregate2()
+    result_analysis2()
 except:
     pass
 

@@ -610,10 +610,14 @@ def CreateSCN_Cruise(alpha, fl_ref, cap=999):
 
 # This function is meant to create a set of scenarios which runs every trajectory
 # of 1 ensemble of a case out of [min, det, stoch, inf]
-def CreateSCN_Cruise2(alpha, selection, cap=999):
+def CreateSCN_Cruise2(alpha, selection=None, cap=999):
     if os.path.exists("scenario\\remon scen"):
         shutil.rmtree("scenario\\remon scen")
     folder = "scenario\\remon_raw_scenario\\"
+    if not selection:
+        selection = list()
+        for i in os.listdir(folder):
+            selection.append(os.path.splitext(i)[0])
     type_file = "AC Type 2.xlsx"
     FileName = os.listdir(folder)
     FileName2 = reversed(FileName)
@@ -808,10 +812,14 @@ def CreateSCN_Cruise2(alpha, selection, cap=999):
 
 # This function is meant to create a set of scenarios which runs every trajectory
 # of 1 ensemble of a case out of [min, det, stoch, inf]
-def CreateSCN_Cruise3(alpha, selection, cap=999):
+def CreateSCN_Cruise3(alpha, selection=None, cap=999):
     if os.path.exists("scenario\\remon scen"):
         shutil.rmtree("scenario\\remon scen")
     folder = "scenario\\custom scen\\"
+    if not selection:
+        selection = list()
+        for i in os.listdir(folder):
+            selection.append(os.path.splitext(i)[0])
     FileName = os.listdir(folder)
     FileName2 = reversed(FileName)
     cruise_speed = pd.read_excel(cruise_file2)
@@ -2482,6 +2490,7 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choi
     if path == None:
         path = 'C:\\Documents\\Git 2\\output\\runs\\xlogs input\\4 inf'
     Dir = os.listdir(path)
+    # Dir = Dir[0:10]
     file_path = os.path.join(path, Dir[0])
     # log = ''.join(list([line for line in open(file_path, 'r') if 'CRE ' in line]))
 
