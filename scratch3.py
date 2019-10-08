@@ -37,10 +37,10 @@ from scratch_methods import *
 
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = np.arange(1, 51) #np.flip(np.arange(1, 51))
+list_ensemble = np.arange(44, 51) #np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
-set_of_delays = [0, 300, 600, 900, 1200, 1500, 1800]
+skip_entire_dir = ['2 det', '3 inf', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
+set_of_delays = [0, 180, 300, 600, 900, 1200, 1500, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
               #                       [ 0,   1,   2,   3,   4,    5]
@@ -166,16 +166,18 @@ if create_scenarios_custom:
 
         # selection = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
 
-        with open(save_file, 'w') as fin:
-            fin.write(str(selection))
+        with open(save_file, 'wb') as fp:
+            pickle.dump(selection, fp)
 
-    selection = str("".join(list([line for line in open(save_file, 'r')])))
+    with open(save_file, 'rb') as fp:
+        selection = pickle.load(fp)
+
     print('\nThe selected trajectories are:\n')
-    for counter, word in enumerate(selection.split()):
+    for counter, word in enumerate(selection):
         if ((counter+1) % 3) == 0:  print(word)
-        else:                   print(word, end='')
+        else:                   print(word, end=' ')
+    print(' ')
     counter = 0
-    print('\n')
     for i, j in enumerate(banana):
         citrus = apple[apple['callsign_geo'] == j].reset_index(drop=True)
         if j in selection:
@@ -187,7 +189,7 @@ if create_scenarios_custom:
     print(' ')
     CreateSCN_Cruise3(True, selection)
     CreateSCNM3('Trajectories-batch3', file4)
-    orig = os.listdir(file3)[0]
+    orig = os.listdir(os.path.join(os.getcwd(), file3))[0]
 
 if del_runs:
     if os.path.isdir("output\\runs"):
@@ -199,7 +201,9 @@ if del_runs:
 
 # run a trajectory for every ensemble
 if run:
-    for dir in os.listdir(traj_folder):
+    traj_folder_list = os.listdir(traj_folder)
+    traj_folder_list.reverse()
+    for dir in traj_folder_list:
         if dir in skip_entire_dir:
             continue
         traj_counter = 0
@@ -213,10 +217,15 @@ if run:
             runs += 1
             talk_time(runs)
             talk_run3(ensemble, dir, runs)
-            bs_desktop()
-            # Move the input and output log files into their log folders
-            movelog2(ensemble, dir, False)
-            writerfix2(dir, traj_counter, False)
+            try:
+                bs_desktop()
+                # Move the input and output log files into their log folders
+                movelog2(ensemble, dir, False)
+                writerfix2(dir, traj_counter, False)
+            except:
+                print(f'The run for Ensemble {ensemble} failed for w/e reason :( !!')
+                print('The simulation will try to continue with the next iteration!')
+                continue
         traj_counter += 1
 
 # Open the folder with all the results

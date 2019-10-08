@@ -1,4 +1,4 @@
-import pandas as pd, os, datetime, random, re
+import pandas as pd, os, datetime, random, re, pickle
 import numpy as np, timeit, shutil, warnings
 import seaborn as sns; sns.set()
 import matplotlib.pyplot as plt
@@ -835,14 +835,16 @@ def CreateSCN_Cruise3(alpha, selection=None, cap=999):
     number = 0
     for index, k in enumerate(FileName2):
         acid, ext = os.path.splitext(k)
+        print(acid)
         if cap == index-1:
             return
         elif acid not in selection:
+            print('Skipped scenario for Flight {}'.format(acid))
             continue
         elif ext != '.xlsx' or acid in list(cruise_speed['skip']):
             FileName.remove(k)
             continue
-        print('Creating scenario for Flight {}'.format(os.path.splitext(k)[0]))
+        print('Creating scenario for Flight {}'.format(acid))
         number += 1
         scenario = pd.read_excel(folder + k)
         actype = scenario['AAC-type'][0] + ','
