@@ -233,23 +233,23 @@ talk_time(runs)
 # os.startfile('output\\runs')
 
 # overall_aggregate() #os.getcwd() + '\\output\\runs_save')
-skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
-        'SWR779', 'AZA1572', 'DLH156', 'FPO551',
-        'PRI5403', 'EZY471', 'RYR5008',
-        'DLH1HU', 'SHT2J', 'BAW4TM', 'AFR234H',
-        'PGT4629',
-        'SAS1842', 'DLH08W', 'SAS1042',
-        'TAP803L', 'NJE2FD', 'LBT7362',
-        'KLM1395', 'BLX328', 'BER717E',
-        'TAP1015', 'PGT424', 'EZY92FN',
-        'AFL2352', 'QTR022',
-        'BEL7PC', 'DTH3057', 'EXS79G',
-        'CCA931', 'ROT608D', 'VLG2473',
-        'BAW66Q', 'EIN111', 'DLH8PK',
-        'SAS618', 'DLH8PK', 'BEL724',
-        'TAY011', 'EZY471', 'OHY2160',
-        'WZZ114', 'MON752A'
-        ]
+# skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
+#         'SWR779', 'AZA1572', 'DLH156', 'FPO551',
+#         'PRI5403', 'EZY471', 'RYR5008',
+#         'DLH1HU', 'SHT2J', 'BAW4TM', 'AFR234H',
+#         'PGT4629',
+#         'SAS1842', 'DLH08W', 'SAS1042',
+#         'TAP803L', 'NJE2FD', 'LBT7362',
+#         'KLM1395', 'BLX328', 'BER717E',
+#         'TAP1015', 'PGT424', 'EZY92FN',
+#         'AFL2352', 'QTR022',
+#         'BEL7PC', 'DTH3057', 'EXS79G',
+#         'CCA931', 'ROT608D', 'VLG2473',
+#         'BAW66Q', 'EIN111', 'DLH8PK',
+#         'SAS618', 'DLH8PK', 'BEL724',
+#         'TAY011', 'EZY471', 'OHY2160',
+#         'WZZ114', 'MON752A'
+#         ]
 
 try:
     overall_aggregate2()

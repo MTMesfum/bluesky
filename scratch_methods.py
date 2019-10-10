@@ -2663,3 +2663,5 @@ def color_min(s):
         if banana.total_seconds() < apple.total_seconds():
             below_min[i] = True
     return ['background-color: yellow' if v else '' for v in below_min]
+
+# Analyse every
