@@ -38,8 +38,9 @@ from scratch_methods import *
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
 list_ensemble = np.arange(44, 51) #np.flip(np.arange(1, 51))
+list_ensemble = np.arange(10, 11) #np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['2 det', '3 inf', '3 prob', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = ['1 min', '3 inf', '3 prob'] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 180, 300, 600, 900, 1200, 1500, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -202,7 +203,7 @@ if del_runs:
 # run a trajectory for every ensemble
 if run:
     traj_folder_list = os.listdir(traj_folder)
-    traj_folder_list.reverse()
+    # traj_folder_list.reverse()
     for dir in traj_folder_list:
         if dir in skip_entire_dir:
             continue
@@ -211,7 +212,8 @@ if run:
         traj.append('dummy')
         replace_batch_set2(dir, "Trajectories-batch3", "Trajectories-batch4")
         talk_traj2(dir, traj_counter)
-
+        if dir in '4 inf':
+            list_ensemble = np.arange(29, 30)  # np.flip(np.arange(1, 51))
         for ensemble in list_ensemble:
             replace_ensemble(ensemble, "Trajectories-batch4.scn")
             runs += 1
