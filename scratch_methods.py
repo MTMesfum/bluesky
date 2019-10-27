@@ -2,11 +2,15 @@ import pandas as pd, os, datetime, random, re, pickle
 import numpy as np, timeit, shutil, warnings
 import seaborn as sns; sns.set()
 import matplotlib.pyplot as plt
+from string import ascii_uppercase as alphabet
 from bluesky.tools import aero
 from bluesky.tools.geo import qdrdist as dist
 from bluesky.tools.geo import latlondist as dist2
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
+
 
 '''                 ######################################## 
                     ########################################
@@ -1809,7 +1813,6 @@ def overall_aggregate2(path=None, upload=False):
     Dir = os.listdir(path)
     to_save = pd.DataFrame()
     skip_list = ['py', 'skip', 'xlogs', 'xls', 'anal']
-    spacer = len(set_of_delays) - 1
     to_skip = False
     print('\n' + bcolors.HEADER + 'Creating meta-analysis for:\n' + os.path.split(path)[-1] + bcolors.ENDC, '\n')
     for i, dir in enumerate(Dir):
@@ -1837,7 +1840,11 @@ def overall_aggregate2(path=None, upload=False):
 
             if j == 0:
                 apple = pd.read_excel(file, index_col=None, header=None)
-                apple = apple.drop([0]).reset_index(drop=True)
+                if np.isnan(apple[0].iloc[0]):
+                    apple = apple.drop([0]).reset_index(drop=True)
+                    spacer = len(set(apple[2])) - 1
+                else:
+                    spacer = len(set(apple[2]))
                 banana = list(range(0, len(apple.columns)))
                 to_pop = list([0, 1, 2, 3, 5, 6, 7])
                 to_pop.reverse()
@@ -1862,7 +1869,8 @@ def overall_aggregate2(path=None, upload=False):
                 continue
 
             apple2 = pd.read_excel(file, index_col=None, header=None)
-            apple2 = apple2.drop([0]).reset_index(drop=True)
+            if np.isnan(apple2[0].iloc[0]):
+                apple2 = apple2.drop([0]).reset_index(drop=True)
             apple[6] = pd.to_timedelta(apple[6], unit='s') + pd.to_timedelta(apple2[6], unit='s')
             appleMin = appleMin.clip_upper(apple2[7].astype(float), axis=0)
             appleMax = appleMax.clip_lower(apple2[7].astype(float), axis=0)
@@ -1914,10 +1922,10 @@ def overall_aggregate2(path=None, upload=False):
             log2 = ''.join(list([line for line in open(Files_input_log[0], 'r') if k in line]))
             logType = ''.join(list([line for line in open(Files_input_log[0], 'r') if 'CRE ' in line]))
 
-            if i == 0:
+            if i == 0 and m == 0:
                 appleType = list()
                 for q in pd_files_names:
-                    apple_0 = logType.find('CRE {}-INF-0 '.format(q))
+                    apple_0 = logType.find('CRE {}-MIN-0 '.format(q))
                     appleType.append(logType[apple_0:apple_0 + 50].split()[2])
 
             apple_0 = log2.find('TW_SIZE_AT {}'.format(k))
@@ -2245,7 +2253,6 @@ def result_analysis(path=None, skip_dir=False, upload=False, skip_flights='zero'
 
 # This method creates an analysis per ensemble
 def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero'):
-
     if path is None:
         path = os.path.join(os.getcwd(), dest_output)
 
@@ -2296,18 +2303,20 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
                    'colour yellow if too early for TW',
                    'colour green if within TW'])
         print(' ')
-        for k in pd_files_names:
+        for kk, k in enumerate(pd_files_names):
             if k in skip_flights:
                 continue
+            # if kk == 4:
+            #     return
             print('Starting trajectory {} of directory {}!'.format(k, dir))
             filename0 = '{}{}.xlsx'.format(k, dir[1:])
             filename = os.path.join(path_analysis, filename0)
             to_save = to_save.reindex(to_save.columns.tolist() + ['Name', 'Vstart'])
 
             # Read in both files
-            for a, b in zip(range(0, len(Files_input_log), 10), range(10, len(Files_input_log)+1, 10)):
-                if a > 9:
-                    break
+            for a, b in zip(range(0, len(Files_input_log), 5), range(5, len(Files_input_log)+1, 5)):
+                # if b > 3:
+                #     return
                 print('\nStart = ', a, '| Stop = ', b)
                 filename0 = '{}{} - {}.xlsx'.format(k, dir[1:], b)
                 filename = os.path.join(path_analysis, filename0)
@@ -2375,13 +2384,13 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
                             pd_max.append(apple2.strftime('%H:%M:%S'))
 
                     for o, p in enumerate(range(len(FL))):
-                        q = f'WP{o} [{FL[o]}]' #.format(str(o), FL[o])
+                        q = f'WP{o} [{FL[o]}]'
                         Flights = Flights.rename(index=str, columns={(o+9): q})
 
                     # Add Rows
-                    holder1 = list(['-', 'Goal Early', '-', pd_min[0], pd_min[-1], '-'])
+                    holder1 = list(['-2', 'Goal Early', '-', pd_min[0], pd_min[-1], '-'])
                     holder1.extend(pd_min)
-                    holder2 = ['-', 'Goal Late', '-', pd_max[0], pd_max[-1], '-']
+                    holder2 = ['-1', 'Goal Late', '-', pd_max[0], pd_max[-1], '-']
                     holder2.extend(pd_max)
                     Flights.ix[len(Flights):len(Flights)+2] = np.nan
                     Flights = Flights.append(pd.Series(), ignore_index=True)
@@ -2406,6 +2415,9 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
                         if o > len(legend):
                             legend = legend + list(' ')
                     Flights['Legend'] = legend
+                    Flights['Delay'] = Flights['Delay'].astype(float)
+                    Flights.sort_values(by='Delay', inplace=True)
+                    Flights.reset_index(drop=True, inplace=True)
 
                     # Create second Waypoint Analysis with Normalised Time
                     Flights2 = Flights.copy()
@@ -2664,4 +2676,398 @@ def color_min(s):
             below_min[i] = True
     return ['background-color: yellow' if v else '' for v in below_min]
 
-# Analyse every
+# Create a plot with the fuel usages per delay
+def fuelvsdelay(flight, path=None):
+    print(f'\nProcessing flight {flight}!')
+
+    # Setup variables
+    if path == None:
+        path = 'C:\\Documents\\Git 2\\output\\runs\\'
+
+    # Setup variables
+    Dir = [i for i in os.listdir(path) if 'meta-analysis' in i][0]
+    file_path = os.path.join(path, Dir)
+    file = pd.read_excel(file_path)
+    shape = np.array(file.shape)
+    index = file.index
+    columns = file.columns
+    palette = ['r', 'y', 'b', 'g']
+
+    # Find number of sibling aircraft from the file
+    print(file)
+    for i in range(shape[0]):
+        print(f'iterator is {i} and compared with {file[:].iloc[i][0]}')
+        if file[:].iloc[i][0] == i:
+            continue
+        else:
+            N = i
+            break
+
+    # Find name and number of schedules
+    number_of_schedules = int(float((shape[1] - 1) / 13))
+    schedules = list()
+    for i in range(number_of_schedules):
+        schedules.append(file[:].iloc[N][i * 13 + 2])
+
+    # Get the delays
+    delays = list()
+    for i in range(N):
+        delays.append(file[:].iloc[i][1])
+
+    print(f'The number of sibling aircraft is {N}')
+    print(f'The names of the schedules are: {schedules}')
+    print(f'The delays of the aircraft are: {delays}')
+
+    # Create a dataset for every schedule
+    selection = list()
+    for i in range(int(np.floor(shape[1] / 13))):
+        selection.append(columns[i * 13 + 2])
+        selection.append(columns[i * 13 + 7])
+        selection.append(columns[i * 13 + 10])
+
+    print(f'Plotting flight {flight}!')
+    w, h, l = len(schedules), 2, N
+    data = [[[0 for x in range(w)] for y in range(h)] for z in range(l)]
+    a = file[columns[2]].str.split('-', n=1, expand=True)
+    subfile = file[selection].iloc[:][flight == a[0]]
+    subfile.reset_index(drop=True)
+    subcolumns = subfile.columns
+
+    # Store the data on the right places
+    for i, schedule in enumerate(schedules):
+        data[i][0][:] = subfile[subcolumns[i * 3 + 1]].iloc[:]
+        data[i][1][:] = subfile[subcolumns[i * 3 + 2]].iloc[:]
+
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.9 / len(schedules)  # the width of the bars
+    legendlist = list()
+    d = {}
+    fig, ax = plt.subplots(figsize=(12, 10))
+    for i in range(number_of_schedules):
+        d[f'rects{i}'] = ax.bar(ind + width * i, data[i][:][0], width, color=palette[i], yerr=data[i][:][1])
+        legendlist.append(subfile[subcolumns[3 * i]].str.split('-', n=1, expand=True)[1].iloc[0])
+
+    # add some text for labels, title and axes ticks
+    ax.set_ylabel('Fuel Consumption [kg]', fontsize=12)
+    ax.set_xlabel('Delay [seconds]', fontsize=12)
+    ax.set_title(f'Fuel Consumption by Delay and Schedule for Flight {flight}', fontsize=16)
+    ax.set_xticks(ind + width * (number_of_schedules - 1) / 2)
+    ax.set_xticklabels((delays))
+
+    if len(schedules) == 3:
+        ax.legend((d["rects0"][0], d["rects1"][0], d["rects2"][0]), legendlist, loc='lower left')
+    else:
+        ax.legend((d["rects0"][0], d["rects1"][0], d["rects2"][0], d["rects3"][0]), legendlist, loc='lower left')
+
+    def autolabel(rects):
+        """
+        Attach a text label above each bar displaying its height
+        """
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width() / 2., 1.02 * height,
+                    '%d' % int(height),
+                    ha='center', va='bottom', fontsize=8)
+
+    for i in range(len(schedules)):
+        autolabel(d["rects" + str(i)])
+
+    plt.show()
+    return
+
+# Create a plot for the KPI of reaching a TW per flight
+def TWperformance(flights_input, path=None):
+    # Setup variables
+    if path == None:
+        path = 'C:\\Documents\\Git 2\\output\\runs\\analysis'
+    else:
+        path = os.path.join(path, 'analysis')
+
+    # Calculate KPI per flight with matched/violated waypoint per waypoint
+    # Firstly see if the waypoint has been matched or violated early/late
+    flights = list()
+    flights.extend(flights_input)
+    kickoff = False
+    custom_order = ["min",  "det",   "prob",  "inf"]
+
+    for i_flight, flight in enumerate(flights):
+        if i_flight > 0:
+            break
+        print(f'\nProcessing flight {flight}!')
+
+        # Setup variables
+        holder = list()
+        schedules = list()
+        Dir = [i for i in os.listdir(path) if flight in i]
+        holder.extend(set([i.split(' ')[1] for i in Dir]))
+        for i in custom_order:
+            if i in holder:
+                schedules.append(i)
+
+        for i_schedule, schedule in enumerate(schedules):
+            print(f'Processing schedule {schedule}')
+            dir = [i for i in Dir if schedule in i]
+
+            # Find number of delays
+            file_path = os.path.join(path, dir[0])
+            file = pd.read_excel(file_path)
+            nDelays = 0
+            for i in file.iloc[3:, 1]:
+                if type(i) == int:
+                    nDelays += 1
+                else:
+                    break
+            if kickoff:
+                if nDelays != nDelays2:
+                    print(f'Warning! The set of delays is not consistent over the schedules.')
+                    print(f'The new set of delays consists of {nDelays} delays and the previous set has {nDelays2} delays.')
+
+            # Iterate over the files
+            for File in dir:
+                if '$' in File:
+                    continue
+                file_path = os.path.join(path, File)
+                file = pd.read_excel(file_path, sheet_name=None)
+
+                for sheetname, sheet in file.items():
+                    # Find number of waypoints
+                    for i in sheet.iloc[0][7:]:
+                        if 'nWP' in str(i):
+                            nWP = int(i[6:])-1
+
+                    if not kickoff:
+                        w, h, l, m = len(schedules), nWP, nDelays, 3
+                        KPI = np.array([[[[0 for x in range(w)] for y in range(h)] for z in range(l)] for z2 in range(m)])
+                        column_names = [f'Waypoint {x+1}' for x in range(nWP)]
+                        delays = list(sheet.iloc[3:3+nDelays, 1])
+                        print(f'The set of delays are: \n{delays}')
+                        print(f'The shape of the KPI-matrix is {KPI.shape}.\n')
+                        nDelays2 = nDelays
+                        kickoff = True
+
+                    # So the important columns lie in column 8 to 8+nWP
+                    for i in range(8, 8+nWP):
+                        early = sheet.iloc[1, i]
+                        late = sheet.iloc[2, i]
+                        minTime = datetime.datetime(100, 1, 1, int(early[-8:-6]), int(early[-5:-3]), int(early[-2:]))
+                        maxTime = datetime.datetime(100, 1, 1, int(late[-8:-6]), int(late[-5:-3]), int(late[-2:]))
+                        # print(f'\nMin time is: {minTime} | Max time is: {maxTime}')
+
+                        for i_delay, j in enumerate(list(sheet.iloc[3:3+nDelays, i])):
+                            # print(f'Waypoint {i-7} has arrival time of {j}')
+                            curTime = datetime.datetime(100, 1, 1, int(j[-8:-6]), int(j[-5:-3]), int(j[-2:]))
+                            # Store the data on the right places
+                            if curTime > maxTime:
+                                KPI[2, i_delay, i-8, i_schedule] += 1
+                            elif curTime < minTime:
+                                KPI[1, i_delay, i-8, i_schedule] += 1
+                            else:
+                                KPI[0, i_delay, i-8, i_schedule] += 1
+
+    def autolabel(rects, text, xpos='center'):
+        ha = {'center': 'center', 'right': 'left', 'left': 'right'}
+        offset = {'center': 0, 'right': 1, 'left': -1}
+        height = -6
+        for rect in rects:
+            ax.annotate(f'{text}',
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(offset[xpos] * 3, 3),  # use 3 points offset
+                        textcoords="offset points",  # in both directions
+                        ha=ha[xpos], va='bottom', rotation=90, weight='bold') #, fontsize=10)
+
+    # Plot the KPI
+    flights = flights[0] # right now, only one flight can be processed at a time
+    print(f'\nPlotting {len(schedules)} schedules for flight {flight}!')
+    print(f'These are: {schedules}')
+
+    palette = ['r', 'g', 'y']
+    for i_schedule, schedule in enumerate(schedules):
+        print(f'Plotting schedule [{schedule}]!')
+        d = {}
+        for i in range(KPI.shape[1]):
+            d[f'{alphabet[i*3  ]}']   = KPI[2, i, :, i_schedule] *2
+            d[f'{alphabet[i*3+1]}']   = KPI[0, i, :, i_schedule] *2 #+ KPI[2,i,:,tlk]
+            d[f'{alphabet[i*3+2]}']   = KPI[1, i, :, i_schedule] *2 #+ KPI[2,i,:,tlk] + KPI[0,i,:,tlk]
+
+        df2 = pd.DataFrame(d)
+        width_val = list([0.1 for x in range(int(df2.shape[1] / 3))])
+        width_val2 = list([0 for x in range(int(df2.shape[1] / 3))])
+        for i in range(int(df2.shape[1] / 6)):
+            width_val2[i]    = np.round(-0.4+0.1*i, 1)
+            width_val2[-1-i] = np.round(0.3-0.1*i, 1)
+
+        fig, ax = plt.subplots(figsize=(20, 10))
+
+        for i in range(int(df2.shape[1]/3)):
+            d[f'{alphabet[i*3]}{alphabet[i*3+1]}{alphabet[i*3+2]}_bar_list']   = \
+                    [plt.bar(np.arange(KPI.shape[2])+width_val2[i], d[f'{alphabet[i*3+2]}'], #eval(f'df2.{alphabet[i*3+2]}'),
+                             align='edge', width=width_val[i], color=palette[2], hatch='//',
+                             bottom=d[f'{alphabet[i*3+1]}']+d[f'{alphabet[i*3]}']),
+                     plt.bar(np.arange(KPI.shape[2])+width_val2[i], d[f'{alphabet[i*3+1]}'], #eval(f'df2.{alphabet[i*3+1]}'),
+                             align='edge', width=width_val[i], color=palette[1], #hatch='\\\\',
+                             bottom=d[f'{alphabet[i*3]}']),
+                     plt.bar(np.arange(KPI.shape[2])+width_val2[i], d[f'{alphabet[i*3]}'], #eval(f'df2.{alphabet[i*3]}'),
+                             align='edge', width=width_val[i], color=palette[0], hatch='..')]
+            autolabel(d[f'{alphabet[i*3]}{alphabet[i*3+1]}{alphabet[i*3+2]}_bar_list'][0], delays[i])
+
+        ax.set_title(f'Punctuality for flight {flights} - [{schedule}]', fontsize=20)
+        ax.set_ylabel('Arrival punctuality in [%]', fontsize=16)
+        ax.set_xlabel('Delay in [seconds] per set of flights at every waypoint', fontsize=16)
+        ax.legend(['Too Early', 'On Time', 'Too Late'], loc='upper right')
+        plt.xticks(np.arange(KPI.shape[2]), column_names, fontsize=14)
+        plt.yticks(np.arange(0, 101, 10))
+        plt.ylim(-6, 100)
+        plt.show()
+
+    return
+
+# Secondly combine the results of the matching and create a KPI
+# Score = matched WP * weight factor (distance WP / total distance) * # of matches / (
+# Calculate KPI per schedule with overall matched/violated waypoints
+# First get percentages to weigh every waypoint
+#   ~ use infinite case?
+#   ~ should be distance based (?)
+#       -> get coordinates
+#       -> calculate distances per waypoint and total distance
+#       -> divide the distance between waypoints by the total and use it as weightfactors
+# Secondly see if the waypoint has been matched or violated early/late
+# Thirdly combine the results of the matching and create a KPI
+# Create a plot for the KPI of reaching a TW per flight
+def TWscore(path=None):
+    # Setup variables
+    if path == None:
+        path = 'C:\\Documents\\Git 2\\output\\runs\\analysis'
+        path2 = 'C:\\Documents\\Git 2\\output\\runs\\xlogs input\\1 min'
+    else:
+        path = os.path.join(path, 'analysis')
+        path2 = os.path.join(path, 'xlogs input\\1 min')
+
+    path2 = os.path.join(path2, os.listdir(path2)[0])
+
+    # Calculate KPI per flight with matched/violated waypoint per waypoint
+    # Firstly see if the waypoint has been matched or violated early/late
+    flights = list(set([x.split(' ')[0] for x in os.listdir(path)]))
+    flights.sort()
+    kickoff = False
+    custom_order = ["min",  "det",   "prob",  "inf"]
+
+    for i_flight, flight in enumerate(flights):
+        print(f'\nProcessing flight {flight}!')
+        kickoff_2 = False
+
+        # Setup variables
+        holder = list()
+        schedules = list()
+        Dir = [i for i in os.listdir(path) if flight in i]
+        holder.extend(set([i.split(' ')[1] for i in Dir]))
+        for i in custom_order:
+            if i in holder:
+                schedules.append(i)
+
+        # Calculate weight factors of the waypoints
+        # This should be done per flight and only once for all the schedules
+        # Find list of waypoints with coordinates
+        log = list([line for line in open(path2, 'r') if f'DEFWPT {flight}-min-0-' in line])
+        log.append(log.pop(1))
+        WeightFactors = list()
+        for i in range(len(log)-2):
+            j = log[i].split(' ')
+            k = log[i+1].split(' ')
+            a = float(j[2].strip(","))
+            b = float(j[3].strip(","))
+            c = float(k[2].strip(","))
+            d = float(k[3].strip(","))
+            WeightFactors.append(dist(a, b, c, d)[1])
+        WeightFactors = WeightFactors/sum(WeightFactors)
+
+        for i_schedule, schedule in enumerate(schedules):
+            print(f'Processing schedule {schedule}')
+            dir = [i for i in Dir if schedule in i]
+
+            # Find number of delays
+            file_path = os.path.join(path, dir[0])
+            file = pd.read_excel(file_path)
+            nDelays = 0
+            for i in file.iloc[3:, 1]:
+                if type(i) == int:
+                    nDelays += 1
+                else:
+                    break
+            if kickoff:
+                if nDelays != nDelays2:
+                    print(f'Warning! The set of delays is not consistent over the schedules.')
+                    print(bcolors.WARNING + f'The new set of delays consists of {nDelays} '
+                            f'delays and the previous set has {nDelays2} delays.' + bcolors.ENDC)
+
+            # Iterate over the files
+            for File in dir:
+                if '$' in File:
+                    continue
+                file_path = os.path.join(path, File)
+                file = pd.read_excel(file_path, sheet_name=None)
+
+                for sheetname, sheet in file.items():
+                    # Find number of waypoints
+                    for i in sheet.iloc[0][7:]:
+                        if 'nWP' in str(i):
+                            nWP = int(i[6:])-1
+
+                    if not kickoff:
+                        w, h = len(flights), len(schedules)
+                        KPI_score = pd.DataFrame(data=flights, columns=['Flights']).set_index('Flights') #[[0 for x in range(w)] for y in range(h)])
+                        for i in schedules:
+                            KPI_score[i] = ''
+                        print(f'The shape of the KPI_score-matrix is {KPI_score.shape}.\n')
+                        kickoff = True
+
+                    if not kickoff_2:
+                        w, h, l, m = len(schedules), nWP, nDelays, 3
+                        KPI = np.array(
+                            [[[[0 for x in range(w)] for y in range(h)] for z in range(l)] for z2 in range(m)])
+                        # column_names = [f'Waypoint {x + 1}' for x in range(nWP)]
+                        delays = list(sheet.iloc[3:3 + nDelays, 1])
+                        print(f'The set of delays are: \n{delays}')
+                        print(f'The shape of the KPI-matrix is {KPI.shape}.\n')
+                        nDelays2 = nDelays
+                        kickoff_2 = True
+
+                    # So the important columns lie in column 8 to 8+nWP
+                    for i in range(8, 8+nWP):
+                        early = sheet.iloc[1, i]
+                        late = sheet.iloc[2, i]
+                        minTime = datetime.datetime(100, 1, 1, int(early[-8:-6]), int(early[-5:-3]), int(early[-2:]))
+                        maxTime = datetime.datetime(100, 1, 1, int(late[-8:-6]), int(late[-5:-3]), int(late[-2:]))
+                        # print(f'\nMin time is: {minTime} | Max time is: {maxTime}')
+
+                        for i_delay, j in enumerate(list(sheet.iloc[3:3+nDelays, i])):
+                            # print(f'Waypoint {i-7} has arrival time of {j}')
+                            curTime = datetime.datetime(100, 1, 1, int(j[-8:-6]), int(j[-5:-3]), int(j[-2:]))
+                            # Store the data on the right places
+                            if curTime > maxTime:
+                                # print('Too late')
+                                KPI[2, i_delay, i-8, i_schedule] += 1
+                            elif curTime < minTime:
+                                KPI[1, i_delay, i-8, i_schedule] += 1
+                                # print('Too early')
+                            else:
+                                KPI[0, i_delay, i-8, i_schedule] += 1
+                                # print('On Time !')
+
+            # Multiply the weight factors with the KPI matrix to get a score and store it in KPI_score
+            print(f'\nSaving {flight} in the KPI_score-matrix!')
+            for i in range(int(KPI.shape[3])):
+                KPI_score.loc[flight, schedules[i]] = sum(np.sum(KPI[0, :, :, i], axis=0) * 2 / KPI.shape[1] * WeightFactors)
+
+    # Create a table for the KPI of reaching TW per flight
+    # one grade/percentage/stat per flight of a schedule
+    # take distance into acocunt? If only compared between schedules, not necessary?
+    print(KPI_score) # Table
+
+    # Create a plot per schedule with those percentages/grades from above for all flights
+    # It gives info on #flights that stay within certain scoreranges
+    # See the picture. Bars per 10% range for a schedule.
+
+    return
+
+# Create a plot for number of speed changes per flight --> present these in a plot flights vs changes ?
+# Do this for every schedule or smthing? what does this tell the user?

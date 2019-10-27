@@ -51,14 +51,14 @@ traj_folder2 = 'scenario\\remon scen'
 set_dt(0.1)
 traj_folder = traj_folder2
 
-analysis = False
+analysis = True
 
 runs = 0
-del_runs = True
-run = True
+del_runs = False
+run = False
 
 FE = False
-create_scenarios = True
+create_scenarios = False
 create_scenarios_custom = False
 selection_made = False
 
@@ -79,9 +79,15 @@ if analysis:
     # flights = ['DLH48H', 'JEI252']
     selection = [0, 600, 1200, 1800]
 
-    for flight in flights:
-        getLog(analysis_path, flight, selection, False)
-    exit()
+    # for flight in flights:
+    #     getLog(analysis_path, flight, selection, False)
+
+    path = 'F:\Documents\BlueSky Backup\Final Runs'
+    Dir = os.listdir(path)
+    Dir.pop(0)
+    for dir in Dir:
+        result_analysis2(os.path.join(path, dir))
+
 
 # This section is used to find the most FE speed
 if FE:
