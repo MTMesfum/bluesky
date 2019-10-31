@@ -149,14 +149,13 @@ class Afms(TrafficArrays):
         traf.resultstosave2 = pd.DataFrame()
         traf.resultstosave3 = pd.DataFrame()
         traf.index = 0
+        traf.index2 = 0
 
         # Adaptations by Johannes
         with RegisterElementParameters(self):
             # Set required for multiple fms-mode runs
             self.interval_counter = np.array([])
             self.currentwp = np.array([])
-            self.lat = np.array([])
-            self.lon = np.array([])
             self.index = np.array([])
 
     @staticmethod
@@ -230,21 +229,15 @@ class Afms(TrafficArrays):
         list_to_update = list()
         for i in range(0, len(traf.id)):
             holder.append(traf.ap.route[bs.traf.id2idx(traf.id[i])].iactwp)
-        # if np.logical_and(self.currentwp == holder, True).all():
-        #     self.interval_counter += 1
-        #     return
-        # print('\ncurrentwp is: ', self.currentwp)
-        # print('interval is: ', self.interval_counter)
-        # print('first statement is: ', np.logical_and(self.currentwp == holder, True).all())
-        # print('if-statement : ', np.logical_and(self.currentwp == holder,
-        #                   np.logical_or(self.interval_counter == 0,
-        #                                 self.interval_counter % (self.dt / settings.simdt) != 0).all()).all())
-        if np.logical_and(self.currentwp == holder,
+
+        if np.logical_and(np.logical_and(self.currentwp == holder, traf.index == traf.index2),
                           np.logical_or(self.interval_counter == 0,
                                         self.interval_counter % (self.dt / settings.simdt) != 0).all()).all():
             self.interval_counter += 1
             return
 
+        if traf.index != traf.index2:
+            traf.index2 = traf.index
 
         for index, traf_id in enumerate(traf.id):
             # Check whether the final waypoint has been reached
@@ -253,40 +246,37 @@ class Afms(TrafficArrays):
                 if column_name not in traf.resultstosave2:
                     traf.resultstosave2[column_name] = None
 
-                # Get the position of the AC and Echo the wind at that position
-                wp_number = int(float(self.currentwp[index]))
-                stack.stack(f'ECHO {traf.id[index]} {wp_number} {traf.lat[index]} {traf.lon[index]} {traf.alt[index]}')
-                vn, ve = bs.traf.wind.getdata(traf.lat[index], traf.lon[index], traf.alt[index])
-                stack.stack(f'ECHO {traf.id[index]} {wp_number} {vn} {ve} {traf.alt[index]}')
-
                 traf.resultstosave2[column_name][int(self.index[index])] = str(sim.utc.strftime("%H:%M:%S"))
                 traf.resultstosave2['AC ID'][int(self.index[index])] = str(traf.id[index])
                 stack.stack('WRITER2 {} {} {}'.format(bs.traf.id2idx(traf.id[index]), traf.id[index], index))
-                continue
-            # Check whether a new waypoint has been reached
-            elif self.interval_counter[index] % (self.dt / settings.simdt) == 0 or \
-                    self.currentwp[index] != holder[index] or \
-                    self.currentwp[index] == []:
 
-                # Get the position of the AC and Echo the wind at that position
-                wp_number = int(float(self.currentwp[index]))
-                stack.stack(f'ECHO {traf.id[index]} {wp_number} {traf.lat[index]} {traf.lon[index]} {traf.alt[index]}')
-                vn, ve = bs.traf.wind.getdata(traf.lat[index], traf.lon[index], traf.alt[index])
-                stack.stack(f'ECHO {traf.id[index]} {wp_number} {vn} {ve} {traf.alt[index]}')
+            # Check whether a new waypoint has been reached
+            elif self.currentwp[index] != holder[index] or self.currentwp[index] == []:
+                column_name = '[ {0} ]'.format(holder[index] - 1)
+
+                if column_name not in traf.resultstosave2.columns:
+                    traf.resultstosave2[column_name] = None
+                traf.resultstosave2[column_name][int(self.index[index])] = str(sim.utc.strftime("%H:%M:%S"))
 
                 self.interval_counter[index] = 1
                 self.currentwp[index] = holder[index]
                 list_to_update.append(index)
+
+            # Check whether the interval has been met
+            elif self.interval_counter[index] % (self.dt / settings.simdt) == 0:
+                self.interval_counter[index] = 1
+                self.currentwp[index] = holder[index]
+                list_to_update.append(index)
+
             else:
                 self.interval_counter[index] += 1
                 continue
 
-            column_name = '[ {0} ]'.format(holder[index]-1)
-            self.lat[index] = traf.lat[index]
-            self.lon[index] = traf.lon[index]
-            if column_name not in traf.resultstosave2:
-                traf.resultstosave2[column_name] = None
-            traf.resultstosave2[column_name][int(self.index[index])] = str(sim.utc.strftime("%H:%M:%S"))
+            # Get the position of the AC and Echo the wind at that position
+            wp_number = int(float(self.currentwp[index]))
+            stack.stack(f'ECHO {traf.id[index]} {wp_number} {traf.lat[index]} {traf.lon[index]} {traf.alt[index]}')
+            vn, ve = bs.traf.wind.getdata(traf.lat[index], traf.lon[index], traf.alt[index])
+            stack.stack(f'ECHO {traf.id[index]} {wp_number} {vn} {ve} {traf.alt[index]}')
 
         if list_to_update == []:
             pass

@@ -113,9 +113,6 @@ class DataLogger(TrafficArrays):
             print('pilot tas is {} \n tas is {} \n delspd becomes {}'.format(
                   traf.pilot.tas, traf.tas, traf.pilot.tas-traf.tas))
             print('The groundspeed is: ', traf.gs)
-        # print('eta is {} \n Thrust is {} \n '
-        #       'cf_cruise jet is {} \n jt is {}'.format(
-        #         eta, self.Thr, self.cf_cruise, jt))
 
     def update(self):
         # print(self.initmass)
@@ -229,12 +226,8 @@ class DataLogger(TrafficArrays):
             np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)) + '\033[0m' +
               " has been deleted at " + '\033[92m' + "{}".format(sim.utc.strftime("%d-%b-%Y %H:%M:%S"))
               + '\033[0m' + '.')
-        # print("Fuel used by {0} is {1} [kg].".format(traf.id[i],
-        #                          np.array2string(self.initmass[int(i)]-traf.perf.mass[int(i)], precision=2)))
-        # print('ac_limit is1: ', self.aclimit)
-        # print('ac_limit is2: ', self.aclimit2)
-        if traf.resultstosave2.iloc[-1, -1] is not None and self.aclimit2 == self.aclimit:
-            # \                (len(traf.id) == 1 or self.aclimit2 == self.aclimit):
+
+        if self.aclimit2 == self.aclimit:
             traf.resultstosave3 = traf.resultstosave3.sort_values('AC ID').reset_index(drop=True)
             traf.resultstosave2 = traf.resultstosave2.sort_values('AC ID').reset_index(drop=True)
             traf.resultstosave = pd.concat([traf.resultstosave3,
@@ -264,7 +257,7 @@ class DataLogger(TrafficArrays):
 
         if curtime:
             traf.resultstosave = pd.DataFrame(columns=self.dataframe_holder)
-        # print(self.aclimit2)
+
         if self.aclimit2 == self.aclimit:
             print('\033[94m' + '\033[4m' +
                   'The final aircraft has landed!\n' + '\033[0m')

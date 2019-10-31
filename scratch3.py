@@ -37,10 +37,9 @@ from scratch_methods import *
 
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = np.arange(44, 51) #np.flip(np.arange(1, 51))
-list_ensemble = np.arange(10, 11) #np.flip(np.arange(1, 51))
+list_ensemble = np.arange(1, 51) #np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '3 inf', '3 prob'] # ['1 min', '2 det', '3 prob', '4 inf']
+skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
 set_of_delays = [0, 180, 300, 600, 900, 1200, 1500, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
@@ -48,22 +47,22 @@ set_of_delays = [0, 180, 300, 600, 900, 1200, 1500, 1800]
 
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(0.1)
+set_dt(1.0)
 traj_folder = traj_folder2
 
-analysis = True
+analysis = False
 
 runs = 0
-del_runs = False
-run = False
+del_runs = True
+run = True
 
 FE = False
-create_scenarios = False
+create_scenarios = True
 create_scenarios_custom = False
 selection_made = False
 
 # position of the TW. True is in middle, False is on the bottom
-set_TW_place(True)
+set_TW_place(False)
 
 clear_mylog()
 timeit.default_timer()
@@ -82,7 +81,13 @@ if analysis:
     # for flight in flights:
     #     getLog(analysis_path, flight, selection, False)
 
-    path = 'F:\Documents\BlueSky Backup\Final Runs'
+    path = 'F:\Documents\BlueSky Backup\Final Runs\Run Oct 24 TW_mid Munich Wx1'
+    overall_aggregate2(path)
+    result_analysis2(path)
+    path = 'F:\Documents\BlueSky Backup\Final Runs\Run Oct 24 TW_mid Munich Wx3'
+    overall_aggregate2(path)
+    result_analysis2(path)
+    exit()
     Dir = os.listdir(path)
     Dir.pop(0)
     for dir in Dir:
@@ -173,6 +178,8 @@ if create_scenarios_custom:
 
         # selection = ['DLH2557', 'IBE31DD', 'SAS4759', 'AFL2326']
 
+        # selection = ['DLH587', 'DLH2557']
+
         with open(save_file, 'wb') as fp:
             pickle.dump(selection, fp)
 
@@ -218,8 +225,8 @@ if run:
         traj.append('dummy')
         replace_batch_set2(dir, "Trajectories-batch3", "Trajectories-batch4")
         talk_traj2(dir, traj_counter)
-        if dir in '4 inf':
-            list_ensemble = np.arange(29, 30)  # np.flip(np.arange(1, 51))
+        # if dir in '4 inf':
+        #     list_ensemble = np.arange(29, 30)  # np.flip(np.arange(1, 51))
         for ensemble in list_ensemble:
             replace_ensemble(ensemble, "Trajectories-batch4.scn")
             runs += 1
@@ -228,8 +235,8 @@ if run:
             try:
                 bs_desktop()
                 # Move the input and output log files into their log folders
-                movelog2(ensemble, dir, False)
-                writerfix2(dir, traj_counter, False)
+                movelog2(ensemble, dir, True)
+                writerfix2(dir, traj_counter, True)
             except:
                 print(f'The run for Ensemble {ensemble} failed for w/e reason :( !!')
                 print('The simulation will try to continue with the next iteration!')
@@ -240,30 +247,11 @@ if run:
 talk_time(runs)
 # os.startfile('output\\runs')
 
-# overall_aggregate() #os.getcwd() + '\\output\\runs_save')
-# skip = [#'ADH931', 'AEE929', 'AUI34L', 'TFL219',
-#         'SWR779', 'AZA1572', 'DLH156', 'FPO551',
-#         'PRI5403', 'EZY471', 'RYR5008',
-#         'DLH1HU', 'SHT2J', 'BAW4TM', 'AFR234H',
-#         'PGT4629',
-#         'SAS1842', 'DLH08W', 'SAS1042',
-#         'TAP803L', 'NJE2FD', 'LBT7362',
-#         'KLM1395', 'BLX328', 'BER717E',
-#         'TAP1015', 'PGT424', 'EZY92FN',
-#         'AFL2352', 'QTR022',
-#         'BEL7PC', 'DTH3057', 'EXS79G',
-#         'CCA931', 'ROT608D', 'VLG2473',
-#         'BAW66Q', 'EIN111', 'DLH8PK',
-#         'SAS618', 'DLH8PK', 'BEL724',
-#         'TAY011', 'EZY471', 'OHY2160',
-#         'WZZ114', 'MON752A'
-#         ]
-
-try:
-    overall_aggregate2()
-    result_analysis2()
-except:
-    pass
+# try:
+#     overall_aggregate2()
+#     result_analysis2()
+# except:
+#     pass
 
 talk_time(runs)
 # exit()
