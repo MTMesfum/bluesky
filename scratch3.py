@@ -37,17 +37,19 @@ from scratch_methods import *
 
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = np.arange(1, 51) #np.flip(np.arange(1, 51))
+list_ensemble = np.arange(1, 2) #np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = [] # ['1 min', '2 det', '3 prob', '4 inf']
-set_of_delays = [0, 180, 300, 600, 900, 1200, 1500, 1800]
+skip_entire_dir = ['1 min', '2 det', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
+# set_of_delays = [0, 180, 300, 600, 900, 1200, 1500, 1800]
+set_of_delays = [0, 1200, 1500, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
               #                       [ 0,   1,   2,   3,   4,    5]
 
+
 traj_folder1 = 'scenario\\remon'
 traj_folder2 = 'scenario\\remon scen'
-set_dt(1.0)
+set_dt(0.1)
 traj_folder = traj_folder2
 
 analysis = False
@@ -117,8 +119,8 @@ if FE:
     exit()
 
 if create_scenarios:
-    selected = ['TAP1015', 'AZA1572', 'BEL7PC', 'EXS79G']
-    CreateSCN_Cruise2(True)
+    selected = ['TAP1015'] #, 'AZA1572', 'BEL7PC', 'EXS79G']
+    CreateSCN_Cruise2(True, selected)
     CreateSCNM3('Trajectories-batch3')
     orig = "1 min" #+ '\\min ADH931.scn'
 
@@ -235,8 +237,8 @@ if run:
             try:
                 bs_desktop()
                 # Move the input and output log files into their log folders
-                movelog2(ensemble, dir, True)
-                writerfix2(dir, traj_counter, True)
+                movelog2(ensemble, dir, False)
+                writerfix2(dir, traj_counter, False)
             except:
                 print(f'The run for Ensemble {ensemble} failed for w/e reason :( !!')
                 print('The simulation will try to continue with the next iteration!')
@@ -255,7 +257,7 @@ talk_time(runs)
 
 talk_time(runs)
 # exit()
-os.system("shutdown /s /t 180")
+# os.system("shutdown /s /t 180")
 
 # import pickle
 # df = pickle.load( open(

@@ -10,6 +10,8 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
                                AutoMinorLocator, MaxNLocator)
+import matplotlib.gridspec as gridspec
+from matplotlib import rcParams
 
 '''                 ######################################## 
                     ########################################
@@ -2265,7 +2267,7 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
     else:
         skip_list = ['py', 'skip', 'put', 'xls', 'anal']
     to_skip = False
-    stepsize = 1
+    stepsize = 10
     cruise_speed = pd.read_excel(cruise_file2)
 
     for i, dir in enumerate(Dir):
@@ -2297,10 +2299,10 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
         pd_files_names = list(set([r.pop(0) for r in pd_files[3].astype(str).str.split('-')]))
         pd_files_names.sort()
         legend = ([ ' ', ' ',
-                   'colour blue if RTA',
-                   'colour red if too late for TW',
-                   'colour yellow if too early for TW',
-                   'colour green if within TW'])
+                    'colour green if within TW', ' ', ' ',
+                    'colour yellow if too early for TW', ' ',
+                    'colour red if too late for TW',
+                    ' '])
         print(' ')
         for kk, k in enumerate(pd_files_names):
             if k in skip_flights:
@@ -2496,14 +2498,18 @@ def result_analysis2(path=None, skip_dir=False, upload=False, skip_flights='zero
 # Create a function that provides the filtered logs for a selected trajectory for plot-purposes
 # WPonly: True = First Wind measurement at WP only, False = Every Wind measurement
 # Choice: True = Magnitude + Direction, False = V north + Veast
-def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choice=False):
+def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, ensembles=None, choice=False):
     print('Processing flight {}!'.format(traj))
 
     # Setup variables
     if path == None:
         path = 'C:\\Documents\\Git 2\\output\\runs\\xlogs input\\4 inf'
+    else:
+        path = os.path.join(path, 'xlogs input\\4 inf')
     Dir = os.listdir(path)
-    # Dir = Dir[0:10]
+    if ensembles:
+        print(f'Plot is limited to the first {ensembles} ensembles!')
+        Dir = Dir[0:ensembles]
     file_path = os.path.join(path, Dir[0])
     # log = ''.join(list([line for line in open(file_path, 'r') if 'CRE ' in line]))
 
@@ -2581,27 +2587,38 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, choi
         plt.show()
     else:
         # V north and V east Plots
+        dot_size = 2
         dfsub = df[df['Delay'].isin(selection)]
         dfsub = dfsub[dfsub['North / East'] == 'V north']
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(20, 10))
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(5, 9))
 
         sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
-                      jitter=True, dodge=True, color=".3", ax=ax1)
+                      jitter=True, dodge=True, color=".3", ax=ax1, size=dot_size)
         sns.boxplot(x="Waypoint", y='Speed [m/s]', data=dfsub, hue="Delay",
                     ax=ax1, showfliers=False)
         handles, labels = ax1.get_legend_handles_labels()
-        ax1.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
-        ax1.set_title('North Component of the Wind', fontsize=30)
+        ax1.legend(handles[0:len(selection)], labels[0:len(selection)], fontsize=8,
+                   title='delay [seconds]', loc='upper center', framealpha=0.1)
+        ax1.set_title('North-component of the Wind', fontsize=16)
+        # ax1.axes.set_title(fontsize=50)
+        ax1.set_xlabel("Waypoint [#]", fontsize=0)
+        ax1.set_ylabel('Speed [m/s]', fontsize=14)
+        ax1.tick_params(labelsize=14)
+        # ax1.ytick_params(labelsize=10)
 
         dfsub = df[df['Delay'].isin(selection)]
         dfsub = dfsub[dfsub['North / East'] == 'V east']
         sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
-                      jitter=True, dodge=True, color=".3", ax=ax2)
+                      jitter=True, dodge=True, color=".3", ax=ax2, size=dot_size)
         sns.boxplot(x="Waypoint", y="Speed [m/s]", data=dfsub, hue="Delay",
                     ax=ax2, showfliers=False)
         handles, labels = ax2.get_legend_handles_labels()
-        ax2.legend(handles[0:len(selection)], labels[0:len(selection)], title='delay in seconds')
-        ax2.set_title('East Component of the Wind', fontsize=30)
+        ax2.legend(handles[0:len(selection)], labels[0:len(selection)], fontsize=8,
+                   title='delay [seconds]', loc='upper center', framealpha=0.1)
+        ax2.set_title('East-component of the Wind', fontsize=16)
+        ax2.set_xlabel("Waypoint [#]", fontsize=14)
+        ax2.set_ylabel('Speed [m/s]', fontsize=14)
+        ax2.tick_params(labelsize=14)
 
         print('Flight {} is shown!\n'.format(traj))
         plt.tight_layout()
@@ -2675,28 +2692,28 @@ def color_min(s):
             below_min[i] = True
     return ['background-color: yellow' if v else '' for v in below_min]
 
-def autolabel(rects, ax, flag=True):
+def autolabel(rects, ax, flag=True, font=8, ratio=1.02):
     """
     Attach a text label above each bar displaying its height
     """
     if flag:
         for rect in rects:
             height = rect.get_height()
-            ax.text(rect.get_x() + rect.get_width() / 2., 1.02 * height,
-                    '%d' % int(height),
-                    ha='center', va='bottom', fontsize=8)
+            ax.text(rect.get_x() + rect.get_width() / 2., ratio * height,
+                    '%d' % int(round(height)),
+                    ha='center', va='bottom', fontsize=font)
     else:
         for rect in rects:
             height = rect.get_height()
             if height == 0:
-                ax.text(rect.get_x() + rect.get_width() / 2., 1.02 * height,
-                        f'{int(height)}', ha='center', va='bottom', fontsize=8)
+                ax.text(rect.get_x() + rect.get_width() / 2., ratio * height,
+                        f'{int(height)}', ha='center', va='bottom', fontsize=font)
             else:
-                ax.text(rect.get_x() + rect.get_width() / 2., 1.02 * height,
-                    f'{round(height, 1)}', ha='center', va='bottom', fontsize=8)
+                ax.text(rect.get_x() + rect.get_width() / 2., ratio * height,
+                    f'{round(height, 1)}', ha='center', va='bottom', fontsize=font)
 
 # Create a plot with the fuel usages per delay
-def fuelvsdelay(flight, path=None):
+def fuelvsdelay(flight, path=None, ylimits=None):
     print(f'\nProcessing flight {flight}!')
 
     # Setup variables
@@ -2711,6 +2728,7 @@ def fuelvsdelay(flight, path=None):
     index = file.index
     columns = file.columns
     palette = ['r', 'y', 'b', 'g']
+    timewindows = list([])
 
     # Find number of sibling aircraft from the file
     for i in range(shape[0]):
@@ -2732,9 +2750,9 @@ def fuelvsdelay(flight, path=None):
     for i in range(N):
         delays.append(file[:].iloc[i][1])
 
-    print(f'The number of sibling aircraft is {N}')
-    print(f'The names of the schedules are: {schedules}')
-    print(f'The delays of the aircraft are: {delays}')
+    print(f'The number of sibling aircraft is: {N}')
+    print(f'The delays of the aircraft are: \n{delays}')
+    # print(f'The names of the schedules are: {schedules}')
 
     # Create a dataset for every schedule
     selection = list()
@@ -2743,11 +2761,12 @@ def fuelvsdelay(flight, path=None):
         selection.append(columns[i * 13 + 7])
         selection.append(columns[i * 13 + 10])
 
-    print(f'Plotting flight {flight}!')
+    # print(f'Plotting flight {flight}!')
     w, h, l = len(schedules), 2, N
     data = [[[0 for x in range(w)] for y in range(h)] for z in range(l)]
     a = file[columns[2]].str.split('-', n=1, expand=True)
     subfile = file[selection].iloc[:][flight == a[0]]
+    subfile2 = file.iloc[:][flight == a[0]]
     subfile.reset_index(drop=True)
     subcolumns = subfile.columns
 
@@ -2755,15 +2774,33 @@ def fuelvsdelay(flight, path=None):
     for i, schedule in enumerate(schedules):
         data[i][0][:] = subfile[subcolumns[i * 3 + 1]].iloc[:]
         data[i][1][:] = subfile[subcolumns[i * 3 + 2]].iloc[:]
+        deltatime = datetime.datetime.strptime(subfile2.iloc[2, 5+13*i], '%H:%M:%S') - \
+                    datetime.datetime.strptime(subfile2.iloc[2, 4+13*i], '%H:%M:%S')
+        timewindows.append(int(deltatime.total_seconds() / 60))
+    # print(f'The time-windows are: {timewindows}')
 
     ind = np.arange(N)  # the x locations for the groups
     width = 0.9 / len(schedules)  # the width of the bars
     legendlist = list()
     d = {}
-    fig, ax = plt.subplots(figsize=(12, 10))
+    fig, ax = plt.subplots(figsize=(12, 3))
+    fuel_max = 0
+    fuel_min = 10000
     for i in range(number_of_schedules):
+        fuel_max = max(fuel_max, max(data[i][:][0]))
+        fuel_min = min(fuel_min, min(data[i][:][0]))
         d[f'rects{i}'] = ax.bar(ind + width * i, data[i][:][0], width, color=palette[i], yerr=data[i][:][1])
-        legendlist.append(subfile[subcolumns[3 * i]].str.split('-', n=1, expand=True)[1].iloc[0])
+        holder = f' - {timewindows[i]}'
+        legendlist.append(subfile[subcolumns[3 * i]].str.split('-', n=1, expand=True)[1].iloc[0] + holder)
+    print(f'The legend becomes: \n{legendlist}')
+
+    fuel_max = np.ceil(fuel_max/(10**(len(str(int(fuel_min)))-1)))*(10**(len(str(int(fuel_min)))-1))
+    fuel_min = np.floor(fuel_min/(10**(len(str(int(fuel_min)))-1)))*(10**(len(str(int(fuel_min)))-1))
+    if ylimits:
+        fuel_min = ylimits[0]
+        fuel_max = ylimits[1]
+    # print(f'Fuel max is {fuel_max}')
+    # print(f'Fuel min is {fuel_min}')
 
     # add some text for labels, title and axes ticks
     ax.set_ylabel('Fuel Consumption [kg]', fontsize=12)
@@ -2773,18 +2810,27 @@ def fuelvsdelay(flight, path=None):
     ax.set_xticklabels((delays))
 
     if len(schedules) == 3:
-        ax.legend((d["rects0"][0], d["rects1"][0], d["rects2"][0]), legendlist, loc='lower left')
+        ax.legend((d["rects0"][0], d["rects1"][0], d["rects2"][0]), legendlist,
+                  loc='upper left', title='Schedule - TW [min]', framealpha=0.1)
     else:
-        ax.legend((d["rects0"][0], d["rects1"][0], d["rects2"][0], d["rects3"][0]), legendlist, loc='lower left')
+        ax.legend((d["rects0"][0], d["rects1"][0], d["rects2"][0], d["rects3"][0]), legendlist,
+                  loc='upper left', title='Schedule - TW [min]', framealpha=0.1)
 
-    for i in range(len(schedules)):
-        autolabel(d["rects" + str(i)], ax)
-
+    if ylimits:
+        for i in range(len(schedules)):
+            autolabel(d["rects" + str(i)], ax, True, 8, ylimits[2])
+    else:
+        for i in range(len(schedules)):
+            autolabel(d["rects" + str(i)], ax)
+    plt.ylim(fuel_min, fuel_max)
+    plt.gcf().subplots_adjust(bottom=0.15)
+    plt.tight_layout()
     plt.show()
-    return
+    return legendlist
 
 # Create a plot for the KPI of reaching a TW per flight
-def TWperformance(flights_input, path=None):
+# wp_sel: skip these waypoints in the plots
+def TWperformance(flights_input, path=None, wp_sel=False):
     # Setup variables
     if path == None:
         path = 'C:\\Documents\\Git 2\\output\\runs\\analysis'
@@ -2797,7 +2843,12 @@ def TWperformance(flights_input, path=None):
     flights.extend(flights_input)
     kickoff = False
     custom_order = ["min",  "det",   "prob",  "inf"]
-
+    if wp_sel:
+        for i, j in enumerate(wp_sel):
+            wp_sel[i] = j - 1
+        test_x = len(range(min(wp_sel), max(wp_sel)))
+    else:
+        test_x = 0
     for i_flight, flight in enumerate(flights):
         if i_flight > 0:
             break
@@ -2844,7 +2895,7 @@ def TWperformance(flights_input, path=None):
                             nWP = int(i[6:])-1
 
                     if not kickoff:
-                        w, h, l, m = len(schedules), nWP, nDelays, 3
+                        w, h, l, m = len(schedules), nWP-test_x, nDelays, 3
                         KPI = np.array([[[[0 for x in range(w)] for y in range(h)] for z in range(l)] for z2 in range(m)])
                         column_names = [f'Waypoint {x+1}' for x in range(nWP)]
                         delays = list(sheet.iloc[3:3+nDelays, 1])
@@ -2852,9 +2903,12 @@ def TWperformance(flights_input, path=None):
                         print(f'The shape of the KPI-matrix is {KPI.shape}.\n')
                         nDelays2 = nDelays
                         kickoff = True
-
+                    test_i = 0
                     # So the important columns lie in column 8 to 8+nWP
                     for i in range(8, 8+nWP):
+                        if i >= min(wp_sel)+8 and i < max(wp_sel)+8:
+                            test_i += 1
+                            continue
                         early = sheet.iloc[1, i]
                         late = sheet.iloc[2, i]
                         minTime = datetime.datetime(100, 1, 1, int(early[-8:-6]), int(early[-5:-3]), int(early[-2:]))
@@ -2866,29 +2920,36 @@ def TWperformance(flights_input, path=None):
                             curTime = datetime.datetime(100, 1, 1, int(j[-8:-6]), int(j[-5:-3]), int(j[-2:]))
                             # Store the data on the right places
                             if curTime > maxTime:
-                                KPI[2, i_delay, i-8, i_schedule] += 1
+                                KPI[2, i_delay, i-8-test_i, i_schedule] += 1
                             elif curTime < minTime:
-                                KPI[1, i_delay, i-8, i_schedule] += 1
+                                KPI[1, i_delay, i-8-test_i, i_schedule] += 1
                             else:
-                                KPI[0, i_delay, i-8, i_schedule] += 1
+                                KPI[0, i_delay, i-8-test_i, i_schedule] += 1
 
     def autolabel(rects, text, xpos='center'):
         ha = {'center': 'center', 'right': 'left', 'left': 'right'}
         offset = {'center': 0, 'right': 1, 'left': -1}
-        height = -6
+        height = -20
         for rect in rects:
             ax.annotate(f'{text}',
                         xy=(rect.get_x() + rect.get_width() / 2, height),
                         xytext=(offset[xpos] * 3, 3),  # use 3 points offset
                         textcoords="offset points",  # in both directions
-                        ha=ha[xpos], va='bottom', rotation=90, weight='bold') #, fontsize=10)
+                        ha=ha[xpos], va='bottom', rotation=90)#, weight='bold') #, fontsize=10)
 
     # Plot the KPI
     flights = flights[0] # right now, only one flight can be processed at a time
-    print(f'\nPlotting {len(schedules)} schedules for flight {flight}!')
+    print(f'\nPlotting {len(schedules)} schedules for Flight {flight}!')
     print(f'These are: {schedules}')
 
     palette = ['r', 'g', 'y']
+    # KPI = np.delete(KPI, 0, [np.arange(2, 7)])
+    if wp_sel:
+        i = max(wp_sel)-1
+        while i >= min(wp_sel):
+            column_names.pop(i)
+            i += -1
+        print(column_names)
     for i_schedule, schedule in enumerate(schedules):
         print(f'Plotting schedule [{schedule}]!')
         d = {}
@@ -2904,7 +2965,7 @@ def TWperformance(flights_input, path=None):
             width_val2[i]    = np.round(-0.4+0.1*i, 1)
             width_val2[-1-i] = np.round(0.3-0.1*i, 1)
 
-        fig, ax = plt.subplots(figsize=(20, 10))
+        fig, ax = plt.subplots(figsize=(5, 3.5))
 
         for i in range(int(df2.shape[1]/3)):
             d[f'{alphabet[i*3]}{alphabet[i*3+1]}{alphabet[i*3+2]}_bar_list']   = \
@@ -2918,15 +2979,15 @@ def TWperformance(flights_input, path=None):
                              align='edge', width=width_val[i], color=palette[0], hatch='..')]
             autolabel(d[f'{alphabet[i*3]}{alphabet[i*3+1]}{alphabet[i*3+2]}_bar_list'][0], delays[i])
 
-        ax.set_title(f'Punctuality for flight {flights} - [{schedule.upper()}]', fontsize=20)
-        ax.set_ylabel('Arrival punctuality in [%]', fontsize=16)
-        ax.set_xlabel('Delay in [seconds] per set of flights at every waypoint', fontsize=16)
+        ax.set_title(f'Punctuality for Flight {flights} - [{schedule.upper()}]', fontsize=16)
+        ax.set_ylabel('Arrival punctuality [%]', fontsize=14)
+        ax.set_xlabel('Delay [seconds] by waypoint [#]', fontsize=14)
         ax.legend(['Too Early', 'On Time', 'Too Late'], loc='upper right')
         plt.xticks(np.arange(KPI.shape[2]), column_names, fontsize=14)
         plt.yticks(np.arange(0, 101, 10))
-        plt.ylim(-6, 100)
+        plt.ylim(-20, 100)
+        plt.tight_layout()
         plt.show()
-
     return
 
 # Secondly combine the results of the matching and create a KPI
@@ -2941,28 +3002,33 @@ def TWperformance(flights_input, path=None):
 # Secondly see if the waypoint has been matched or violated early/late
 # Thirdly combine the results of the matching and create a KPI
 # Create a plot for the KPI of reaching a TW per flight
-def TWscore(path=None):
+def TWscore(flights=None, path=None, legend=None, flight_limit=10):
     # Setup variables
-    if path == None:
+    if not path:
         path = 'C:\\Documents\\Git 2\\output\\runs\\analysis'
         path2 = 'C:\\Documents\\Git 2\\output\\runs\\xlogs input\\1 min'
     else:
-        path = os.path.join(path, 'analysis')
         path2 = os.path.join(path, 'xlogs input\\1 min')
+        path = os.path.join(path, 'analysis')
 
     path2 = os.path.join(path2, os.listdir(path2)[0])
 
     # Calculate KPI per flight with matched/violated waypoint per waypoint
     # Firstly see if the waypoint has been matched or violated early/late
-    flights = list(set([x.split(' ')[0] for x in os.listdir(path)]))
-    flights.sort()
+    if not flights:
+        flights = list(set([x.split(' ')[0] for x in os.listdir(path)]))
+        flights.sort()
+        print(f'\nNumber of flights is {len(flights)}')
+    # else:
+
     kickoff = False
     custom_order = ["min",  "det",   "prob",  "inf"]
+    palette = ['r', 'y', 'b', 'g']
 
     for i_flight, flight in enumerate(flights):
-        if i_flight > 10:
+        if i_flight > flight_limit:
             break
-        print(f'\nProcessing flight {flight}!\n')
+        print(f'\nProcessing flight {flight}!')
         kickoff_2 = False
 
         # Setup variables
@@ -2989,6 +3055,7 @@ def TWscore(path=None):
             c = float(k[2].strip(","))
             d = float(k[3].strip(","))
             WeightFactors.append(dist(a, b, c, d)[1])
+        print(f'Total distance for trajectory {flight} is {round(sum(WeightFactors),2)}')
         WeightFactors = WeightFactors/sum(WeightFactors)
 
         for i_schedule, schedule in enumerate(schedules):
@@ -3028,7 +3095,7 @@ def TWscore(path=None):
                         KPI_score = pd.DataFrame(data=flights, columns=['Flights']).set_index('Flights') #[[0 for x in range(w)] for y in range(h)])
                         for i in schedules:
                             KPI_score[i] = np.NAN
-                        print(f'The shape of the KPI_score-matrix is {KPI_score.shape}.\n')
+                        # print(f'The shape of the KPI_score-matrix is {KPI_score.shape}.\n')
                         kickoff = True
 
                     if not kickoff_2:
@@ -3038,7 +3105,7 @@ def TWscore(path=None):
                         # column_names = [f'Waypoint {x + 1}' for x in range(nWP)]
                         delays = list(sheet.iloc[3:3 + nDelays, 1])
                         print(f'The set of delays are: \n{delays}')
-                        print(f'The shape of the KPI-matrix is {KPI.shape}.')
+                        # print(f'The shape of the KPI-matrix is {KPI.shape}.')
                         nDelays2 = nDelays
                         kickoff_2 = True
 
@@ -3075,6 +3142,32 @@ def TWscore(path=None):
     KPI_score.dropna(axis=0, how='any', thresh=2, subset=None, inplace=True)
     print('\n', KPI_score) # Table
 
+    # If only one flight, combine the stats in 1 plot and return
+    if i_flight < 1:
+        fig, ax = plt.subplots(figsize=(6, 4.5))
+        # KPI_score.plot(kind='bar', color='b')
+        for i in range(len(KPI_score.columns)):
+            # print(KPI_score.iloc[0, i])
+            bar = ax.bar(i+1, KPI_score.iloc[0, i])
+            autolabel(bar, ax, True, 12, 1.01)
+        ax.set_ylabel('Aggregated arrival punctuality [%]', fontsize=12)
+        ax.set_xlabel('Schedules - TW [min]', fontsize=12)
+        fig.suptitle(f'Punctuality per Schedule for Flight {flights[0]}',
+                     x=.5, y=.94, fontsize=16)
+        # ax.set_suptitle(f'Punctuality per Schedule for Flight {flights[0]}', fontsize=16)
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.xaxis.set_major_locator(MaxNLocator(10))
+        ax.set_xticks(range(1, len(KPI_score.columns)+1))
+        if legend:
+            ax.set_xticklabels(legend, fontsize=10)
+        else:
+            ax.set_xticklabels(KPI_score.columns.str.upper(), fontsize=10)
+        ax.set_xlim(0, 5)
+        ax.set_ylim(0, 100)
+        plt.gcf().subplots_adjust(bottom=0.15)
+        plt.show()
+        return
+
     # Create a plot per schedule with those percentages/grades from above for all flights
     # It gives info on #flights that stay within certain scoreranges
     # See the picture. Bars per 10% range for a schedule.
@@ -3098,21 +3191,31 @@ def TWscore(path=None):
 
     # Create the plot
     fig = plt.figure()
-    fig.suptitle('Number of flights vs punctuality per schedule', fontsize=20)
-    fig.set_figheight(15)
-    fig.set_figwidth(15)
+    fig.suptitle('Flights vs Punctuality per schedule', x=.5, y=.95, fontsize=16)
+    fig.set_figheight(6)
+    fig.set_figwidth(9)
     for i2, i in enumerate(range(KPI_bars.shape[0])):
         ax = fig.add_subplot(i_1, i_2, i2+1)
-        ax.set_title(f'Distribution of {(KPI_score.columns[i2]).upper()}-schedule', fontsize=15)
-        bar = ax.bar(x, KPI_bars[i2, :], width=10)
-        autolabel(bar, ax)
-        ax.set_ylabel('number of flights')
+        ax.set_title(f'Distribution of {(KPI_score.columns[i2]).upper()}-schedule', fontsize=14)
+        bar = ax.bar(x, KPI_bars[i2, :], width=8)
+        autolabel(bar, ax, True, 10)
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.tick_params(axis='y', pad=-3)
+        # ax.tick_params(axis='x')
         ax.xaxis.set_major_locator(MaxNLocator(10))
+        xlim = range(0, 101, 10)
+        ax.set_xticklabels(xlim, fontsize=10, verticalalignment='bottom')
+
         ax.set_xlim(0, 100)
         ax.set_ylim(0, KPI_max)
+
         if i2+1 > (KPI_bars.shape[0] / 2):
-            ax.set_xlabel('Aggregated arrival punctuality in [%]')
+            ax.set_xlabel('Aggregated arrival punctuality [%]', fontsize=14)
+        if i2 == (KPI_bars.shape[0] / 2) or i2 < 1:
+            ax.set_ylabel('Flights [#]', fontsize=14)
+    plt.gcf().subplots_adjust(bottom=0.15)
+    plt.subplots_adjust(wspace=0.10, hspace=0.20)
+
     plt.show()
 
     return
@@ -3131,6 +3234,7 @@ def speedchanges(flights=None, path=None):
         flights = [x for x in flights if "$" not in x]
         flights.sort()
         nFlights = len(flights)
+        print(f'Number of flights is {nFlights}')
     else:
         flights.append('stop')
         nFlights = 1
@@ -3141,7 +3245,7 @@ def speedchanges(flights=None, path=None):
         # Stop after # of flights or at second flight if only one has been called
         if i_flight > 10 or 'stop' in flight:
             break
-        print(f'\nProcessing flight {flight}!\n')
+        print(f'\nProcessing flight {flight}!')
         kickoff_2 = False
         timewindows = list([])
 
@@ -3200,7 +3304,7 @@ def speedchanges(flights=None, path=None):
                         for i in schedules:
                             KPI_score[f'{i}-pos'] = 0
                             KPI_score[f'{i}-neg'] = 0
-                        print(f'The shape of the KPI_score-matrix is {KPI_score.shape}.\n')
+                        print(f'The shape of the KPI_score-matrix is {KPI_score.shape}.')
                         start_cell = (nDelays+4) * 2
                         kickoff = True
 
@@ -3211,12 +3315,9 @@ def speedchanges(flights=None, path=None):
                         kickoff_2 = True
 
                     if kickoff_3:
-                        # print(f'TW size is: {sheet.iloc[1,4]}')
-                        # print(f'TW size is: {sheet.iloc[2,4]}')
                         deltatime = datetime.datetime.strptime(sheet.iloc[2, 4], '%H:%M:%S') - \
                                     datetime.datetime.strptime(sheet.iloc[1, 4], '%H:%M:%S')
                         timewindows.append(int(deltatime.total_seconds() / 60))
-                        # print(int(deltatime.total_seconds() / 60))
                         kickoff_3 = False
 
                     sheet = sheet.iloc[start_cell:]
@@ -3244,24 +3345,9 @@ def speedchanges(flights=None, path=None):
                         # print(f'Accelerations : {np.sum([inputs2 > inputs]*1)}')
                         KPI_score.loc[f'{flight}-{delay}', f'{schedule}-pos'] += np.sum([inputs2 < inputs]*1)
                         KPI_score.loc[f'{flight}-{delay}', f'{schedule}-neg'] += np.sum([inputs2 > inputs]*1)
-
-            # KPI = KPI / 50
-
-            # KPI_score = KPI_scor
-        print(f'\nStarting speed : V = {initial_speed} Mach')
-        print(KPI_score.iloc[i_flight*nDelays:(i_flight+1)*nDelays, :])
-    # exit()
+        # print(f'\nStarting speed : V = {initial_speed} Mach')
+        # print(KPI_score.iloc[i_flight*nDelays:(i_flight+1)*nDelays, :])
     KPI_score = KPI_score/50
-    # Create a plot per schedule with those percentages/grades from above for all flights
-    # It gives info on #flights that stay within certain scoreranges
-    # See the picture. Bars per 10% range for a schedule.
-    # KPI_bars = np.array([[0 for x in range(10)] for y in range(len(KPI_score.columns))])
-    # for i2, i in enumerate(KPI_score.columns):
-    #     for j2, j in enumerate(range(0, 100, 10)):
-    #         holder = np.where((KPI_score[i].values > j) & (KPI_score[i].values < j+10), 1, 0)
-    #         # print(f'j = {j} and j+10 = {j+10} => holder = {holder} => sum = {sum(holder)}')
-    #         KPI_bars[i2, j2] = sum(holder)
-    #     # print(f'schedule = {i} and KPI_bars = {KPI_bars}')
 
     # Setup for the plot
     if KPI_score.shape[1] % 8 == 0:
@@ -3271,60 +3357,50 @@ def speedchanges(flights=None, path=None):
         i_1 = 2
         i_2 = 1
 
-    KPI_max = math.ceil(max(KPI_score.max())/5) * 5
+    if max(KPI_score.max()) >= 5:
+        KPI_max = math.ceil(max(KPI_score.max())/5) * 5
+    else:
+        KPI_max = math.ceil(max(KPI_score.max()))+1
     ind = np.arange(nDelays)  # the x locations for the groups
-    width = 0.9 / 2  # the width of the bars
+    width = 0.8 / 2  # the width of the bars
     legendlist = list(['acceleration', 'deceleration'])
     palette = ['r', 'y', 'b', 'g']
-    print(f'KPI_score shape is {KPI_score.shape}')
-    print(f'Delays is {delays}')
-    # for direction in ['pos', 'neg']:
+    # print(f'KPI_score shape is {KPI_score.shape}')
+    # print(f'Delays is {delays}')
+
     # Create the plot
     fig = plt.figure()
-    fig.suptitle(f'Number of speed inputs vs delay per schedule for flight {flights[0]}', fontsize=20)
-    fig.set_figheight(15)
-    fig.set_figwidth(15)
+    fig.suptitle(f'Speed input vs Delay per schedule for Flight {flights[0]}',
+                 x=.5, y=.94, fontsize=16)
+    rcParams['axes.titlepad'] = 5
+    fig.set_figheight(6)
+    fig.set_figwidth(8)
+    # gs1 = gridspec.GridSpec(4, 4)
+    # gs1.update(wspace=-20, hspace=-1)
     for i2, i in enumerate(range(int(KPI_score.shape[1]/2))):
         d = {}
-        # fig, ax = plt.subplots(figsize=(12, 10))
         ax = fig.add_subplot(i_1, i_2, i2 + 1)
-        # for i in range(len(schedules)):
         d[f'rects1'] = ax.bar(ind - width,  KPI_score.loc[:, f'{schedules[i]}-pos'], width, color=palette[2])
         d[f'rects2'] = ax.bar(ind,          KPI_score.loc[:, f'{schedules[i]}-neg'], width, color=palette[3])
 
-        # legendlist.append(schedules)
+        ax.set_title(f'{schedules[i2].upper()} - TW: {timewindows[i2]} [min]', fontsize=12)
+        ax.set_xticks(ind-width/2)
+        ax.set_xticklabels(delays, fontsize=10, verticalalignment='bottom')
+        # plt.labelpad = 10
+        ax.legend((d["rects1"][0], d["rects2"][0]), legendlist, loc='upper right')
 
-        # add some text for labels, title and axes ticks
-        # ax.set_ylabel('Fuel Consumption [kg]', fontsize=12)
-
-        ax.set_title(f'Schedule {schedules[i2].upper()} - TW: {timewindows[i2]} [min] / Bottom', fontsize=16)
-        print(2*ind + width * (len(schedules)-1))
-        ax.set_xticks(ind-width/2) # + width * (len(schedules)-1)/2)
-        # plt.xticks(np.arange(KPI.shape[2]), column_names, fontsize=14)
-        # delays2 = list([0])
-        # delays2.extend(delays)
-        # print(delays2)
-        ax.set_xticklabels(delays) #, rotation=45, ha="right")
-        ax.legend((d["rects1"][0], d["rects2"][0]), legendlist, loc='lower left')
-
-        # for i in range(len(schedules)):
         autolabel(d["rects1"], ax, False)
         autolabel(d["rects2"], ax, False)
 
-
-        # ax.set_title(f'Distribution of {(KPI_score.columns[i2]).upper()}-schedule', fontsize=15)
-        # bar = ax.bar(delays, KPI_bars[i2, :], width=10)
-        # autolabel(d, ax)
-
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-        # ax.xaxis.set_major_locator(MaxNLocator(10))
-        # ax.set_xlim(0, 100)
+        ax.tick_params(axis='y', pad=-3)
         ax.set_ylim(0, KPI_max)
         if i2+1 > (KPI_score.shape[0] / 4):
-            ax.set_xlabel('Delay in [seconds]')
+            ax.set_xlabel('Delay [seconds]')
         if i2 % 2 == 0:
-            ax.set_ylabel('number of speed inputs')
+            ax.set_ylabel('Speed input [#]')
+        # ax.xaxis.labelpad = -5
+        # print(ax.get_xticks())
+    plt.subplots_adjust(wspace=0.05, hspace=0.13)
     plt.show()
-    # del fig
-
     return

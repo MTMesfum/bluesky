@@ -3,13 +3,30 @@ from scratch_methods import *
 # flights = ['DLH87P', 'DLH48H']  # file 0
 # flights = ['BAW4TM', 'BEL724']  # file 1
 flights = ['ADH931', 'AEE929']
+path = 'F:\Documents\BlueSky Backup\Final Runs\Oct 31 Remon TW_bot Wx1'
+path2 = 'C:\Documents\Git 2\output\\runs-save'
+flights1 = 'EXS79G'
+flights2 = [flights1]
+set_TW_place(False)
+# TAP1015, AZA1572, BEL7PC, EXS79G
 # overall_aggregate2()
 # result_analysis2(None, ['min', 'det'])
 
-# fuelvsdelay('BEL7PC')
-# TWscore()
-# TWperformance(['ADH931'])
-speedchanges(['BEL7PC'])
+# 1
+# print(' ')
+# getLog(path, flights1, [0, 900, 1800]) #, False, 10)
+# 2
+# speedchanges(flights2, path)
+# speedchanges(None, path)
+flights2 = [flights1]
+# 4
+limits = [3600, 4000, 1.005]
+# tw = fuelvsdelay(flights1, path, limits)
+# 3 - distance as well
+TWscore(None, path, None, 250)
+# TWscore(flights2, path, tw)
+# TWperformance(flights2, path, [3, 7])
+
 
 
 

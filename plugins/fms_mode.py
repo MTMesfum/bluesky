@@ -261,6 +261,7 @@ class Afms(TrafficArrays):
                 self.interval_counter[index] = 1
                 self.currentwp[index] = holder[index]
                 list_to_update.append(index)
+                print(f'Flight {traf.id[index]} and index {index}')
 
             # Check whether the interval has been met
             elif self.interval_counter[index] % (self.dt / settings.simdt) == 0:
@@ -269,14 +270,15 @@ class Afms(TrafficArrays):
                 list_to_update.append(index)
 
             else:
+                list_to_update.append(index)
                 self.interval_counter[index] += 1
                 continue
 
             # Get the position of the AC and Echo the wind at that position
-            wp_number = int(float(self.currentwp[index]))
-            stack.stack(f'ECHO {traf.id[index]} {wp_number} {traf.lat[index]} {traf.lon[index]} {traf.alt[index]}')
-            vn, ve = bs.traf.wind.getdata(traf.lat[index], traf.lon[index], traf.alt[index])
-            stack.stack(f'ECHO {traf.id[index]} {wp_number} {vn} {ve} {traf.alt[index]}')
+            # wp_number = int(float(self.currentwp[index]))
+            # stack.stack(f'ECHO {traf.id[index]} {wp_number} {traf.lat[index]} {traf.lon[index]} {traf.alt[index]}')
+            # vn, ve = bs.traf.wind.getdata(traf.lat[index], traf.lon[index], traf.alt[index])
+            # stack.stack(f'ECHO {traf.id[index]} {wp_number} {vn} {ve} {traf.alt[index]}')
 
         if list_to_update == []:
             pass
@@ -393,10 +395,10 @@ class Afms(TrafficArrays):
                         time_window_cas_m_s = 300.0  # Large speed
                     elif eta_s_preferred < earliest_time_s2rta:  # Prefer earlier then TW
                         time_window_cas_m_s = self._cas2rta(distances_nm, flightlevels_m, earliest_time_s2rta,
-                                                            traf.cas[idx])
+                                                            traf.cas[idx], idx)
                     elif eta_s_preferred > latest_time_s2rta:  # Prefer later then TW
                         time_window_cas_m_s = self._cas2rta(distances_nm, flightlevels_m, latest_time_s2rta,
-                                                            traf.cas[idx])
+                                                            traf.cas[idx], idx)
                     else:
                         time_window_cas_m_s = preferred_cas_m_s
 
@@ -596,7 +598,7 @@ class Afms(TrafficArrays):
         else:
             return tdelta.seconds
 
-    def _cas2rta(self, distances_nm, flightlevels_m, time2rta_s, current_cas_m_s):  #
+    def _cas2rta(self, distances_nm, flightlevels_m, time2rta_s, current_cas_m_s, index):  #
         """
         Calculate the CAS needed to arrive at the RTA waypoint in the specified time
         No wind is taken into account.
@@ -619,9 +621,13 @@ class Afms(TrafficArrays):
             k = 0.5  # Part that is taken from estimate_cas_m_s (between 0 and 1)
             estimated_cas_m_s = (k*estimated_cas_m_s + (1-k)*previous_estimate_m_s)  # Stability of iteration
             if abs(previous_estimate_m_s - estimated_cas_m_s) < 0.1:
+                # print(f'Converged properly!! {traf.id[index]}')
                 break
         if abs(previous_estimate_m_s - estimated_cas_m_s) > 5:
+            # print(f'abs criterion hit! {traf.id[index]} - {previous_estimate_m_s} - {estimated_cas_m_s}')
+            # self.interval_counter[index] = -1
             estimated_cas_m_s = current_cas_m_s
+            # estimated_cas_m_s = 600
         return estimated_cas_m_s
 
     def _eta2tw_cas_wfl(self, distances_nm, flightlevels_m, cas_m_s):
