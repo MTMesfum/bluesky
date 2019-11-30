@@ -9,6 +9,7 @@ flights1 = 'EXS79G'
 flights2 = [flights1]
 set_TW_place(False)
 # TAP1015, AZA1572, BEL7PC, EXS79G
+# BER717E CCA931 DLH08W AFR234H
 # overall_aggregate2()
 # result_analysis2(None, ['min', 'det'])
 
@@ -16,17 +17,20 @@ set_TW_place(False)
 # print(' ')
 # getLog(path, flights1, [0, 900, 1800]) #, False, 10)
 # 2
-# speedchanges(flights2, path)
+# speedchanges(flights2, path, 6)
 # speedchanges(None, path)
 flights2 = [flights1]
 # 4
-limits = [3600, 4000, 1.005]
+limits = [71000, 74000, 1.005]
+limits = [750, 1150]
+limits = [3600, 3900, 1.005]
 # tw = fuelvsdelay(flights1, path, limits)
+# tw = fuelvsdelay(flights1, path)
 # 3 - distance as well
-TWscore(None, path, None, 250)
+# TWscore(None, path, None, 200)
 # TWscore(flights2, path, tw)
-# TWperformance(flights2, path, [3, 7])
-
+TWperformance(flights2, path, [3, 7])
+# TWperformance(flights2, path)
 
 
 

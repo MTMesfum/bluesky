@@ -2598,7 +2598,7 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, ense
                     ax=ax1, showfliers=False)
         handles, labels = ax1.get_legend_handles_labels()
         ax1.legend(handles[0:len(selection)], labels[0:len(selection)], fontsize=8,
-                   title='delay [seconds]', loc='upper center', framealpha=0.1)
+                   title='delay [seconds]', loc='upper left', framealpha=0.1)
         ax1.set_title('North-component of the Wind', fontsize=16)
         # ax1.axes.set_title(fontsize=50)
         ax1.set_xlabel("Waypoint [#]", fontsize=0)
@@ -2614,7 +2614,7 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, ense
                     ax=ax2, showfliers=False)
         handles, labels = ax2.get_legend_handles_labels()
         ax2.legend(handles[0:len(selection)], labels[0:len(selection)], fontsize=8,
-                   title='delay [seconds]', loc='upper center', framealpha=0.1)
+                   title='delay [seconds]', loc='upper left', framealpha=0.1)
         ax2.set_title('East-component of the Wind', fontsize=16)
         ax2.set_xlabel("Waypoint [#]", fontsize=14)
         ax2.set_ylabel('Speed [m/s]', fontsize=14)
@@ -2785,7 +2785,7 @@ def fuelvsdelay(flight, path=None, ylimits=None):
     d = {}
     fig, ax = plt.subplots(figsize=(12, 3))
     fuel_max = 0
-    fuel_min = 10000
+    fuel_min = 10**6
     for i in range(number_of_schedules):
         fuel_max = max(fuel_max, max(data[i][:][0]))
         fuel_min = min(fuel_min, min(data[i][:][0]))
@@ -2799,13 +2799,16 @@ def fuelvsdelay(flight, path=None, ylimits=None):
     if ylimits:
         fuel_min = ylimits[0]
         fuel_max = ylimits[1]
+        if len(ylimits) < 3:
+            ylimits.append(1.02)
+
     # print(f'Fuel max is {fuel_max}')
     # print(f'Fuel min is {fuel_min}')
 
     # add some text for labels, title and axes ticks
     ax.set_ylabel('Fuel Consumption [kg]', fontsize=12)
     ax.set_xlabel('Delay [seconds]', fontsize=12)
-    ax.set_title(f'Fuel Consumption by Delay and Schedule for Flight {flight}', fontsize=16)
+    # ax.set_title(f'Fuel Consumption by Delay and Schedule for Flight {flight}', fontsize=16)
     ax.set_xticks(ind + width * (number_of_schedules - 1) / 2)
     ax.set_xticklabels((delays))
 
@@ -2906,9 +2909,10 @@ def TWperformance(flights_input, path=None, wp_sel=False):
                     test_i = 0
                     # So the important columns lie in column 8 to 8+nWP
                     for i in range(8, 8+nWP):
-                        if i >= min(wp_sel)+8 and i < max(wp_sel)+8:
-                            test_i += 1
-                            continue
+                        if wp_sel:
+                            if i >= min(wp_sel)+8 and i < max(wp_sel)+8:
+                                test_i += 1
+                                continue
                         early = sheet.iloc[1, i]
                         late = sheet.iloc[2, i]
                         minTime = datetime.datetime(100, 1, 1, int(early[-8:-6]), int(early[-5:-3]), int(early[-2:]))
@@ -2949,7 +2953,7 @@ def TWperformance(flights_input, path=None, wp_sel=False):
         while i >= min(wp_sel):
             column_names.pop(i)
             i += -1
-        print(column_names)
+        print(f'Selected columns are: {column_names}')
     for i_schedule, schedule in enumerate(schedules):
         print(f'Plotting schedule [{schedule}]!')
         d = {}
@@ -2979,7 +2983,8 @@ def TWperformance(flights_input, path=None, wp_sel=False):
                              align='edge', width=width_val[i], color=palette[0], hatch='..')]
             autolabel(d[f'{alphabet[i*3]}{alphabet[i*3+1]}{alphabet[i*3+2]}_bar_list'][0], delays[i])
 
-        ax.set_title(f'Punctuality for Flight {flights} - [{schedule.upper()}]', fontsize=16)
+        # ax.set_title(f'Punctuality for Flight {flights} - [{schedule.upper()}]', fontsize=16)
+        print(f'Punctuality for Flight {flights} - [{schedule.upper()}]')
         ax.set_ylabel('Arrival punctuality [%]', fontsize=14)
         ax.set_xlabel('Delay [seconds] by waypoint [#]', fontsize=14)
         ax.legend(['Too Early', 'On Time', 'Too Late'], loc='upper right')
@@ -3018,12 +3023,13 @@ def TWscore(flights=None, path=None, legend=None, flight_limit=10):
     if not flights:
         flights = list(set([x.split(' ')[0] for x in os.listdir(path)]))
         flights.sort()
-        print(f'\nNumber of flights is {len(flights)}')
     # else:
 
     kickoff = False
     custom_order = ["min",  "det",   "prob",  "inf"]
     palette = ['r', 'y', 'b', 'g']
+    print(f'\nNumber of flights is {len(flights)} / {flight_limit}')
+    flight_limit -= 1
 
     for i_flight, flight in enumerate(flights):
         if i_flight > flight_limit:
@@ -3144,7 +3150,7 @@ def TWscore(flights=None, path=None, legend=None, flight_limit=10):
 
     # If only one flight, combine the stats in 1 plot and return
     if i_flight < 1:
-        fig, ax = plt.subplots(figsize=(6, 4.5))
+        fig, ax = plt.subplots(figsize=(6, 3.5))
         # KPI_score.plot(kind='bar', color='b')
         for i in range(len(KPI_score.columns)):
             # print(KPI_score.iloc[0, i])
@@ -3152,8 +3158,8 @@ def TWscore(flights=None, path=None, legend=None, flight_limit=10):
             autolabel(bar, ax, True, 12, 1.01)
         ax.set_ylabel('Aggregated arrival punctuality [%]', fontsize=12)
         ax.set_xlabel('Schedules - TW [min]', fontsize=12)
-        fig.suptitle(f'Punctuality per Schedule for Flight {flights[0]}',
-                     x=.5, y=.94, fontsize=16)
+        # fig.suptitle(f'Punctuality per Schedule for Flight {flights[0]}',
+        #              x=.5, y=.94, fontsize=16)
         # ax.set_suptitle(f'Punctuality per Schedule for Flight {flights[0]}', fontsize=16)
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.xaxis.set_major_locator(MaxNLocator(10))
@@ -3174,7 +3180,7 @@ def TWscore(flights=None, path=None, legend=None, flight_limit=10):
     KPI_bars = np.array([[0 for x in range(10)] for y in range(len(KPI_score.columns))])
     for i2, i in enumerate(KPI_score.columns):
         for j2, j in enumerate(range(0, 100, 10)):
-            holder = np.where((KPI_score[i].values > j) & (KPI_score[i].values < j+10), 1, 0)
+            holder = np.where((KPI_score[i].values >= j) & (KPI_score[i].values < j+10), 1, 0)
             # print(f'j = {j} and j+10 = {j+10} => holder = {holder} => sum = {sum(holder)}')
             KPI_bars[i2, j2] = sum(holder)
         # print(f'schedule = {i} and KPI_bars = {KPI_bars}')
@@ -3191,7 +3197,7 @@ def TWscore(flights=None, path=None, legend=None, flight_limit=10):
 
     # Create the plot
     fig = plt.figure()
-    fig.suptitle('Flights vs Punctuality per schedule', x=.5, y=.95, fontsize=16)
+    # fig.suptitle('Flights vs Punctuality per schedule', x=.5, y=.95, fontsize=16)
     fig.set_figheight(6)
     fig.set_figwidth(9)
     for i2, i in enumerate(range(KPI_bars.shape[0])):
@@ -3222,7 +3228,7 @@ def TWscore(flights=None, path=None, legend=None, flight_limit=10):
 
 # Create a plot for number of speed changes per flight --> present these in a plot flights vs changes ?
 # Do this for every schedule or smthing? what does this tell the user?
-def speedchanges(flights=None, path=None):
+def speedchanges(flights=None, path=None, font=8):
     # Setup variables
     if path == None:
         path = 'C:\\Documents\\Git 2\\output\\runs\\analysis'
@@ -3370,8 +3376,8 @@ def speedchanges(flights=None, path=None):
 
     # Create the plot
     fig = plt.figure()
-    fig.suptitle(f'Speed input vs Delay per schedule for Flight {flights[0]}',
-                 x=.5, y=.94, fontsize=16)
+    # fig.suptitle(f'Speed input vs Delay per schedule for Flight {flights[0]}',
+    #              x=.5, y=.94, fontsize=16)
     rcParams['axes.titlepad'] = 5
     fig.set_figheight(6)
     fig.set_figwidth(8)
@@ -3389,8 +3395,8 @@ def speedchanges(flights=None, path=None):
         # plt.labelpad = 10
         ax.legend((d["rects1"][0], d["rects2"][0]), legendlist, loc='upper right')
 
-        autolabel(d["rects1"], ax, False)
-        autolabel(d["rects2"], ax, False)
+        autolabel(d["rects1"], ax, False, font)
+        autolabel(d["rects2"], ax, False, font)
 
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.tick_params(axis='y', pad=-3)
@@ -3398,9 +3404,9 @@ def speedchanges(flights=None, path=None):
         if i2+1 > (KPI_score.shape[0] / 4):
             ax.set_xlabel('Delay [seconds]')
         if i2 % 2 == 0:
-            ax.set_ylabel('Speed input [#]')
+            ax.set_ylabel('Average number of speed changes [#]')
         # ax.xaxis.labelpad = -5
         # print(ax.get_xticks())
-    plt.subplots_adjust(wspace=0.05, hspace=0.13)
+    plt.subplots_adjust(wspace=0.10, hspace=0.17)
     plt.show()
     return
