@@ -37,11 +37,11 @@ from scratch_methods import *
 
 # dt = find_dt() # format '#.##'
 set_of_dt = ['0.05', '0.10', '0.20', '0.50', '1.00']
-list_ensemble = np.arange(1, 2) #np.flip(np.arange(1, 51))
+list_ensemble = np.arange(1, 51) #np.flip(np.arange(1, 51))
 # list_ensemble = list([4, 13, 17, 21, 22, 23, 31, 33, 39, 41, 45, 47, 50])
-skip_entire_dir = ['1 min', '2 det', '4 inf'] # ['1 min', '2 det', '3 prob', '4 inf']
-# set_of_delays = [0, 180, 300, 600, 900, 1200, 1500, 1800]
-set_of_delays = [0, 1200, 1500, 1800]
+skip_entire_dir = [ ] # ['1 min', '2 det', '3 prob', '4 inf']
+set_of_delays = [0, 180, 300, 600, 900, 1200, 1500, 1800]
+# set_of_delays = [0, 1200, 1500, 1800]
 # set_of_delays = [0, 60, 90, 180, 300, 450, 600, 900, 1200] #, 180, 300, 600, 720, 900]  # [s]
               # [0, 1, 2,  3,  4,  5,   6,   7,   8,   9,  10,   11]
               #                       [ 0,   1,   2,   3,   4,    5]
@@ -59,12 +59,12 @@ del_runs = True
 run = True
 
 FE = False
-create_scenarios = True
-create_scenarios_custom = False
+create_scenarios = False
+create_scenarios_custom = True
 selection_made = False
 
 # position of the TW. True is in middle, False is on the bottom
-set_TW_place(False)
+set_TW_place(True)
 
 clear_mylog()
 timeit.default_timer()
@@ -174,6 +174,13 @@ if create_scenarios_custom:
                      'DLH2JW', 'DLH587', 'DLH681', 'DLH9CF', 'NLY1GG',
                      'NLY6WW', 'SBI897', 'TRA908V', 'TRA9352', 'NAX56MG',
                      'SAS4759', 'ICE532', 'IBE31DD']
+
+        selection = ['EZY81NL', 'VOE27SR', 'AEE8', 'DLH62K',
+                     'DLH1835', 'DLH2557', 'DLH587', 'DLH681',
+                     'NLY6WW', 'SBI897', 'TRA908V', 'TRA9352',
+                     'NAX56MG', 'SAS4759']
+
+        selection = ['SAS4759']
 
         # selection = ['DLH48H', 'TRA9352', 'TRA908V',
         #              'DLH2WT', 'JEI252', 'DLH87P']

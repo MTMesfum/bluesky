@@ -261,7 +261,7 @@ class Afms(TrafficArrays):
                 self.interval_counter[index] = 1
                 self.currentwp[index] = holder[index]
                 list_to_update.append(index)
-                print(f'Flight {traf.id[index]} and index {index}')
+                # print(f'Flight {traf.id[index]} and index {index}')
 
             # Check whether the interval has been met
             elif self.interval_counter[index] % (self.dt / settings.simdt) == 0:

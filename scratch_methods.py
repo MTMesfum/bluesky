@@ -879,13 +879,14 @@ def CreateSCN_Cruise3(alpha, selection=None, cap=999):
             banana = list()
             banana.append('00:00:00.00> FF')
             m += 1
-            target_speed = cruise_speed[cruise_speed['AC Type'] == actype[:-1]]['FL' + str(round(scenario['fl'][0], -1))].item()
+
             for apple, delay in zip(basket_of_apples, set_of_delays2):
                 apple = str(apple.time())
                 aircraftid = acid + '-' + l + '-' + str(delay)
                 for i in range(scenario.shape[0]):
                     FlightLevel = 'FL' + str(scenario['fl'][i]-sub_FL).zfill(3)
-
+                    target_speed = cruise_speed[cruise_speed['AC Type'] == actype[:-1]][
+                        'FL' + str(round(scenario['fl'][0], -1))].item()
                     if i == 0:
                         banana.append(apple + '.00> CRE ' + aircraftid + ', ' + actype + str(cut7(scenario['st_x(gpt.coords)'][i]))
                                       + ', ' + str(cut7(scenario['st_y(gpt.coords)'][i])) + ', '
@@ -2505,7 +2506,7 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, ense
     if path == None:
         path = 'C:\\Documents\\Git 2\\output\\runs\\xlogs input\\4 inf'
     else:
-        path = os.path.join(path, 'xlogs input\\4 inf')
+        path = os.path.join(path, 'xlogs input\\1 min')
     Dir = os.listdir(path)
     if ensembles:
         print(f'Plot is limited to the first {ensembles} ensembles!')
@@ -2590,8 +2591,9 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, ense
         dot_size = 2
         dfsub = df[df['Delay'].isin(selection)]
         dfsub = dfsub[dfsub['North / East'] == 'V north']
+        dfsub = dfsub[(dfsub['Waypoint'] % 3 == 1) | (dfsub['Waypoint'] > 22)] # partial selection of waypoints
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(5, 9))
-
+        # print(dfsub)
         sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
                       jitter=True, dodge=True, color=".3", ax=ax1, size=dot_size)
         sns.boxplot(x="Waypoint", y='Speed [m/s]', data=dfsub, hue="Delay",
@@ -2608,13 +2610,14 @@ def getLog(path=None, traj='AZA1572', selection=[0, 300, 600], wponly=True, ense
 
         dfsub = df[df['Delay'].isin(selection)]
         dfsub = dfsub[dfsub['North / East'] == 'V east']
+        dfsub = dfsub[(dfsub['Waypoint'] % 3 == 1) | (dfsub['Waypoint'] > 22)] # partial selection of waypoints
         sns.stripplot(x="Waypoint", y="Speed [m/s]", hue="Delay", data=dfsub,
                       jitter=True, dodge=True, color=".3", ax=ax2, size=dot_size)
         sns.boxplot(x="Waypoint", y="Speed [m/s]", data=dfsub, hue="Delay",
                     ax=ax2, showfliers=False)
         handles, labels = ax2.get_legend_handles_labels()
         ax2.legend(handles[0:len(selection)], labels[0:len(selection)], fontsize=8,
-                   title='delay [seconds]', loc='upper left', framealpha=0.1)
+                   title='delay [seconds]', loc='bottom left', framealpha=0.1)
         ax2.set_title('East-component of the Wind', fontsize=16)
         ax2.set_xlabel("Waypoint [#]", fontsize=14)
         ax2.set_ylabel('Speed [m/s]', fontsize=14)
@@ -3168,7 +3171,10 @@ def TWscore(flights=None, path=None, legend=None, flight_limit=10):
             ax.set_xticklabels(legend, fontsize=10)
         else:
             ax.set_xticklabels(KPI_score.columns.str.upper(), fontsize=10)
-        ax.set_xlim(0, 5)
+        if len(KPI_score.columns) > 3:
+            ax.set_xlim(0, 5)
+        else:
+            ax.set_xlim(0, 4)
         ax.set_ylim(0, 100)
         plt.gcf().subplots_adjust(bottom=0.15)
         plt.show()
@@ -3361,7 +3367,7 @@ def speedchanges(flights=None, path=None, font=8):
         i_2 = 2
     else:
         i_1 = 2
-        i_2 = 1
+        i_2 = 2
 
     if max(KPI_score.max()) >= 5:
         KPI_max = math.ceil(max(KPI_score.max())/5) * 5
@@ -3383,6 +3389,7 @@ def speedchanges(flights=None, path=None, font=8):
     fig.set_figwidth(8)
     # gs1 = gridspec.GridSpec(4, 4)
     # gs1.update(wspace=-20, hspace=-1)
+    print(int(KPI_score.shape[1]/2))
     for i2, i in enumerate(range(int(KPI_score.shape[1]/2))):
         d = {}
         ax = fig.add_subplot(i_1, i_2, i2 + 1)
@@ -3393,7 +3400,10 @@ def speedchanges(flights=None, path=None, font=8):
         ax.set_xticks(ind-width/2)
         ax.set_xticklabels(delays, fontsize=10, verticalalignment='bottom')
         # plt.labelpad = 10
-        ax.legend((d["rects1"][0], d["rects2"][0]), legendlist, loc='upper right')
+        if i2 < 5:
+            ax.legend((d["rects1"][0], d["rects2"][0]), legendlist, loc='upper right')
+        else:
+            ax.legend((d["rects1"][0], d["rects2"][0]), legendlist, loc='upper left')
 
         autolabel(d["rects1"], ax, False, font)
         autolabel(d["rects2"], ax, False, font)

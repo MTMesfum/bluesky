@@ -3,35 +3,43 @@ from scratch_methods import *
 # flights = ['DLH87P', 'DLH48H']  # file 0
 # flights = ['BAW4TM', 'BEL724']  # file 1
 flights = ['ADH931', 'AEE929']
-path = 'F:\Documents\BlueSky Backup\Final Runs\Oct 31 Remon TW_bot Wx1'
+# path = 'F:\Documents\BlueSky Backup\Final Runs\Oct 31 Remon TW_bot Wx1'
+path = 'F:\Documents\BlueSky Backup\Final Runs\\Nov 15 Munich TW_mid Wx1'
 path2 = 'C:\Documents\Git 2\output\\runs-save'
-flights1 = 'EXS79G'
+flights1 = 'SAS4759'
 flights2 = [flights1]
-set_TW_place(False)
-# TAP1015, AZA1572, BEL7PC, EXS79G
+set_TW_place(True)
+# Set II: DLH2557, IBE31DD, SAS4759, -- AFL2326
+# Set  I: TAP1015, AZA1572, BEL7PC, EXS79G
 # BER717E CCA931 DLH08W AFR234H
 # overall_aggregate2()
 # result_analysis2(None, ['min', 'det'])
 
-# 1
-# print(' ')
-# getLog(path, flights1, [0, 900, 1800]) #, False, 10)
-# 2
-# speedchanges(flights2, path, 6)
-# speedchanges(None, path)
-flights2 = [flights1]
-# 4
-limits = [71000, 74000, 1.005]
-limits = [750, 1150]
-limits = [3600, 3900, 1.005]
-# tw = fuelvsdelay(flights1, path, limits)
-# tw = fuelvsdelay(flights1, path)
-# 3 - distance as well
-# TWscore(None, path, None, 200)
-# TWscore(flights2, path, tw)
-TWperformance(flights2, path, [3, 7])
-# TWperformance(flights2, path)
+overall_scoring = True
 
+if not overall_scoring:
+    # 1
+    # print(' ')
+    # getLog(path, flights1, [0, 900, 1800]) #, False, 10)
+    # 2
+    # speedchanges(flights2, path, 6)
+    # speedchanges(None, path)
+    flights2 = [flights1]
+    # 4
+    limits = [71000, 74000, 1.005]
+    limits = [750, 1150]
+    limits = [2200, 2600, 1.01]
+    # tw = fuelvsdelay(flights1, path, limits)
+    # tw = fuelvsdelay(flights1, path)
+    # 3 - distance as well
+    # TWscore(None, path, None, 200)
+    # TWscore(flights2, path, tw)
+    TWperformance(flights2, path, [3, 21])
+    # TWperformance(flights2, path)
+else:
+    # Overall scoring
+    speedchanges(None, path)
+    TWscore(None, path, None, 200)
 
 
 #
